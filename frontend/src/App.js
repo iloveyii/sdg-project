@@ -4,7 +4,11 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Toast from 'react-bootstrap/Toast';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import './App.css';
+
 // import 'bootstrap/dist/css/bootstrap.css';
 
 
@@ -12,7 +16,7 @@ class ToastFlow extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state= {show: true};
+        this.state = {show: true};
     }
 
     toggleShow(value) {
@@ -47,6 +51,21 @@ class App extends React.Component {
                         We now have Toasts
                         <span role="img" aria-label="tada"> 🎉</span>
                     </ToastFlow>
+                </Jumbotron>
+
+                <Jumbotron style={{textAlign: 'center'}}>
+                    <Form>
+                        <Form.Row>
+                            <Form.Group as={Col}>
+                                <Form.Label className="margin20">Select file to upload</Form.Label>
+                                <Button
+                                    variant="primary"
+                                    onClick={() => null}>
+                                    Upload
+                                </Button>
+                            </Form.Group>
+                        </Form.Row>
+                    </Form>
                 </Jumbotron>
             </Container>
         )
