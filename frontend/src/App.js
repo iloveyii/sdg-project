@@ -57,16 +57,16 @@ class App extends React.Component {
                     <Form>
                         <Form.Group as={Row} controlId="formHorizontalEmail">
                             <Form.Label column sm={2}>
-                                Email
+                                File
                             </Form.Label>
                             <Col sm={10}>
-                                <Form.Control type="email" placeholder="Email"/>
+                                <Form.Control type="file" placeholder="Choose..."/>
                             </Col>
                         </Form.Group>
 
                         <Form.Group as={Row}>
                             <Col sm={{span: 10, offset: 2}}>
-                                <Button type="submit">Sign in</Button>
+                                <Button type="submit">Upload FCS file</Button>
                             </Col>
                         </Form.Group>
                     </Form>
