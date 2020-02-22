@@ -112,7 +112,9 @@ class Upload extends Component {
         );
       } else {
         return (
-          <div></div>
+          <div> 
+              <p> Error: Check if server is up</p>
+          </div>
         );
       }
     }
@@ -134,6 +136,7 @@ class Upload extends Component {
     }
 
     sendRequest(file) {
+      
         return new Promise((resolve, reject) => {
          const req = new XMLHttpRequest();
        
@@ -165,7 +168,7 @@ class Upload extends Component {
          const formData = new FormData();
          formData.append("file", file, file.name);
        
-         req.open("POST", "http://localhost:8000/upload");
+         req.open("POST", "http://localhost:5001/");
          req.send(formData);
         });
     }
