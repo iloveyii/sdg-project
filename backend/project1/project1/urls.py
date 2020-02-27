@@ -19,9 +19,10 @@ from app1 import views
 from django.conf.urls import include, url
 # print(url(r'^app1/', include('app1.url')),)
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Path to app1 application,
     url(r'^app1/', include('app1.url')),
-    path('', include('app1.url')),
+    url(r'^$', include('app1.url')),
 ]

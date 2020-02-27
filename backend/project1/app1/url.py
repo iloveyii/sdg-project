@@ -9,4 +9,5 @@ urlpatterns = [
     url('plot', views.get_plot, name='plot'),
     url('upload', views.upload, name='upload'),
     url('', views.welcome, name='welcome'),
+    url(r'^/$', views.welcome, name='welcome'),
 ]
