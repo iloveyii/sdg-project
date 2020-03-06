@@ -1,26 +1,4 @@
-CELL ANALYSIS USING PYTHON FLOW CYTOMETRY
-=========================================
-
-This is a blood cell analysis application written React and Python.
-
-It has two sub applications i.e one for frontend and second for backend.
-
-## 1. Frontend
-
-
-## 2. Backend
-   This is written in Python and it uses Django, SQL lite.
-   
-   ### Installations
-   * Clone the repo `git clone https://github.com/iloveyii/sdg-project.git`
-   * Run migrations `python3.6 manage.py migrate`
-   * Inside backend/project1 run the command `python3.6 manage.py runserver`
-
-
-
-### Instructions for creating app
-
-1. Install Django
+     1. Install Django
 
 pip3 install django
 
