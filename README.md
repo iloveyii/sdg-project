@@ -6,7 +6,12 @@ This is a blood cell analysis application written React and Python.
 It has two sub applications i.e one for frontend and second for backend.
 
 ## 1. Frontend
-
+   This is written in Read JS.
+   ### Installations
+   * Clone the repo `git clone https://github.com/iloveyii/sdg-project.git`
+   * Install npm packages, inside frontend/ run `npm install`
+   * Run the application inside, frontend/ run the command `npm start`
+   * Browse to the url `http://127.0.0.1:3000`
 
 ## 2. Backend
    This is written in Python and it uses Django, SQL lite.
@@ -23,7 +28,7 @@ It has two sub applications i.e one for frontend and second for backend.
 
 
 
-### Instructions for creating app
+## Instructions for creating app
 
 1. Install Django
 
