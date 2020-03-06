@@ -13,7 +13,7 @@ It has two sub applications i.e one for frontend and second for backend.
    
    ### Installations
    * Clone the repo `git clone https://github.com/iloveyii/sdg-project.git`
-   * Run migrations `python3.6 manage.py migrate`
+   * Run migrations inside backend/project1 `python3.6 manage.py migrate`
    * Inside backend/project1 run the command `python3.6 manage.py runserver`
 
 
