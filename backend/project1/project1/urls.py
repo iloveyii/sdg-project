@@ -24,5 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Path to app1 application,
     url(r'^app1/', include('app1.url')),
-    url(r'^$', include('app1.url')),
+    #url(r'^$', include('app1.url')),
 ]

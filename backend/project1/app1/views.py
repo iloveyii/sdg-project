@@ -37,6 +37,11 @@ def about(request):
     return render(request, 'about.html')
 
 
+def react(request):
+    print("Inside react")
+    return render(request, 'index.html')
+
+
 def welcome(request):
     return render(request, 'welcome.html')
 
