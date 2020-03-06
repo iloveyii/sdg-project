@@ -23,13 +23,14 @@ class Upload extends Component {
         this.setState(prevState => ({
           files: prevState.files.concat(files)
         }));
+        console.log(this.state.files);
     }
 
     render() {
         return (
           
             <div className="Upload">
-              <span className="Title">Select File to Upload</span>
+              {/* <span className="Title">Select File to Upload</span> */}
               <div className="Content">
                 <div>
                   <Dropzone
@@ -113,7 +114,7 @@ class Upload extends Component {
       } else {
         return (
           <div> 
-              <p> Error: Check if server is up</p>
+              {/* <p> Error: Check if server is up</p> */}
           </div>
         );
       }

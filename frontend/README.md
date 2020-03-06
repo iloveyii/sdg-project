@@ -1,4 +1,5 @@
 # Cell Data Project - Frontend
+This supports multi-file upload.
 
 ## Setup
 Run the following to install the modules
@@ -14,3 +15,17 @@ The request parameters sent to the server are as follows:
 ```
 {'file': [{'filename': 'Test.fcs', 'body': b'test file for fcs', 'content_type': 'application/octet-stream'}]}
 ```
+
+## Running the app - Dev Mode
+
+```
+npm run start 
+```
+
+##Modules Used
+
+React-hook-form
+Validation of the form inputs
+
+Material - UI
+Form look and Feel
