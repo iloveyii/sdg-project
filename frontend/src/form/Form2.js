@@ -14,11 +14,11 @@ import {
     // Box,
     InputLabel,
     // FormControlLabel,
-    // Checkbox,
+    // Alert,
     Select,
     MenuItem,
     FormControl,
-    // InputAdornment,
+    // Snackbar,
     TextField,
     CircularProgress,
     Container
@@ -27,6 +27,8 @@ import {
 import {DropzoneArea} from 'material-ui-dropzone';
 import clsx from 'clsx';
 import { green } from '@material-ui/core/colors';
+
+import ChartingSection from '../components/ChartingSection';
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -62,24 +64,24 @@ const useStyles = makeStyles(theme => ({
     buttonSuccess: {
         backgroundColor: green[500],
         '&:hover': {
-          backgroundColor: green[700],
+        backgroundColor: green[700],
         },
-      },
-      fabProgress: {
+    },
+    fabProgress: {
         color: green[500],
         position: 'absolute',
         top: -6,
         left: -6,
         zIndex: 1,
-      },
-      buttonProgress: {
+    },
+    buttonProgress: {
         color: green[500],
         position: 'absolute',
         top: '50%',
         left: '50%',
         marginTop: -12,
         marginLeft: -12,
-      },
+    }
 }));
 
 export default function Form() {
@@ -96,7 +98,7 @@ export default function Form() {
     const [labelWidth, setLabelWidth] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
-    const timer = React.useRef();
+    // const timer = React.useRef();
 
     const buttonClassname = clsx({
         [classes.buttonSuccess]: success,
@@ -104,17 +106,21 @@ export default function Form() {
 
     useEffect(() => {
         setLabelWidth(inputLabel.current.offsetWidth);
-        clearTimeout(timer.current);
+        // clearTimeout(timer.current);
     }, []);
 
-    const onDropzoneChange = (e) => {
+    const handleDropzoneChange = (e) => {
         setFiles(e);
+        console.log(files);
+        //fix bug 
         if (files.length < 1){
             setDisabled(false);
         }
+
     }
 
     const uploadFcs = (e) => {
+        
         setLoading(true);
         setSuccess(false);
 
@@ -127,7 +133,7 @@ export default function Form() {
             formData.append("file", file, file.name);
         });
 
-        var urlpath = "http://localhost:5001";// process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";
+        var urlpath = "http://localhost:8000";// process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";
         fetch(`${urlpath}/`,{
             method: 'POST',
             body: formData
@@ -196,6 +202,7 @@ export default function Form() {
                                 <Select
                                     value={category}
                                     onChange={e => setCategory(e.target.value)}
+                                    // onChange={testSnack}
                                     labelWidth={labelWidth}
                                     inputProps={{
                                         name: 'Category',
@@ -211,10 +218,12 @@ export default function Form() {
                         <Grid item xs={12}>
 
                             <DropzoneArea 
-                                // acceptedFiles={['text/fcs']}       
-                                maxFileSize={1024000}                        
+                                acceptedFiles={['.fcs','.csv']}       
+                                maxFileSize={30720000}                        
                                 dropzoneText="Select files to upload"
-                                onChange={onDropzoneChange}
+                                onChange={handleDropzoneChange}
+                                showPreviews={false}
+                                // onDelete={handleDropzoneChange}
                             />
 
                         </Grid>
@@ -242,12 +251,13 @@ export default function Form() {
             </div>
             </Grid>
             <Grid item md={8}>
-                {renderScatter(displayChart)}
+                <ChartingSection />
+                {/* {renderScatter(displayChart)} */}
+
             </Grid>
         </Grid>
     );
 }
-
 
 
 function renderScatter(status) {
@@ -260,7 +270,8 @@ function renderScatter(status) {
     } else {
         return (
         <div> 
-            {/* <p> Error: Check if server is up</p> */}
+            <div className="chart-placeholder"></div>
+            <h5> Nothing to see here</h5>
         </div>
         );
     }

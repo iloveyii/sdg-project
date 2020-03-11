@@ -8,7 +8,7 @@ npm i
 ```
 Navigate to /src/upload/upload.js line 171 and change the port to reflect the port of the server wher efile is to be uploaded.
 ```
-req.open("POST", "http://localhost:5001/");
+req.open("POST", "http://localhost:8000/");
 ```
 The request parameters sent to the server are as follows:
 

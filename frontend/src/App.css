@@ -51,9 +51,22 @@
   max-width: 100%;
 }
 
-.DropzoneArea-dropZone-202,
-.DropzoneArea-dropZone-194 {
+.ChartingSection {
+  margin-top:40px;
+  padding-left: 32px;
+}
+
+/* .DropzoneArea-dropZone-202,
+.DropzoneArea-dropZone-199 { */
+div[class^='DropzoneArea-dropZone-'], div[class*=' DropzoneArea-dropZone-'] {
   border-radius: 4px;
+}
+
+.MuiButton-containded {
+  height: 60px;
+}
+.chart-placeholder {
+  padding-top: 20%;
 }
 
 @keyframes App-logo-spin {
