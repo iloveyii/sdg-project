@@ -1,27 +1,16 @@
 import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Chip from '@material-ui/core/Chip';
-// import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import ChartPlot from '../components/ChartPlot'
 import CustomSelect from '../components/CustomSelect';
 
-import {Grid,
-    CssBaseline,
-    Button,
-    InputLabel,
-    Select,
-    MenuItem,
-    FormControl,
-    Container
-} from "@material-ui/core";
+import {Grid, Button} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     heading: {
@@ -45,89 +34,113 @@ export default function DetailedExpansionPanel() {
     const classes = useStyles();
 
     const [expanded, setExpanded] = React.useState(false);//React.useState(false);
-
-    const inputLabel = React.useRef(null);
-    const [labelWidth, setLabelWidth] = React.useState(0);
     const [xval, setXval] = React.useState("");
     const [yval, setYval] = React.useState("");
     const [transformation, setTransformation] = React.useState("");
     const [graphTitle, setGraphTitle] = React.useState("Choose Columns & Transformation Function");
-    const [selValue, setSelValue] = React.useState("");
-
+    const [selectedFcs, setSelectedFcs] = React.useState(0);
+    const [allFcs, setAllFcs] = React.useState([]);
+    const [allColumns, setAllColumns] = React.useState([]);
 
     useEffect(() => {
-        setLabelWidth(inputLabel.current.offsetWidth);
+        loadFcsSelect();
         //Set first panel as defaultExpanded
         setExpanded("panel1");
     }, []);
+    
 
     const handleChange = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const data = [
-        {
-            id: "1",
-            name: "One"
-        },
-        {
-            id: "2",
-            name: "Two"
-        }];
-
-    const data2 = [
-        {
-            id: "1",
-            name: "Three"
-        },
-        {
-            id: "2",
-            name: "four"
-        }];
-
-    // function onSelectChange(event) {
-    const onSelectChange = (value) => {
-        console.log('************')
-        console.log(value);
-    }
-
-    const onSelectChange2 = (value) => {
-        console.log('************')
-        console.log(value);
-    }
-
-    const initiatePlot = () => {
-        const formData = new FormData();
-        formData.append("xAxis", xval);
-        formData.append("yAxis", yval);
-        formData.append("transformation", transformation);
-    
+    function loadFcsSelect(){
         var urlpath = "http://localhost:8000";// process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";
-        fetch(`${urlpath}/plotGraph`,{
-            method: 'POST',
-            body: formData
-        })
+        fetch(`${urlpath}/loadFcsFiles`)
         .then(response => response.json())
         .then(function(response){
-            // console.log("Info has been logged in backend");
+            if (response){
+                // console.log (response);
+                setAllFcs(response);
+            }
+        })
+        .catch(err => console.error(err)) 
+    }
+
+    const data3 = [
+        {
+            id: "HLOG",
+            name: "HLOG"
+        },
+        {
+            id: "GLOG",
+            name: "GLOG"
+        }];
+        // console.log(data)
+
+    const initiatePlot = () => {
+        var urlpath = "http://localhost:8000";// process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";
+        fetch(`${urlpath}/plotGraph/?fcs=${selectedFcs}&xval=${xval}&yval=${yval}&transformation=${transformation}`)
+        .then(response => response.json())
+        .then(function(response){
             if (response){
                 console.log (response);
             }
         })
         .catch(err => console.error(err)) 
         
-        setExpanded("panel2");
+        setExpanded("panel3");
         
     };
+
+    const populateFcsOptions = (value) => {
+        setSelectedFcs(value);
+        // console.log(value)
+        if (selectedFcs > 0){
+            loadFilters();
+        }
+        
+    }
+
+    function loadFilters(){
+        var urlpath = "http://localhost:8000";// process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";
+        fetch(`${urlpath}/loadColumns/?fcs=${selectedFcs}`)
+        .then(response => response.json())
+        .then(function(response){
+            // console.log("Info has been logged in backend");
+            if (response){
+                setAllColumns(response);
+                setExpanded("panel2");
+            }
+        })
+        .catch(err => console.error(err)) 
+    }
 
 
     return (
         <div className={"ChartingSection"}>
         <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')} defaultExpanded>
+        <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+        >
+            <Typography className={classes.heading}>Select FCS file</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+            <CustomSelect 
+            // selValue={selValue} 
+            data={allFcs} 
+            placeholderText={'FCS-file'}
+            selectSize={'medium'}
+            onSelectChange={populateFcsOptions} 
+            />
+        </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <ExpansionPanel expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
             <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1bh-content"
-                id="panel1bh-header"
+                aria-controls="panel2bh-content"
+                id="panel2bh-header"
                 >
                 <Typography className={classes.heading}>Options</Typography>
             </ExpansionPanelSummary>
@@ -136,76 +149,34 @@ export default function DetailedExpansionPanel() {
                     <Grid item xs={4}>
                     <CustomSelect 
                     // selValue={selValue} 
-                    data={data} 
+                    data={allColumns} 
                     placeholderText={'X-Axis'}
                     selectSize={'small'}
-                    onSelectChange={onSelectChange} 
+                    onSelectChange={(value) => {
+                        setXval(value);
+                    }} 
                     />
-                    {/* <FormControl variant="outlined" className={classes.formControl} size={"small"} required={true} fullWidth>
-                        <InputLabel ref={inputLabel} htmlFor="sel_x">
-                            X - Axis
-                        </InputLabel>
-                        <Select
-                            value={xval}
-                            onChange={e => setXval(e.target.value)}
-                            
-                            labelWidth={labelWidth}
-                            inputProps={{
-                                name: 'x',
-                                id: 'sel_x',
-                            }}
-                        >
-                            <MenuItem value={'FHS-A'}>FHS-A</MenuItem>
-                            <MenuItem value={'FHS-B'}>FHS-B</MenuItem>
-                        </Select>
-                    </FormControl> */}
                     </Grid>
                     <Grid item xs={4}>
                         <CustomSelect 
                         // selValue={selValue} 
-                        data={data2} 
+                        data={allColumns} 
                         placeholderText={'Y-Axis'}
                         selectSize={'small'}
-                        onSelectChange={onSelectChange2} 
+                        onSelectChange={(value) => {
+                            setYval(value);
+                        }} 
                         />
-                        {/* <FormControl variant="outlined" className={classes.formControl} size={"small"} required={true} fullWidth>
-                            <InputLabel ref={inputLabel} htmlFor="sel_y">
-                                Y - Axis
-                            </InputLabel>
-                            <Select
-                                value={yval}
-                                onChange={e => setYval(e.target.value)}
-                                
-                                labelWidth={labelWidth}
-                                inputProps={{
-                                    name: 'y',
-                                    id: 'sel_y',
-                                }}
-                            >
-                                <MenuItem value={'FHS-A'}>FHS-A</MenuItem>
-                                <MenuItem value={'FHS-B'}>FHS-B</MenuItem>
-                            </Select>
-                        </FormControl> */}
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl variant="outlined" className={classes.formControl} size={"small"} required={true} fullWidth>
-                            <InputLabel ref={inputLabel} htmlFor="SelectTransformation">
-                                Transformation
-                            </InputLabel>
-                            <Select
-                                value={transformation}
-                                onChange={e => setTransformation(e.target.value)}
-                                
-                                labelWidth={labelWidth}
-                                inputProps={{
-                                    name: 'Transformation',
-                                    id: 'SelectTransformation',
-                                }}
-                            >
-                                <MenuItem value={'HLOG'}>HLOG </MenuItem>
-                                <MenuItem value={'VLOG'}>VLOG</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <CustomSelect 
+                        data={data3} 
+                        placeholderText={'Transformation'}
+                        selectSize={'small'}
+                        onSelectChange={(value) => {
+                            setTransformation(value);
+                        }} 
+                        />
                     </Grid>
                 </Grid>
             
@@ -232,11 +203,11 @@ export default function DetailedExpansionPanel() {
             </ExpansionPanelActions>
         </ExpansionPanel>
 
-        <ExpansionPanel expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+        <ExpansionPanel expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
         <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel2bh-content"
-            id="panel2bh-header"
+            aria-controls="panel3bh-content"
+            id="panel3bh-header"
         >
             <Typography className={classes.heading}>{graphTitle}</Typography>
         </ExpansionPanelSummary>

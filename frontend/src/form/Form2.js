@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
+import React, {useState, useEffect} from 'react';
+// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+// import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import {
     Grid,
-    CssBaseline,
+    // CssBaseline,
     // CircularProgress,
     // Typography,
     Button,
@@ -20,12 +20,11 @@ import {
     FormControl,
     // Snackbar,
     TextField,
-    CircularProgress,
-    Container
+    CircularProgress
     // Fade,
 } from "@material-ui/core";
 import {DropzoneArea} from 'material-ui-dropzone';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 import { green } from '@material-ui/core/colors';
 
 import ChartingSection from '../components/ChartingSection';
@@ -100,9 +99,9 @@ export default function Form() {
     const [success, setSuccess] = React.useState(false);
     // const timer = React.useRef();
 
-    const buttonClassname = clsx({
-        [classes.buttonSuccess]: success,
-    });
+    // const buttonClassname = clsx({
+    //     [classes.buttonSuccess]: success,
+    // });
 
     useEffect(() => {
         setLabelWidth(inputLabel.current.offsetWidth);
@@ -260,20 +259,20 @@ export default function Form() {
 }
 
 
-function renderScatter(status) {
-    if (status) {
-        return (
-        <div className="Scatter"> 
-            <img src="/plot/scatter.jpg" alt="img-from-data" />
-        </div>
-        );
-    } else {
-        return (
-        <div> 
-            <div className="chart-placeholder"></div>
-            <h5> Nothing to see here</h5>
-        </div>
-        );
-    }
-}
+// function renderScatter(status) {
+//     if (status) {
+//         return (
+//         <div className="Scatter"> 
+//             <img src="/plot/scatter.jpg" alt="img-from-data" />
+//         </div>
+//         );
+//     } else {
+//         return (
+//         <div> 
+//             <div className="chart-placeholder"></div>
+//             <h5> Nothing to see here</h5>
+//         </div>
+//         );
+//     }
+// }
 
