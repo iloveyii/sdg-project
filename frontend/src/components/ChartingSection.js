@@ -11,6 +11,7 @@ import Chip from '@material-ui/core/Chip';
 // import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import ChartPlot from '../components/ChartPlot'
+import CustomSelect from '../components/CustomSelect';
 
 import {Grid,
     CssBaseline,
@@ -51,6 +52,7 @@ export default function DetailedExpansionPanel() {
     const [yval, setYval] = React.useState("");
     const [transformation, setTransformation] = React.useState("");
     const [graphTitle, setGraphTitle] = React.useState("Choose Columns & Transformation Function");
+    const [selValue, setSelValue] = React.useState("");
 
 
     useEffect(() => {
@@ -62,6 +64,37 @@ export default function DetailedExpansionPanel() {
     const handleChange = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
+
+    const data = [
+        {
+            id: "1",
+            name: "One"
+        },
+        {
+            id: "2",
+            name: "Two"
+        }];
+
+    const data2 = [
+        {
+            id: "1",
+            name: "Three"
+        },
+        {
+            id: "2",
+            name: "four"
+        }];
+
+    // function onSelectChange(event) {
+    const onSelectChange = (value) => {
+        console.log('************')
+        console.log(value);
+    }
+
+    const onSelectChange2 = (value) => {
+        console.log('************')
+        console.log(value);
+    }
 
     const initiatePlot = () => {
         const formData = new FormData();
@@ -101,7 +134,14 @@ export default function DetailedExpansionPanel() {
             <ExpansionPanelDetails className={classes.details}>
                 <Grid container spacing={3}>
                     <Grid item xs={4}>
-                    <FormControl variant="outlined" className={classes.formControl} size={"small"} required={true} fullWidth>
+                    <CustomSelect 
+                    // selValue={selValue} 
+                    data={data} 
+                    placeholderText={'X-Axis'}
+                    selectSize={'small'}
+                    onSelectChange={onSelectChange} 
+                    />
+                    {/* <FormControl variant="outlined" className={classes.formControl} size={"small"} required={true} fullWidth>
                         <InputLabel ref={inputLabel} htmlFor="sel_x">
                             X - Axis
                         </InputLabel>
@@ -118,10 +158,17 @@ export default function DetailedExpansionPanel() {
                             <MenuItem value={'FHS-A'}>FHS-A</MenuItem>
                             <MenuItem value={'FHS-B'}>FHS-B</MenuItem>
                         </Select>
-                    </FormControl>
+                    </FormControl> */}
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl variant="outlined" className={classes.formControl} size={"small"} required={true} fullWidth>
+                        <CustomSelect 
+                        // selValue={selValue} 
+                        data={data2} 
+                        placeholderText={'Y-Axis'}
+                        selectSize={'small'}
+                        onSelectChange={onSelectChange2} 
+                        />
+                        {/* <FormControl variant="outlined" className={classes.formControl} size={"small"} required={true} fullWidth>
                             <InputLabel ref={inputLabel} htmlFor="sel_y">
                                 Y - Axis
                             </InputLabel>
@@ -138,7 +185,7 @@ export default function DetailedExpansionPanel() {
                                 <MenuItem value={'FHS-A'}>FHS-A</MenuItem>
                                 <MenuItem value={'FHS-B'}>FHS-B</MenuItem>
                             </Select>
-                        </FormControl>
+                        </FormControl> */}
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl variant="outlined" className={classes.formControl} size={"small"} required={true} fullWidth>
