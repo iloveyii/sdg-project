@@ -73,6 +73,8 @@ def saveMeta(location, category, dateTime,fileName,uploadName,columnNames):
 
 def listArrayToJson(listIn):
     x = ''.join(listIn)
+    # print (x)
+    
     print(x.split(','))
 
     data=[]

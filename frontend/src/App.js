@@ -10,8 +10,8 @@ function App() {
   return (
     <div className="App">
       <div className="Card">
-        <Form />
-        {/* <ChartingSection /> */}
+        {/* <Form /> */}
+        <ChartingSection />
       </div>
       <div ></div>
       <div className="Card">

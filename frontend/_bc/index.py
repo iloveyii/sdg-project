@@ -5,7 +5,7 @@ import json
 from preprocess import getColumnNames, getPlotData #, applyModel
 from db import loadOne, loadData, saveMeta, listArrayToJson
 from pathlib import Path, PurePath
- 
+
 import asyncio
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #Tornado won't work without this
 
@@ -40,14 +40,14 @@ class MainHandler(BaseHandler):
             #Write record to relational database
             saveResponse = saveMeta(self.get_argument("location"), self.get_argument("category"), self.get_argument("dateTime"), "000", f.filename, colNames)
 
-            self.write({"status":"success", "message":"saved"})
+        self.write({"status":"success", "message":"saved"})
 
 class PlotGraphHandler(BaseHandler):
     def get(self):
-        self.write(self.get_query_argument("fcs"))
-        self.write(self.get_query_argument("xval"))
-        self.write(self.get_query_argument("yval"))
-        self.write(self.get_query_argument("transformation"))
+        # self.write(self.get_query_argument("fcs"))
+        # self.write(self.get_query_argument("xval"))
+        # self.write(self.get_query_argument("yval"))
+        # self.write(self.get_query_argument("transformation"))
         
         fcsFilename = self.get_query_argument("fcs")
         xval = self.get_query_argument("xval")
@@ -56,6 +56,8 @@ class PlotGraphHandler(BaseHandler):
         
         
         data1, data2, data3 = getPlotData(xval, yval, transformation, fcsFilename)
+
+        self.write(data3)
         
         
 #        data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
@@ -68,14 +70,14 @@ class PlotGraphHandler(BaseHandler):
 
 class GetUploadsHandler(BaseHandler):
     def get(self):
-        query = "select distinct left(uploadname,-4) as name, id from tbmeta"
+        query = "select distinct left(uploadname,-4) as name, uploadname as id from tbmeta"
         results = loadData(query)
         self.write(json.dumps(results))
 
 
 class GetColumnsHandler(BaseHandler):
     def get(self):
-        query = "select channels from tbmeta where id=%s "
+        query = "select channels from tbmeta where uploadname=%s "
         results = loadOne(query, self.get_query_argument("fcs"))
         channels = listArrayToJson(results) 
         self.write(channels)
@@ -85,7 +87,7 @@ if (__name__ == "__main__"):
         ("/", MainHandler),
         ("/uploads/(.*)", tornado.web.StaticFileHandler, {"path":"/uploads"}),
         ("/loadFcsFiles", GetUploadsHandler), #Get list of all uploaded fcs files from db
-        ("/plotGraph", PlotGraphHandler),
+        ("/plotGraph/", PlotGraphHandler),
         ("/loadColumns/", GetColumnsHandler)
     ])
 

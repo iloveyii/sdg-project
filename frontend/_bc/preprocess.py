@@ -74,30 +74,35 @@ def implementMain():
     """
 def cleanTupleString(strings):
     newString = ''.join(json.dumps(strings))
-    return newString.replace(" ","")
+
+    newString = newString.replace(" ","")
+    newString = newString.replace("[","")
+    newString = newString.replace("]","")
+    newString = newString.replace('"','')
+
+    return newString
     
 def getColumnNames(filename):
     print("Reading columns from .fcs file ", filename)
-#    shortfilename = filename.split('.')[0]
     sample = read_data(filename)
     channelnames = cleanTupleString(sample.channel_names)
     return channelnames
 
 def getPlotData(channelx, channely, transformation, filename):
-    print("Reading .fcs file ", filename)
+    print("Reading selected columns from .fcs file ", filename)
     shortfilename = filename.split('.')[0]
     sample = read_data(filename)
     
     data1 = sample.data[channelx]
     data2 = sample.data[channely]
-    data3= pd.concat([data1,data2], axis=1)
+    data3 = pd.concat([data1,data2], axis=1)
     
     outfile = shortfilename + 'out.csv'
     save_data_file(data3,outfile)
-    print('Raw Data Saved...', outfile)
+    print('Plot Data Saved...', outfile)
 #    print(channelnames)
     
-    return data1, data2, data3
+    return data1, data2, data3.to_json(orient='records')
 
 
 
@@ -106,4 +111,5 @@ def getPlotData(channelx, channely, transformation, filename):
 #sampl = getColumnNames("A06 Ut SY.FCS")
 
 #data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
- 
+#jsn = data3.to_json(orient='records')
+# 

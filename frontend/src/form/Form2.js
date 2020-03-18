@@ -110,7 +110,6 @@ export default function Form() {
 
     const handleDropzoneChange = (e) => {
         setFiles(e);
-        console.log(files);
         //fix bug 
         if (files.length < 1){
             setDisabled(false);
@@ -139,11 +138,9 @@ export default function Form() {
         })
         .then(response => response.json())
         .then(function(response){
-            console.log("Info has been logged in backend");
             if (response){
                 setSuccess(true);
                 setLoading(false);
-                console.log ("Lookie here, there's a response as well");
                 setDisabled(true);
                 setLocation("");
                 setFiles([]);
@@ -160,7 +157,7 @@ export default function Form() {
     return (
         <Grid container component="main" >
             <Grid item md={12}>
-            <Typography variant="h4" component="h4" align="left">
+            <Typography variant="h4" component="h4" align="left" color="primary">
             FCS file upload page
             </Typography>
             <div className={classes.paper}>

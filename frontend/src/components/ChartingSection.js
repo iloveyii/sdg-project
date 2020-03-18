@@ -42,6 +42,8 @@ export default function DetailedExpansionPanel() {
     const [allFcs, setAllFcs] = React.useState([]);
     const [allColumns, setAllColumns] = React.useState([]);
 
+    const [enablePlotButton, setEnablePlotButton] = React.useState(true);
+
     useEffect(() => {
         loadFcsSelect();
         //Set first panel as defaultExpanded
@@ -95,7 +97,7 @@ export default function DetailedExpansionPanel() {
     const populateFcsOptions = (value) => {
         setSelectedFcs(value);
         // console.log(value)
-        if (selectedFcs > 0){
+        if (selectedFcs != ""){
             loadFilters();
         }
         
@@ -109,6 +111,7 @@ export default function DetailedExpansionPanel() {
             // console.log("Info has been logged in backend");
             if (response){
                 setAllColumns(response);
+                setEnablePlotButton(false);
                 setExpanded("panel2");
             }
         })
@@ -118,6 +121,10 @@ export default function DetailedExpansionPanel() {
 
     return (
         <div className={"ChartingSection"}>
+        <Typography variant="h4" component="h4" align="left" color="primary">
+        FCS file analysis 
+        </Typography>
+        <div></div>
         <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')} defaultExpanded>
         <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
@@ -145,7 +152,7 @@ export default function DetailedExpansionPanel() {
                 <Typography className={classes.heading}>Options</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.details}>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} >
                     <Grid item xs={4}>
                     <CustomSelect 
                     // selValue={selValue} 
@@ -166,6 +173,7 @@ export default function DetailedExpansionPanel() {
                         onSelectChange={(value) => {
                             setYval(value);
                         }} 
+                        
                         />
                     </Grid>
                     <Grid item xs={4}>
@@ -194,9 +202,11 @@ export default function DetailedExpansionPanel() {
             <ExpansionPanelActions>
             {/* <Button size="small">Cancel</Button> */}
             <Button 
+            variant="outlined"
             size="small" 
             color="primary"
             onClick={initiatePlot}
+            disabled={enablePlotButton}
             >
                 Plot
             </Button>
