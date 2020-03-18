@@ -32,8 +32,11 @@ def upload(request):
 
 def hello(request):
     text = """<h1>welcome to my app - hello !</h1>"""
-    # return render(request, 'index.html', context=context)
-    return HttpResponse(text)
+    context = {
+        'name': 'Cell analysis'
+    }
+    return render(request, 'index.html', context=context)
+    # return HttpResponse(text)
 
 
 def about(request):
