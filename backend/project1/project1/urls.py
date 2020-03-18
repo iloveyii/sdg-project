@@ -29,8 +29,8 @@ def hello(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url('/', hello),
-    url('', hello),
+    url('^/$', hello),
+    url('^$', hello),
     # Path to app1 application,
     url(r'^app1/', include('app1.url')),
     url(r'^$', include('app1.url')),
