@@ -6,7 +6,7 @@ import {
     Grid,
     // CssBaseline,
     // CircularProgress,
-    // Typography,
+    Typography,
     Button,
     // Tabs,
     // Tab,
@@ -159,7 +159,10 @@ export default function Form() {
 
     return (
         <Grid container component="main" >
-            <Grid item md={4}>
+            <Grid item md={12}>
+            <Typography variant="h4" component="h4" align="left">
+            FCS file upload page
+            </Typography>
             <div className={classes.paper}>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
@@ -249,11 +252,11 @@ export default function Form() {
                 </form>
             </div>
             </Grid>
-            <Grid item md={8}>
+            {/* <Grid item md={6}>
                 <ChartingSection />
-                {/* {renderScatter(displayChart)} */}
+                {renderScatter(displayChart)}
 
-            </Grid>
+            </Grid> */}
         </Grid>
     );
 }

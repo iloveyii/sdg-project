@@ -4,11 +4,12 @@ import json
 
 from preprocess import getColumnNames, getPlotData #, applyModel
 from db import loadOne, loadData, saveMeta, listArrayToJson
-# from nodb saveFcs, getFcs
+from pathlib import Path, PurePath
  
 import asyncio
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #Tornado won't work without this
 
+dirpath = PurePath.joinpath(Path().parent.absolute(),'data/raw/')
 
 class BaseHandler(tornado.web.RequestHandler):
     def set_default_headers(self):
@@ -29,7 +30,7 @@ class MainHandler(BaseHandler):
         # print(self.get_argument("location"))
         files = self.request.files["file"]
         for f in files:
-            fh = open(f"uploads/{f.filename}", "wb") #wb is write in binary to accept any file format
+            fh = open(f"{dirpath}/{f.filename}", "wb") #wb is write in binary to accept any file format
             fh.write(f.body)
             fh.close()
             

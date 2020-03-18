@@ -77,11 +77,11 @@ def cleanTupleString(strings):
     return newString.replace(" ","")
     
 def getColumnNames(filename):
-    print("Reading .fcs file ", filename)
+    print("Reading columns from .fcs file ", filename)
 #    shortfilename = filename.split('.')[0]
     sample = read_data(filename)
     channelnames = cleanTupleString(sample.channel_names)
-    return channelnames, sample.channel_names
+    return channelnames
 
 def getPlotData(channelx, channely, transformation, filename):
     print("Reading .fcs file ", filename)
@@ -103,7 +103,7 @@ def getPlotData(channelx, channely, transformation, filename):
 
     
 #implementMain()
-#x, sampl = getColumnNames("A06 Ut SY.FCS")
+#sampl = getColumnNames("A06 Ut SY.FCS")
 
-data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
+#data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
  
