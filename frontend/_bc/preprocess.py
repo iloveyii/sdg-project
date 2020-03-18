@@ -5,6 +5,7 @@ import pandas as pd
 #import numpy as np
 #from pandas import read_csv
 from pathlib import Path, PurePath
+import json
 
 dirpath = Path().parent.absolute()
 
@@ -71,7 +72,38 @@ def implementMain():
         savedataclassic(data3,'transformdata.csv')
         print('Transform Data Saved...')
     """
+def cleanTupleString(strings):
+    newString = ''.join(json.dumps(strings))
+    return newString.replace(" ","")
     
-       
+def getColumnNames(filename):
+    print("Reading .fcs file ", filename)
+#    shortfilename = filename.split('.')[0]
+    sample = read_data(filename)
+    channelnames = cleanTupleString(sample.channel_names)
+    return channelnames, sample.channel_names
+
+def getPlotData(channelx, channely, transformation, filename):
+    print("Reading .fcs file ", filename)
+    shortfilename = filename.split('.')[0]
+    sample = read_data(filename)
+    
+    data1 = sample.data[channelx]
+    data2 = sample.data[channely]
+    data3= pd.concat([data1,data2], axis=1)
+    
+    outfile = shortfilename + 'out.csv'
+    save_data_file(data3,outfile)
+    print('Raw Data Saved...', outfile)
+#    print(channelnames)
+    
+    return data1, data2, data3
+
+
+
+    
 #implementMain()
+#x, sampl = getColumnNames("A06 Ut SY.FCS")
+
+data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
  

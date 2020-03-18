@@ -41,10 +41,10 @@ def loadOne(query, id):
             conn.close()
 
 
-def saveMeta(location, category, dateTime,fileName,uploadName):
+def saveMeta(location, category, dateTime,fileName,uploadName,columnNames):
     """ Save fcs meta """
-    sql = """INSERT INTO tbmeta(location,category,datetime,filename,uploadname)
-            VALUES(%s,%s,%s,%s,%s) RETURNING id;"""
+    sql = """INSERT INTO tbmeta(location,category,datetime,filename,uploadname,channels)
+            VALUES(%s,%s,%s,%s,%s,%s) RETURNING id;"""
     conn = None
     vendor_id = None
     try:
@@ -55,7 +55,7 @@ def saveMeta(location, category, dateTime,fileName,uploadName):
         # create a new cursor
         cur = conn.cursor()
         # execute the INSERT statement
-        cur.execute(sql, (location,category,dateTime,fileName,uploadName))
+        cur.execute(sql, (location,category,dateTime,fileName,uploadName,columnNames))
         # get the generated id back
         vendor_id = cur.fetchone()[0]
 
