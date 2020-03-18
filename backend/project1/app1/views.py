@@ -33,7 +33,7 @@ def upload(request):
 def hello(request):
     text = """<h1>welcome to my app - hello !</h1>"""
     context = {
-        'name': 'Cell analysis'
+        'name': 'CELL ANALYSIS'
     }
     return render(request, 'index.html', context=context)
     # return HttpResponse(text)
