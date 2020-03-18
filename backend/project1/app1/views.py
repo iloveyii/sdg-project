@@ -45,6 +45,7 @@ def react(request):
 def welcome(request):
     return render(request, 'welcome.html')
 
+
 def analysis(request):
     data = {
         'user': {

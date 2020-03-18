@@ -18,11 +18,21 @@ from django.urls import path
 from app1 import views
 from django.conf.urls import include, url
 # print(url(r'^app1/', include('app1.url')),)
+from django.http import HttpResponse
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+
+def hello(request):
+    text = """<h1>welcome to my app !</h1>"""
+    return HttpResponse(text)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url('/', hello),
+    url('', hello),
     # Path to app1 application,
     url(r'^app1/', include('app1.url')),
-    #url(r'^$', include('app1.url')),
+    url(r'^$', include('app1.url')),
 ]
+urlpatterns += staticfiles_urlpatterns()
