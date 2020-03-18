@@ -2,7 +2,7 @@ import tornado.web #GET, POST etc to receive requests
 import tornado.ioloop #Thread listens for requests; always needs to be up
 import json
 
-from ml import getColumnNames #, applyModel
+from preprocess import getColumnNames, getPlotData #, applyModel
 from db import loadOne, loadData, saveMeta, listArrayToJson
 # from nodb saveFcs, getFcs
  
@@ -27,18 +27,17 @@ class MainHandler(BaseHandler):
     def post(self): #If exists, doesn't overwrite
         # print("on my way") 
         # print(self.get_argument("location"))
-       
-        # Save to Mongo
-        # id = saveFcs(file)
         files = self.request.files["file"]
         for f in files:
             fh = open(f"uploads/{f.filename}", "wb") #wb is write in binary to accept any file format
             fh.write(f.body)
             fh.close()
             
+            colNames = getColumnNames(f.filename)
+            # print(colNames)
 
             #Write record to relational database
-            saveResponse = saveMeta(self.get_argument("location"), self.get_argument("category"), self.get_argument("dateTime"), "000", f.filename)
+            saveResponse = saveMeta(self.get_argument("location"), self.get_argument("category"), self.get_argument("dateTime"), "000", f.filename, colNames)
 
             self.write({"status":"success", "message":"saved"})
 
@@ -48,6 +47,17 @@ class PlotGraphHandler(BaseHandler):
         self.write(self.get_query_argument("xval"))
         self.write(self.get_query_argument("yval"))
         self.write(self.get_query_argument("transformation"))
+        
+        fcsFilename = self.get_query_argument("fcs")
+        xval = self.get_query_argument("xval")
+        yval = self.get_query_argument("yval")
+        transformation = self.get_query_argument("transformation")
+        
+        
+        data1, data2, data3 = getPlotData(xval, yval, transformation, fcsFilename)
+        
+        
+#        data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
         # self.write("Not implemented yet")
         # query = "select channels from tbmeta where id=%s "
         # results = loadOne(query, self.get_query_argument("fcs"))
