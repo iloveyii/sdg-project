@@ -54,6 +54,10 @@
 .ChartingSection {
   margin-top:40px;
   padding-left: 32px;
+  width: 100%;
+}
+.PageTitleTop{
+  margin-bottom: 20px;
 }
 
 /* .DropzoneArea-dropZone-202,

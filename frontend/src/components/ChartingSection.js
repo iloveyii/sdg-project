@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -11,6 +11,8 @@ import ChartPlot from '../components/ChartPlot'
 import CustomSelect from '../components/CustomSelect';
 
 import {Grid, Button} from "@material-ui/core";
+
+import Scatter from '../charts/ScatterPlot';
 
 const useStyles = makeStyles(theme => ({
     heading: {
@@ -33,16 +35,19 @@ const useStyles = makeStyles(theme => ({
 export default function DetailedExpansionPanel() {
     const classes = useStyles();
 
-    const [expanded, setExpanded] = React.useState(false);//React.useState(false);
-    const [xval, setXval] = React.useState("");
-    const [yval, setYval] = React.useState("");
-    const [transformation, setTransformation] = React.useState("");
-    const [graphTitle, setGraphTitle] = React.useState("Choose Columns & Transformation Function");
-    const [selectedFcs, setSelectedFcs] = React.useState(0);
-    const [allFcs, setAllFcs] = React.useState([]);
-    const [allColumns, setAllColumns] = React.useState([]);
+    const [expanded, setExpanded] = useState(false);//React.useState(false);
+    const [xval, setXval] = useState("");
+    const [yval, setYval] = useState("");
+    const [transformation, setTransformation] = useState("");
+    const [graphTitle, setGraphTitle] = useState("Choose Columns & Transformation Function");
+    const [selectedFcs, setSelectedFcs] = useState(0);
+    const [allFcs, setAllFcs] = useState([]);
+    const [allColumns, setAllColumns] = useState([]);
 
-    const [enablePlotButton, setEnablePlotButton] = React.useState(true);
+    const [enablePlotButton, setEnablePlotButton] = useState(true);
+
+    const [dataToPlot, setDataToPlot] = useState([]);
+    const [title, setTitle] = useState("here");
 
     useEffect(() => {
         loadFcsSelect();
@@ -63,6 +68,7 @@ export default function DetailedExpansionPanel() {
             if (response){
                 // console.log (response);
                 setAllFcs(response);
+                setTitle("success");
             }
         })
         .catch(err => console.error(err)) 
@@ -85,7 +91,10 @@ export default function DetailedExpansionPanel() {
         .then(response => response.json())
         .then(function(response){
             if (response){
-                console.log (response);
+                // console.log (response);
+                var output = response.map(s => ({x:s[xval], y:s[yval]}));
+                setDataToPlot(output);
+                setGraphTitle("Scatter Plot: " + xval + " Vs. " + yval);
             }
         })
         .catch(err => console.error(err)) 
@@ -95,11 +104,18 @@ export default function DetailedExpansionPanel() {
     };
 
     const populateFcsOptions = (value) => {
-        setSelectedFcs(value);
-        // console.log(value)
-        if (selectedFcs != ""){
-            loadFilters();
-        }
+        
+        setTimeout(function() {
+            console.log(value);
+
+            setSelectedFcs(value);
+            // ;
+            if (value != "" || value !== 0){
+                loadFilters();
+            }
+        }, 8000);
+       
+        console.log(selectedFcs);
         
     }
 
@@ -108,7 +124,6 @@ export default function DetailedExpansionPanel() {
         fetch(`${urlpath}/loadColumns/?fcs=${selectedFcs}`)
         .then(response => response.json())
         .then(function(response){
-            // console.log("Info has been logged in backend");
             if (response){
                 setAllColumns(response);
                 setEnablePlotButton(false);
@@ -121,10 +136,11 @@ export default function DetailedExpansionPanel() {
 
     return (
         <div className={"ChartingSection"}>
-        <Typography variant="h4" component="h4" align="left" color="primary">
-        FCS file analysis 
-        </Typography>
-        <div></div>
+        <div className="PageTitleTop">
+            <Typography variant="h4" component="h4" align="left" color="primary">
+            FCS file analysis 
+            </Typography>
+        </div>
         <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')} defaultExpanded>
         <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
@@ -134,6 +150,7 @@ export default function DetailedExpansionPanel() {
             <Typography className={classes.heading}>Select FCS file</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
+        
             <CustomSelect 
             // selValue={selValue} 
             data={allFcs} 
@@ -222,12 +239,17 @@ export default function DetailedExpansionPanel() {
             <Typography className={classes.heading}>{graphTitle}</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-            {/* <div className="Scatter"> 
-                <img src="/plot/scatter.jpg" alt="img-from-data" />
-            </div> */}
-            <ChartPlot 
+            <Grid container>
+                <Scatter 
+                dataToPlot={dataToPlot}
+                title={title}
+                xval={xval}
+                yval={yval}
+                />
+            </Grid>
+            {/* <ChartPlot 
             data={"is here"}
-            />
+            /> */}
         </ExpansionPanelDetails>
         </ExpansionPanel>
         </div>
