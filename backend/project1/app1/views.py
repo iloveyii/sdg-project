@@ -7,6 +7,8 @@ from app1.models import Model
 import json
 from django.views.decorators.csrf import csrf_exempt
 from cell.analysis import Analysis
+from django.shortcuts import render
+
 
 # Create your views here.
 @csrf_exempt
@@ -29,8 +31,12 @@ def upload(request):
 
 
 def hello(request):
-    text = """<h1>welcome to my app !</h1>"""
-    return HttpResponse(text)
+    text = """<h1>welcome to my app - hello !</h1>"""
+    context = {
+        'name': 'CELL ANALYSIS'
+    }
+    return render(request, 'index.html', context=context)
+    # return HttpResponse(text)
 
 
 def about(request):
@@ -44,6 +50,7 @@ def react(request):
 
 def welcome(request):
     return render(request, 'welcome.html')
+
 
 def analysis(request):
     data = {

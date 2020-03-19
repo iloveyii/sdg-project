@@ -7,7 +7,7 @@ from db import loadOne, loadData, saveMeta, listArrayToJson
 from pathlib import Path, PurePath
 
 import asyncio
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #Tornado won't work without this
+## asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) #Tornado won't work without this
 
 dirpath = PurePath.joinpath(Path().parent.absolute(),'data/raw/')
 
@@ -21,6 +21,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_status(204)
         self.finish()
 
+
 class MainHandler(BaseHandler):
     def get(self):
         self.render("index.html")
@@ -28,11 +29,16 @@ class MainHandler(BaseHandler):
     def post(self): #If exists, doesn't overwrite
         # print("on my way") 
         # print(self.get_argument("location"))
-        files = self.request.files["file"]
+
+        # Save to Mongo
+        # id = saveFcs(file)
+        files = self.request.files["imgFile"]
+
         for f in files:
             fh = open(f"{dirpath}/{f.filename}", "wb") #wb is write in binary to accept any file format
             fh.write(f.body)
             fh.close()
+
             
             colNames = getColumnNames(f.filename)
             # print(colNames)
@@ -41,6 +47,7 @@ class MainHandler(BaseHandler):
             saveResponse = saveMeta(self.get_argument("location"), self.get_argument("category"), self.get_argument("dateTime"), "000", f.filename, colNames)
 
         self.write({"status":"success", "message":"saved"})
+
 
 class PlotGraphHandler(BaseHandler):
     def get(self):
@@ -82,6 +89,7 @@ class GetColumnsHandler(BaseHandler):
         channels = listArrayToJson(results) 
         self.write(channels)
 
+
 if (__name__ == "__main__"):
     app = tornado.web.Application([
         ("/", MainHandler),
@@ -90,8 +98,6 @@ if (__name__ == "__main__"):
         ("/plotGraph/", PlotGraphHandler),
         ("/loadColumns/", GetColumnsHandler)
     ])
-
-
 
     port = 8000
     app.listen(port)
