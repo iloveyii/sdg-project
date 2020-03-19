@@ -27,16 +27,12 @@ def upload(request):
         return HttpResponse(json_str)
 
     else:
-        return HttpResponse('Not post')
-
-
-def hello(request):
-    text = """<h1>welcome to my app - hello !</h1>"""
-    context = {
-        'name': 'CELL ANALYSIS'
-    }
-    return render(request, 'index.html', context=context)
-    # return HttpResponse(text)
+        text = """<h1>welcome to my app - hello !</h1>"""
+        context = {
+            'name': 'CELL ANALYSIS'
+        }
+        return render(request, 'upload.html', context=context)
+        # return HttpResponse(text)
 
 
 def about(request):

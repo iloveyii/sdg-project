@@ -24,8 +24,8 @@ import numpy as np
 from pandas import read_csv
     
 def read_data(): 
-    datadir = '/home/dave/codes/python/FlowCytometryTools-master/data/raw/'
-    datafile = datadir + 'BCK_16_May_11_33.fcs'   #'sandysample.fcs'
+    datadir = '/home/alex/projects/sustainable_projects/sdg-project/frontend/_bc/MachineLearning/data/raw/'
+    datafile = datadir + 'A1_24h Noc200.fcs'   #'sandysample.fcs'
     from FlowCytometryTools import FCMeasurement
     testsample = FCMeasurement(ID='Test Sample', datafile=datafile)
     return testsample

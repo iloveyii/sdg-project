@@ -22,12 +22,15 @@ from django.http import HttpResponse
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.conf import settings
+from django.shortcuts import render
 
 
 
 def hello(request):
-    text = """<h1>welcome to my app !</h1>"""
-    return HttpResponse(text)
+    context = {
+        'name': 'CELL ANALYSIS'
+    }
+    return render(request, 'index.html', context=context)
 
 
 urlpatterns = [
