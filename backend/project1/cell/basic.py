@@ -19,7 +19,7 @@ class Basic:
         self.tsample = FCMeasurement(ID='Test Sample', datafile=self.datafile)
         self.tsample = self.tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500)
 
-    def plot_columns(self,col1):
+    def plot_columns(self, col1):
         self.tsample.plot(col1, bins=100, alpha=0.9, color='green')
 
     def get_channel_names(self):
