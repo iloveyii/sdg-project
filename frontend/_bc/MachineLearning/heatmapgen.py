@@ -25,7 +25,14 @@ import os
 import pandas as pd
 import numpy as np
 from pandas import read_csv
-   
+
+from pathlib import Path, PurePath
+
+dirpath = Path().parent.absolute()
+
+rawdatadir = PurePath.joinpath(dirpath,'data/transformed/')
+heatmapdatadir = PurePath.joinpath(dirpath,'data/heatmap/')
+gateddatadir = PurePath.joinpath(dirpath,'data/gated/')
 ####################################################    
 """
 This function saves the heatmap (frequency count) and the gated output for further processing
@@ -52,9 +59,9 @@ Used local vaiables    =
 def save_heatmap_gated_data(outfile, datatype, xbin, ybin, dataf):
     print('Now Saving ', outfile, "...") 
     if (datatype == 1):
-        filename = heatmapdatadir + outfile + "-hm.csv"        
+        filename = PurePath.joinpath(heatmapdatadir, (outfile + "-hm.csv"))        
     else:
-        filename = gateddatadir + outfile + "-gate.csv"
+        filename = PurePath.joinpath(gateddatadir, (outfile + "-gate.csv"))
 
     fn = open(filename,'w')
     for i in range(xbin):
@@ -81,7 +88,7 @@ Used local variables    =
     df      = data frame to return the content to the caller
 """
 def read_data(filename): 
-    datafile = rawdatadir + filename               #'transformdata.csv'
+    datafile = PurePath.joinpath(rawdatadir, filename)              #'transformdata.csv'
     df = pd.read_csv(datafile)                      #, header=None
     print("\nRead file ", filename, "....")
     return df

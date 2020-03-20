@@ -14,7 +14,6 @@ transformeddatadir = PurePath.joinpath(dirpath,'data/transformed/')
 
     
 def save_data_file(df, outfile):
-
     filename = PurePath.joinpath(transformeddatadir, outfile)
     fn = open(filename,'w')
     xstr = str('seq') + "," + str('xcol') + ", " + str('ycol') + "\n"
@@ -30,8 +29,7 @@ def save_data_file(df, outfile):
 
     
 def read_data(filename): 
-    datafile = PurePath.joinpath(rawdatadir, filename)    #'sandysample.fcs'
-#    from FlowCytometryTools import FCMeasurement
+    datafile = PurePath.joinpath(rawdatadir, filename) 
     df = FCMeasurement(ID='Test Sample', datafile=datafile)
     return df
 

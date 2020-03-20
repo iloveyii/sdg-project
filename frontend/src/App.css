@@ -66,7 +66,7 @@ div[class^='DropzoneArea-dropZone-'], div[class*=' DropzoneArea-dropZone-'] {
   border-radius: 4px;
 }
 
-.MuiButton-containded {
+.MuiButton-contained {
   height: 60px;
 }
 .chart-placeholder {

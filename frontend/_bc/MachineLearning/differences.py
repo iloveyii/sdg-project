@@ -16,13 +16,19 @@ This code calculates the difference between gated samples according to the follo
 The number of files is N(N-1)/2 where N is the number of samples in the directory
 """
 
-rawdatadir = '/home/dave/codes/python/FlowCytometryTools-master/data/gated/'  #input files
-diffdatadir = '/home/dave/codes/python/FlowCytometryTools-master/data/diff/'  #output files
+#rawdatadir = '/home/dave/codes/python/FlowCytometryTools-master/data/gated/'  #input files
 
 import os  
 import pandas as pd 
 import numpy as np
 from pandas import read_csv
+
+from pathlib import Path, PurePath
+
+dirpath = Path().parent.absolute()
+
+rawdatadir = PurePath.joinpath(dirpath,'data/gated/')
+diffdatadir = PurePath.joinpath(dirpath,'data/gated/')
 
 ####################################################
 """
@@ -44,7 +50,7 @@ Used local vaiables    =
 
 def save_diff_data(outfile, dataf, xbin, ybin):
     print('Now Saving ', outfile, "...") 
-    filename = diffdatadir + outfile + "-diff.csv"        
+    filename = PurePath.joinpath(diffdatadir, (outfile + "-diff.csv"))      
 
     fn = open(filename,'w')
     for i in range(xbin):
@@ -72,7 +78,7 @@ Used local variables    =
 """    
 def read_data(filename): 
     print("Reading file ", filename, "....")
-    datafile = rawdatadir + filename               #gateddata.csv'
+    datafile = PurePath.joinpath(rawdatadir, filename)   #gateddata.csv'
     df = pd.read_csv(datafile, header=None)      #, index_col=0)
     return df
 
@@ -133,7 +139,7 @@ def get_and_save_diff(sample1, sample2):
        for j in range(numcols):
             diffArray[i][j] = abs(dataxy1[j] - dataxy2[j])
             
-    filename = getfileno(sample1) + "-" + getfileno(sample2)
+    filename = get_file_no(sample1) + "-" + get_file_no(sample2)
     save_diff_data(filename, diffArray, numrows, numcols)
 
 ####################################################    
