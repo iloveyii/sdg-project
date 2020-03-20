@@ -135,7 +135,6 @@ class SaveUserData(BaseHandler):
         values.append(True)
 
         results = saveEntry(sql, values)
-        print(results)
         response = {"status":False}
         if(results):
             response["status"] = True

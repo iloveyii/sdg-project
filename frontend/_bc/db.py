@@ -26,8 +26,6 @@ def loadData(query):
 
 def loadOne(query, values, formatJson):
     """ Query a table """
-    # qry = query % values
-    # print(qry)
     conn = None
     try:
         params = config()
@@ -100,16 +98,10 @@ def saveEntry(sql, values):
 
 def listArrayToJson(listIn):
     x = ''.join(listIn)
-    # print (x)
-    
-    print(x.split(','))
-
     data=[]
     for i in x.split(','): 
         item = {"id":i,"name":i}
         data.append(item)
-        
-    # return json.dumps(data)
     return data
 
 
