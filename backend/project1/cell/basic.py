@@ -7,9 +7,12 @@ from pylab import *
 
 class Basic:
     def __init__(self):
-        # data directory path
-        datadir = os.path.join(FlowCytometryTools.__path__[0], 'tests', 'data', 'Plate01')
+        # data directory path - please uncomment the following line if you are using Ubuntu
+        # datadir = os.path.join(FlowCytometryTools.__path__[0], 'tests', 'data', 'Plate01')
+        datadir = os.path.dirname(os.path.realpath(__file__)) + '/data/'
         self.datafile = os.path.join(datadir, 'RFP_Well_A3.fcs')
+        print(self.datafile)
+        self.tsample = False
         self.read_data()
 
     def read_data(self):
@@ -23,7 +26,4 @@ class Basic:
         return self.tsample.channel_names
 
 
-# TEST RUN
-basic = Basic()
-basic.plot_columns('V2-A')
-print(basic.get_channel_names())
+

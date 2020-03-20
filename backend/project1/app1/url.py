@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     url('about', views.about, name='about'),
+    url('basic', views.basic, name='basic'),
     url('react', views.react, name='react'),
     url('analysis', views.analysis, name='analysis'),
     url('plot', views.get_plot, name='plot'),
