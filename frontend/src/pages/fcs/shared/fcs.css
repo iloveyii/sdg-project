@@ -1,0 +1,30 @@
+.App-link {
+    color: #61dafb;
+}
+
+.Scatter img{
+    width: 100%;
+    max-width: 100%;
+}
+
+.ChartingSection {
+    margin-top:40px;
+    padding-left: 32px;
+    width: 100%;
+}
+.PageTitleTop{
+    margin-bottom: 20px;
+}
+
+/* .DropzoneArea-dropZone-202,
+.DropzoneArea-dropZone-199 { */
+div[class^='DropzoneArea-dropZone-'], div[class*=' DropzoneArea-dropZone-'] {
+    border-radius: 4px;
+}
+
+.MuiButton-contained {
+    height: 60px;
+}
+.chart-placeholder {
+    padding-top: 20%;
+}

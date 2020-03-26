@@ -14,7 +14,6 @@ transformeddatadir = PurePath.joinpath(dirpath,'data/transformed/')
 
     
 def save_data_file(df, outfile):
-
     filename = PurePath.joinpath(transformeddatadir, outfile)
     fn = open(filename,'w')
     xstr = str('seq') + "," + str('xcol') + ", " + str('ycol') + "\n"
@@ -30,8 +29,7 @@ def save_data_file(df, outfile):
 
     
 def read_data(filename): 
-    datafile = PurePath.joinpath(rawdatadir, filename)    #'sandysample.fcs'
-#    from FlowCytometryTools import FCMeasurement
+    datafile = PurePath.joinpath(rawdatadir, filename) 
     df = FCMeasurement(ID='Test Sample', datafile=datafile)
     return df
 
@@ -74,36 +72,42 @@ def implementMain():
     """
 def cleanTupleString(strings):
     newString = ''.join(json.dumps(strings))
-    return newString.replace(" ","")
+
+    newString = newString.replace(" ","")
+    newString = newString.replace("[","")
+    newString = newString.replace("]","")
+    newString = newString.replace('"','')
+
+    return newString
     
 def getColumnNames(filename):
-    print("Reading .fcs file ", filename)
-#    shortfilename = filename.split('.')[0]
+    print("Reading columns from .fcs file ", filename)
     sample = read_data(filename)
     channelnames = cleanTupleString(sample.channel_names)
-    return channelnames, sample.channel_names
+    return channelnames
 
 def getPlotData(channelx, channely, transformation, filename):
-    print("Reading .fcs file ", filename)
+    print("Reading selected columns from .fcs file ", filename)
     shortfilename = filename.split('.')[0]
     sample = read_data(filename)
     
     data1 = sample.data[channelx]
     data2 = sample.data[channely]
-    data3= pd.concat([data1,data2], axis=1)
+    data3 = pd.concat([data1,data2], axis=1)
     
     outfile = shortfilename + 'out.csv'
     save_data_file(data3,outfile)
-    print('Raw Data Saved...', outfile)
+    print('Plot Data Saved...', outfile)
 #    print(channelnames)
     
-    return data1, data2, data3
+    return data1, data2, data3.to_json(orient='records')
 
 
 
     
 #implementMain()
-#x, sampl = getColumnNames("A06 Ut SY.FCS")
+#sampl = getColumnNames("A06 Ut SY.FCS")
 
-data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
- 
+#data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
+#jsn = data3.to_json(orient='records')
+# 

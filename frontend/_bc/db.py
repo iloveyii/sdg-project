@@ -24,14 +24,17 @@ def loadData(query):
             conn.close()
 
 
-def loadOne(query, id):
+def loadOne(query, values, formatJson):
     """ Query a table """
     conn = None
     try:
         params = config()
         conn = psycopg2.connect(**params)
-        cur = conn.cursor()
-        cur.execute(query, (id,))
+        if (formatJson):
+            cur = conn.cursor(cursor_factory=RealDictCursor)
+        else: 
+            cur = conn.cursor()
+        cur.execute(query, values)
         rows = cur.fetchone()
         return rows
     except (Exception, psycopg2.DatabaseError) as error:
@@ -70,16 +73,35 @@ def saveMeta(location, category, dateTime,fileName,uploadName,columnNames):
  
     return vendor_id
 
+def saveEntry(sql, values):
+    """ Save fcs meta """
+    conn = None
+    vendor_id = None
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute(sql, values)
+        vendor_id = cur.fetchone()[0]
+
+        conn.commit()
+        
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+ 
+    return vendor_id
+
 
 def listArrayToJson(listIn):
     x = ''.join(listIn)
-    print(x.split(','))
-
     data=[]
     for i in x.split(','): 
         item = {"id":i,"name":i}
         data.append(item)
-        
-    return json.dumps(data)
+    return data
 
 
