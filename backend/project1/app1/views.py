@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from cell.analysis import Analysis
 from django.shortcuts import render
 from cell.basic import Basic
+import ast
 
 # Create your views here.
 @csrf_exempt
@@ -38,15 +39,30 @@ def upload(request):
 def about(request):
     return render(request, 'about.html')
 
+
 def basic(request):
     # TEST RUN
     basic = Basic()
     basic.plot_columns('V2-A')
-    data = basic.get_channel_names()
+    channels = basic.get_channel_names()
+    meta = basic.get_meta()
+    data = {
+        'channel_names': channels,
+        #'meta': meta.keys()  #(meta['__header__']).decode("UTF-8")
+        'head': basic.head().to_json()
+    }
+    # print('Meta :')
+    # print(meta['__header__'])
     json_str = json.dumps(data)
     # print(json_str)
     # json_str = serializers.serialize('json', a)
     return HttpResponse(json_str)
+
+
+def binary_to_dict(the_binary):
+    jsn = ''.join(chr(int(x, 2)) for x in the_binary.split())
+    d = json.loads(jsn)
+    return d
 
 def react(request):
     print("Inside react")

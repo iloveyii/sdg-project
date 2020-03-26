@@ -3,6 +3,7 @@ import os
 import FlowCytometryTools
 from FlowCytometryTools import FCMeasurement, ThresholdGate, PolyGate
 from pylab import *
+import json
 
 
 class Basic:
@@ -11,7 +12,7 @@ class Basic:
         # datadir = os.path.join(FlowCytometryTools.__path__[0], 'tests', 'data', 'Plate01')
         datadir = os.path.dirname(os.path.realpath(__file__)) + '/data/'
         self.datafile = os.path.join(datadir, 'RFP_Well_A3.fcs')
-        print(self.datafile)
+        print('Path to data file is : ' + self.datafile)
         self.tsample = False
         self.read_data()
 
@@ -25,5 +26,26 @@ class Basic:
     def get_channel_names(self):
         return self.tsample.channel_names
 
+    def get_meta(self):
+        return self.tsample.meta
+
+    def head(self):
+        channelx = "HDR-T"
+        channely = "FSC-A"
+
+        return (self.tsample.data[[channelx, channely]][:-10]).head(10)
+
+    def medians(self):
+        channelx = "HDR-T"
+        channely = "FSC-A"
+
+        print((self.tsample.data[[channelx, channely]][:-10]).head(10))
+        print(channelx, channely)
 
 
+# basic = Basic()
+# basic.plot_columns('V2-A')
+# channels = basic.get_channel_names()
+# meta = basic.get_meta()
+# print(json.dumps(meta.keys()))
+# print(basic.head())
