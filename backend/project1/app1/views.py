@@ -6,14 +6,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 import ast
 import json
-
+import re
 from app1.models import Model
 from cell.analysis import Analysis
 from cell.basic import Basic
 from cell.transformed import Transformed
 from cell.hmap import Hmap
 from cell.gated import Gated
-from pprint import pprint
+from django.core.files.storage import FileSystemStorage
 
 FILE_FIELD_NAME = 'fcs_file'
 
@@ -26,11 +26,16 @@ def upload(request):
         print('FILE is POSTED', upload_file)
         print(upload_file.name)
         print(upload_file.size)
-        #analyze = Analysis(upload_file.name)
+        fs = FileSystemStorage()
+        filename_formatted = s = re.sub('[^0-9a-zA-Z.]+', '_', upload_file.name.lower())
+        filename = fs.save(filename_formatted, upload_file)
+        uploaded_file_url = fs.url(filename)
+        # analyze = Analysis(upload_file.name)
         data = {
             'name': upload_file.name,
             'size': upload_file.size,
-            #'analysis': analyze.do()
+            'file_url': uploaded_file_url,
+            # 'analysis': analyze.do()
         }
         json_str = json.dumps(data)
         return HttpResponse(json_str)
