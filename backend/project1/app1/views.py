@@ -13,19 +13,24 @@ from cell.basic import Basic
 from cell.transformed import Transformed
 from cell.hmap import Hmap
 from cell.gated import Gated
+from pprint import pprint
+
+FILE_FIELD_NAME = 'fcs_file'
+
 
 # Create your views here.
 @csrf_exempt
 def upload(request):
-    if request.method == 'POST':
-        upload_file = request.FILES['fcs']
+    if request.method == 'POST' and request.FILES[FILE_FIELD_NAME]:
+        upload_file = request.FILES[FILE_FIELD_NAME]
+        print('FILE is POSTED', upload_file)
         print(upload_file.name)
         print(upload_file.size)
-        analyze = Analysis(upload_file.name)
+        #analyze = Analysis(upload_file.name)
         data = {
             'name': upload_file.name,
             'size': upload_file.size,
-            'analysis': analyze.do()
+            #'analysis': analyze.do()
         }
         json_str = json.dumps(data)
         return HttpResponse(json_str)
@@ -41,6 +46,7 @@ def upload(request):
 
 def about(request):
     return render(request, 'about.html')
+
 
 def binary_to_dict(the_binary):
     jsn = ''.join(chr(int(x, 2)) for x in the_binary.split())
@@ -83,13 +89,13 @@ def get_plot(request):
 def basic(request):
     # TEST RUN
     basic = Basic()
-    #basic.plot_columns('V2-A')
+    # basic.plot_columns('V2-A')
     channels = basic.get_channel_names()
     meta = basic.get_meta()
     data = {
         'channel_names': channels,
-        #'meta': meta.keys()  #(meta['__header__']).decode("UTF-8")
-        #'head': basic.head().to_json()
+        # 'meta': meta.keys()  #(meta['__header__']).decode("UTF-8")
+        # 'head': basic.head().to_json()
     }
     # print('Meta :')
     # print(meta['__header__'])
@@ -115,4 +121,3 @@ def gated(request):
     gated = Gated()
     df = gated.generate_gated()
     return HttpResponse(df.to_json())
-
