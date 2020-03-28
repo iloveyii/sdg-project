@@ -52,7 +52,8 @@ class Hmap:
 
         # save_heatmap_gated_data(filename, 1, xbin, ybin, binArray)  # save heatmap data
         self.__save_heatmap_data(xbin, ybin, binArray)  # save gated data
-        return True
+        df = pd.read_csv(self.csv_file)  # , header=None
+        return df
 
     def __save_heatmap_data(self, xbin, ybin, df):
         try:
