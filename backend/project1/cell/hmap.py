@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 import os
-import FlowCytometryTools
-from FlowCytometryTools import FCMeasurement, ThresholdGate, PolyGate
 from pylab import *
-import json
-from pathlib import Path, PurePath
 import pandas as pd
-from transformed import Transformed
+from .transformed import Transformed
 
 
 HEAT_MAP_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/heatmap/'
