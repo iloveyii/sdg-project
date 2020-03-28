@@ -9,13 +9,9 @@ import pandas as pd
 from transformed import Transformed
 
 
-RAW_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/raw/'
-TRANSFORMED_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/transformed/'
 HEAT_MAP_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/heatmap/'
-GATED_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/gated/'
 
 BIN_WIDTH = 100
-FCS_FILE = 'a06_ut_sy.fcs'
 CSV_FILE = 'a06_ut_sy.csv'
 
 
@@ -59,34 +55,10 @@ class Hmap:
             binArray[xval][yval] = 1 + binArray[xval][yval]
 
         # save_heatmap_gated_data(filename, 1, xbin, ybin, binArray)  # save heatmap data
-        self.__save_heatmap_gated_data(xbin, ybin, binArray)  # save gated data
+        self.__save_heatmap_data(xbin, ybin, binArray)  # save gated data
         return True
 
-        # The gate coordinates belw are hard coded for a rectangular gate.
-        # The front nd web app should simplify this step
-        x1 = 5
-        y1 = 5
-        x2 = 12
-        y2 = 12
-
-        """
-        Generate gated output from the heatmap
-        Gate coordinates: (x1, y1) - (x2, y2)
-        """
-        gateddata = self.__gating(x1, x2, y1, y2, binArray)
-        print("Gating Complete for: ", ". Now saving...")
-        self.__save_heatmap_gated_data(x2 - x1, y2 - y1, gateddata)  # save gated data
-
-    def __gating(self, x1, x2, y1, y2, df):
-        gated = np.zeros((1 + x2 - x1, 1 + y2 - y1), dtype=np.uint16)
-
-        for i in range(0, x2 - x1):
-            for j in range(0, y2 - y1):
-                gated[i][j] = df[i + x1][j + y1]
-
-        return gated
-
-    def __save_heatmap_gated_data(self, xbin, ybin, df):
+    def __save_heatmap_data(self, xbin, ybin, df):
         try:
             if not os.path.exists(HEAT_MAP_DIR):
                 os.mkdir(HEAT_MAP_DIR)

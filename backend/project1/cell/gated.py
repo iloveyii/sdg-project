@@ -9,23 +9,19 @@ import pandas as pd
 from transformed import Transformed
 
 
-RAW_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/raw/'
-TRANSFORMED_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/transformed/'
-HEAT_MAP_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/heatmap/'
 GATED_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/gated/'
 
 BIN_WIDTH = 100
-FCS_FILE = 'a06_ut_sy.fcs'
 CSV_FILE = 'a06_ut_sy.csv'
 
 
-class Hmap:
+class Gated:
     def __init__(self):
         self.csv_file = os.path.join(GATED_DIR, CSV_FILE)
         transformed = Transformed()
         self.df = transformed.transform_data()
 
-    def __hmap_file_exists(self):
+    def __gated_file_exists(self):
         if os.path.exists(self.csv_file):
             return True
 
@@ -33,9 +29,9 @@ class Hmap:
         return False
 
 
-    def generate_hmap(self):
+    def generate_gated(self):
         # No need to generate again
-        if self.__hmap_file_exists():
+        if self.__gated_file_exists():
             print('Gated file already exists')
             df = pd.read_csv(self.csv_file)  # , header=None
             return df
@@ -57,8 +53,6 @@ class Hmap:
             xval = int(dataxy[1] / BIN_WIDTH)
             yval = int(dataxy[2] / BIN_WIDTH)
             binArray[xval][yval] = 1 + binArray[xval][yval]
-
-        # save_heatmap_gated_data(filename, 1, xbin, ybin, binArray)  # save heatmap data
 
         # The gate coordinates belw are hard coded for a rectangular gate.
         # The front nd web app should simplify this step
@@ -104,5 +98,5 @@ class Hmap:
         print('Heatmap Data Saved in ', self.csv_file)
 
 
-hmap = Hmap()
-hmap.generate_hmap()
+gated = Gated()
+gated.generate_gated()
