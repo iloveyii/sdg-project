@@ -60,7 +60,9 @@ class Transformed:
 
         self.__df_values_to_transformed_csv(data3)
         print('Transformed Data Saved...', CSV_FILE)
-        return data3
+        print('TYPE: ', type( data3))
+        df = pd.read_csv(self.csv_file)  # , header=None
+        return df
 
     def __transform_file_exists(self):
         if os.path.exists(self.csv_file):
@@ -68,6 +70,4 @@ class Transformed:
         return False
 
 
-transformed = Transformed()
-df = transformed.transform_data()
-# print(df.head().to_json())
+
