@@ -70,6 +70,7 @@ class Transformed:
         return False
 
 
+# If script ran from terminal
 if __name__ == '__main__':
     tr = Transformed()
     tr.transform_data()
