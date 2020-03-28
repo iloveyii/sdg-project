@@ -27,7 +27,7 @@ def upload(request):
         print(upload_file.name)
         print(upload_file.size)
         fs = FileSystemStorage()
-        filename_formatted = s = re.sub('[^0-9a-zA-Z.]+', '_', upload_file.name.lower())
+        filename_formatted = re.sub('[^0-9a-zA-Z.]+', '_', 'fcs_file.fcs')
         filename = fs.save(filename_formatted, upload_file)
         uploaded_file_url = fs.url(filename)
         # analyze = Analysis(upload_file.name)

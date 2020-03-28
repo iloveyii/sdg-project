@@ -8,7 +8,7 @@ from .transformed import Transformed
 HEAT_MAP_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/heatmap/'
 
 BIN_WIDTH = 100
-CSV_FILE = 'a06_ut_sy.csv'
+CSV_FILE = 'fcs_file.csv'
 
 
 class Hmap:

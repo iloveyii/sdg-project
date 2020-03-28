@@ -7,8 +7,8 @@ import pandas as pd
 RAW_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/raw/'
 TRANSFORMED_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/transformed/'
 
-FCS_FILE = 'a06_ut_sy.fcs'
-CSV_FILE = 'a06_ut_sy.csv'
+FCS_FILE = 'fcs_file.fcs'
+CSV_FILE = 'fcs_file.csv'
 
 
 class Transformed:
@@ -18,8 +18,18 @@ class Transformed:
 
     def __read_fcs_file_to_fcm(self):
         fcs_file = os.path.join(RAW_DIR, FCS_FILE)
+        if not os.path.exists(TRANSFORMED_DIR):
+            os.mkdir(TRANSFORMED_DIR)
         self.csv_file = os.path.join(TRANSFORMED_DIR, CSV_FILE)
+        if not os.path.exists(fcs_file):
+            return self.__save_empty_csv_file()
         self.sample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
+
+    def __save_empty_csv_file(self):
+        file_handle = open(self.csv_file, 'w')
+        xstr = "{},{},{}\n".format(str('seq'), str('xcol'), str('ycol'))
+        file_handle.writelines(xstr)
+        file_handle.close()
 
     # Converts df to CSV file and save to heatmap dir
     def __df_values_to_transformed_csv(self, df):

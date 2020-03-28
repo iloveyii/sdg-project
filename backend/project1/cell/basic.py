@@ -5,7 +5,7 @@ from pylab import *
 import json
 
 RAW_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/raw/'
-FCS_FILE = 'RFP_Well_A3.fcs'
+FCS_FILE = 'fcs_file.fcs'
 
 
 class Basic:

@@ -8,7 +8,7 @@ from .transformed import Transformed
 GATED_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/gated/'
 
 BIN_WIDTH = 100
-CSV_FILE = 'a06_ut_sy.csv'
+CSV_FILE = 'fcs_file.csv'
 
 
 class Gated:
@@ -64,6 +64,8 @@ class Gated:
         gateddata = self.__gating(x1, x2, y1, y2, binArray)
         print("Gating Complete for: ", ". Now saving...")
         self.__save_heatmap_gated_data(x2 - x1, y2 - y1, gateddata)  # save gated data
+        df = pd.read_csv(self.csv_file)  # , header=None
+        return df
 
     def __gating(self, x1, x2, y1, y2, df):
         gated = np.zeros((1 + x2 - x1, 1 + y2 - y1), dtype=np.uint16)
