@@ -78,5 +78,8 @@ class Hmap:
         print('Heatmap Data Saved in ', self.csv_file)
 
 
-hmap = Hmap()
-hmap.generate_hmap()
+if __name__ == '__main__':
+    hmap = Hmap()
+    hmap.generate_hmap()
+    print(os.path.basename(__file__))
+    print(__name__)

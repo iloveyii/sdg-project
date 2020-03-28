@@ -98,5 +98,9 @@ class Gated:
         print('Heatmap Data Saved in ', self.csv_file)
 
 
-gated = Gated()
-gated.generate_gated()
+if __name__ == '__main__':
+    gated = Gated()
+    gated.generate_gated()
+    print(os.path.basename(__file__))
+    print(__name__)
+

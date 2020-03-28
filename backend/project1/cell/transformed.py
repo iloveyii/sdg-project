@@ -70,4 +70,9 @@ class Transformed:
         return False
 
 
+if __name__ == '__main__':
+    tr = Transformed()
+    tr.transform_data()
+    print(os.path.basename(__file__))
+    print(__name__)
 
