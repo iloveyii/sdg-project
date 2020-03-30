@@ -12,7 +12,9 @@ CSV_FILE = 'fcs_file.csv'
 
 
 class Transformed:
-    def __init__(self):
+    def __init__(self, filename=FCS_FILE):
+        global FCS_FILE
+        FCS_FILE = filename
         self.sample = False
         self.__read_fcs_file_to_fcm()
 
@@ -67,7 +69,7 @@ class Transformed:
 
         self.__df_values_to_transformed_csv(data3)
         print('Transformed Data Saved...', CSV_FILE)
-        print('TYPE: ', type( data3))
+        print('TYPE: ', type(data3))
         df = pd.read_csv(self.csv_file)  # , header=None
         return df
 
@@ -76,6 +78,13 @@ class Transformed:
             return True
         return False
 
+    def get_plot_data(self, channelx, channely, transformation, filename):
+        print("GET PLOT DATA :- Reading selected columns from .fcs file ", filename)
+        data1 = self.sample.data[channelx]
+        data2 = self.sample.data[channely]
+        data3 = pd.concat([data1, data2], axis=1)
+        return data3
+
 
 # If script ran from terminal
 if __name__ == '__main__':
@@ -83,4 +92,5 @@ if __name__ == '__main__':
     tr.transform_data()
     print(os.path.basename(__file__))
     print(__name__)
-
+    df = tr.get_plot_data('FSC-A', 'SSC-A', 'hlog', 'fname.tst')
+    print(df.values)

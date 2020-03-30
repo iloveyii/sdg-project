@@ -84,10 +84,19 @@ def analysis(request):
     return HttpResponse(json_str)
 
 
+@csrf_exempt
 def get_plot(request):
-    a = Analysis('testfilename')
-    img = a.snapshot()
-    return HttpResponse(img, mimetype="image/png")
+    tr = Transformed()
+    x = 'FSC-A'
+    y = 'SSC-A'
+    df = tr.get_plot_data(x,y, 'hlog', 'fname.tst')
+    labels = df[x].to_list()
+    series = df[y].to_list()
+    data = [
+        labels, series
+    ]
+    json_str = json.dumps(data)
+    return HttpResponse(json_str)
 
 
 # ANALYSIS METHODS

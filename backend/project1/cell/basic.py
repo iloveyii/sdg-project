@@ -17,7 +17,7 @@ class Basic:
 
     def read_data(self):
         self.sample = FCMeasurement(ID='Test Sample', datafile=self.datafile)
-        self.sample = self.sample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500)
+        self.sample = self.sample.transform('hlog', b=500)
 
     def plot_columns(self, col1):
         self.sample.plot(col1, bins=100, alpha=0.9, color='green')
