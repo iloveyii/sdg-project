@@ -78,8 +78,32 @@ class MachineLearning:
 
         table(ax, ex2.data.head(), loc='center')  # where df is your data frame
         png_file = os.path.join(STATIC_DIR + '/img/', 'gausian_table.png')
-
         savefig(png_file)
+
+        subplots(clear=True)
+        g = flow.GaussianMixtureOp(name="Gauss",
+                                   channels=["V2-A"],
+                                   scale={"V2-A": "logicle"},
+                                   num_components=2,
+                                   posteriors=True)
+
+        g.estimate(ex)
+        ex2 = g.apply(ex)
+        g.default_view().plot(ex2)
+        png_file = os.path.join(STATIC_DIR + '/img/', 'gausian_posterior.png')
+        savefig(png_file)
+
+    def __df_to_png(self, df, file_path):
+        # Clear prev sub plot
+        subplots(clear=True)
+        matplotlib.rc('figure', dpi=80)
+
+        ax = plt.subplot(111, frame_on=False)  # no visible frame
+        ax.xaxis.set_visible(False)  # hide the x axis
+        ax.yaxis.set_visible(False)  # hide the y axis
+
+        table(ax, df, loc='center')  # where df is your data frame
+        savefig(file_path)
 
     def __read_fcs_file_to_fcm(self):
         pass
