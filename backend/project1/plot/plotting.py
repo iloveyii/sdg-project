@@ -4,6 +4,7 @@ from pylab import *
 import pandas as pd
 import FlowCytometryTools
 from FlowCytometryTools import FCMeasurement
+from FlowCytometryTools import ThresholdGate
 
 RAW_DIR = ''
 GATED_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/gated/'
@@ -32,18 +33,61 @@ class Plotting:
         tsample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
         self.sample = tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500.0)
 
-    def plot(self):
+    def histogram(self):
         # Plot Histogram
         self.sample.plot('Y2-A', bins=100, alpha=0.9, color='green')
         png_file = os.path.join(STATIC_DIR + '/img/', 'histogram.png')
         print(png_file)
+        grid(True)
         savefig(png_file)
-        show()
+        # show()
+
+    def histogram2d(self):
+        # Plot Histogram 2D
+        self.sample.plot(['Y2-A', 'B1-A'], bins=100, alpha=0.9, cmap=cm.hot)
+        png_file = os.path.join(STATIC_DIR + '/img/', 'histogram2d.png')
+        print(png_file)
+        grid(True)
+        savefig(png_file)
+
+    def scatter(self):
+        # Plot scatter
+        self.sample.plot(['Y2-A', 'B1-A'], kind='scatter', alpha=0.6, color='gray')
+        png_file = os.path.join(STATIC_DIR + '/img/', 'scatter.png')
+        print(png_file)
+        grid(True)
+        savefig(png_file)
+
+    def threshold_gate(self):
+        # Create a threshold gates
+        y2_gate = ThresholdGate(1000.0, 'Y2-A', region='above')
+
+        # Gate
+        gated_sample = self.sample.gate(y2_gate)
+
+        # Plot
+        ax1 = subplot(121);
+        self.sample.plot('Y2-A', gates=[y2_gate], bins=100, alpha=0.9)
+        y2_gate.plot(color='k', linewidth=4, linestyle='-')
+        title('Original Sample')
+
+        ax2 = subplot(122, sharey=ax1, sharex=ax1);
+        gated_sample.plot('Y2-A', gates=[y2_gate], bins=100, color='y', alpha=0.9);
+        title('Gated Sample');
+
+        tight_layout()
+        png_file = os.path.join(STATIC_DIR + '/img/', 'threshold_gate.png')
+        print(png_file)
+        grid(True)
+        savefig(png_file)
 
 
 # If script ran from terminal
 if __name__ == '__main__':
     plotting = Plotting()
-    plotting.plot()
+    plotting.histogram()
+    plotting.histogram2d()
+    plotting.scatter()
+    plotting.threshold_gate()
     print(os.path.basename(__file__))
     print(__name__)
