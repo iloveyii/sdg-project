@@ -157,3 +157,21 @@ web_1  | Starting development server at http://0.0.0.0:8000/
 web_1  | Quit the server with CONTROL-C.
 
 ```
+
+### Docker commands
+  * stop docker containers from another terminal tab
+  ```
+sudo docker-compose down
+```
+   * List running containers
+   ```
+sudo docker container ls
+```
+   * List images available on your system
+   ```
+sudo docker images
+```
+   * Remove image
+   ```
+sudo docker rmi <image_id>
+```
