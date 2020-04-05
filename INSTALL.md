@@ -175,3 +175,12 @@ sudo docker images
    ```
 sudo docker rmi <image_id>
 ```
+
+## Create Django app
+   ```
+python3.6 manage.py startapp <app_name>
+```
+Then you should add the app_name in INSTALLED_APPS in settings.py
+
+## Create migrations in Django
+   * To create a migration you need to first create a model
