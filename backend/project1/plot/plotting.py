@@ -5,6 +5,8 @@ import pandas as pd
 import FlowCytometryTools
 from FlowCytometryTools import FCMeasurement
 from FlowCytometryTools import ThresholdGate
+from FlowCytometryTools import FCPlate
+from FlowCytometryTools.core.graph import plot_heat_map
 
 RAW_DIR = ''
 GATED_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/gated/'
@@ -81,6 +83,34 @@ class Plotting:
         grid(True)
         savefig(png_file)
 
+    def plate_gated_counts(self):
+        # Plot - Counting fluorescent events¶
+        self.sample.plot(['Y2-A', 'B1-A'], kind='scatter', alpha=0.6, color='gray')
+
+        # Clear prev sub plot
+        subplots(clear=True)
+
+        # Load plate
+        plate = FCPlate.from_dir(ID='Demo Plate', path=RAW_DIR, parser='name')
+        plate = plate.transform('hlog', channels=['Y2-A', 'B1-A'], b=500.0)
+
+        # Drop empty cols / rows
+        plate = plate.dropna()
+
+        # Create a threshold gates
+        y2_gate = ThresholdGate(1000.0, 'Y2-A', region='above')
+
+        # Plot
+        plate = plate.gate(y2_gate)
+        plot_heat_map(plate.counts(), include_values=True, show_colorbar=True,
+                      cmap=cm.Oranges)
+        title('Heat map of fluorescent counts on plate')
+
+        png_file = os.path.join(STATIC_DIR + '/img/', 'plate_gated_counts.png')
+        print(png_file)
+        grid(False)
+        savefig(png_file)
+
 
 # If script ran from terminal
 if __name__ == '__main__':
@@ -89,5 +119,6 @@ if __name__ == '__main__':
     plotting.histogram2d()
     plotting.scatter()
     plotting.threshold_gate()
+    plotting.plate_gated_counts()
     print(os.path.basename(__file__))
     print(__name__)
