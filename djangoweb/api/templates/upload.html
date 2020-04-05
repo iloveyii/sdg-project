@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-md-12 order-md-0">
             <h4 class="mb-3">Upload FCS File</h4>
-            <form method="post" enctype="multipart/form-data" action="/app1/upload">
+            <form method="post" enctype="multipart/form-data" action="/api/upload">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-12 mb-3">
@@ -77,7 +77,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script>
-    const url = '/app1/basic'
+    const url = '/api/basic'
 
     function getBasicInfo() {
         return new Promise((resolve, reject) => {

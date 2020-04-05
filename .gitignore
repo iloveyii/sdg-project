@@ -1,3 +1,5 @@
 .idea
 djangoweb/api/__pycache__
 djangoweb/djangoweb/__pycache__
+djangoweb/static
+djangoweb/data
