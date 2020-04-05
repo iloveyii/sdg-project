@@ -34,3 +34,16 @@ services:
       - 8080:80
     depends_on:
       - web
+  plotting:
+    build: ./plotting
+    image: python:3-onbuild
+    command: bash -c "
+        pip install -r requirements.txt
+        && python3.6 api.py
+      "
+    volumes:
+      - ./plotting:/usr/src/app
+    ports:
+      - 8090:80
+    depends_on:
+      - web
