@@ -33,6 +33,7 @@ class Plotting:
             return False
         # Load data
         tsample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
+        self.ssample = tsample
         self.sample = tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500.0)
 
     def histogram(self):
@@ -143,6 +144,80 @@ class Plotting:
         grid(False)
         savefig(png_file)
 
+    def __custom_compensate(self, original_sample):
+        # Copy the original sample
+        new_sample = original_sample.copy()
+        new_data = new_sample.data
+        original_data = original_sample.data
+
+        # Our transformation goes here
+        new_data['Y2-A'] = original_data['Y2-A'] - 0.15 * original_data['FSC-A']
+        new_data['FSC-A'] = original_data['FSC-A'] - 0.32 * original_data['Y2-A']
+        new_data = new_data.dropna()  # Removes all NaN entries
+        new_sample.data = new_data
+        return new_sample
+
+    def compensation(self):
+        # Load data
+        sample = self.sample.transform('hlog')
+        compensated_sample = sample.apply(self.__custom_compensate)
+
+        ###
+        # To do this with a collection (a plate):
+        # compensated_plate = plate.apply(compensate, output_format='collection')
+        #
+
+        # Clear prev sub plot
+        subplots(clear=True)
+
+        # Plot
+        sample.plot(['Y2-A', 'FSC-A'], kind='scatter', color='gray', alpha=0.6, label='Original');
+        compensated_sample.plot(['Y2-A', 'FSC-A'], kind='scatter', color='green', alpha=0.6,
+                                label='Compensated');
+
+        legend(loc='best')
+        png_file = os.path.join(STATIC_DIR + '/img/', 'compensation.png')
+        print(png_file)
+        grid(True)
+        savefig(png_file)
+
+    def __transform_using_this_method(self, original_sample):
+        """ This function implements a log transformation on the data. """
+        # Copy the original sample
+        new_sample = original_sample.copy()
+        new_data = new_sample.data
+
+        # Our transformation goes here
+        new_data['Y2-A'] = log(new_data['Y2-A'])
+        new_data = new_data.dropna()  # Removes all NaN entries
+        new_sample.data = new_data
+        return new_sample
+
+    def custom_transformation(self):
+        # Load data
+        sample = self.ssample
+
+        # Transform using our own custom method
+        custom_transform_sample = sample.apply(self.__transform_using_this_method)
+
+        ###
+        # To do this with a collection (a plate):
+        # compensated_plate = plate.apply(transform_using_this_method,
+        #                   output_format='collection')
+
+        # Clear prev sub plot
+        subplots(clear=True)
+
+        # Plot
+        custom_transform_sample.plot(['Y2-A'], color='green', alpha=0.9);
+        grid(True)
+
+        title('Custom log transformation')
+        png_file = os.path.join(STATIC_DIR + '/img/', 'custom_transformation.png')
+        print(png_file)
+        grid(True)
+        savefig(png_file)
+
 
 # If script ran from terminal
 if __name__ == '__main__':
@@ -153,6 +228,8 @@ if __name__ == '__main__':
     plotting.threshold_gate()
     plotting.plate_gated_counts()
     plotting.plate_gated_median_fluorescence()
+    plotting.compensation()
+    plotting.custom_transformation()
 
     print(os.path.basename(__file__))
     print(__name__)
