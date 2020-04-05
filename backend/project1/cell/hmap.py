@@ -2,7 +2,7 @@
 import os
 from pylab import *
 import pandas as pd
-from .transformed import Transformed
+from .transformed import Transformed # Remove dot if run from cmd
 
 
 HEAT_MAP_DIR = os.path.dirname(os.path.realpath(__file__)) + '/data/heatmap/'

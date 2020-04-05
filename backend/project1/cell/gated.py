@@ -24,7 +24,6 @@ class Gated:
         print('Gated file does not exist ' + self.csv_file)
         return False
 
-
     def generate_gated(self):
         # No need to generate again
         if self.__gated_file_exists():
