@@ -111,6 +111,38 @@ class Plotting:
         grid(False)
         savefig(png_file)
 
+    def __calculate_median_Y2(self, well):
+        return well.data['Y2-A'].median()
+
+    def plate_gated_median_fluorescence(self):
+        # Load plate
+        plate = FCPlate.from_dir(ID='Demo Plate', path=RAW_DIR, parser='name')
+        plate = plate.transform('hlog', channels=['Y2-A', 'B1-A'], b=500.0)
+
+        # Clear prev sub plot
+        subplots(clear=True)
+
+        # Drop empty cols / rows
+        plate = plate.dropna()
+
+        # Create a threshold gates
+        from FlowCytometryTools import ThresholdGate
+        y2_gate = ThresholdGate(1000.0, 'Y2-A', region='above')
+
+        # Plot
+        plate = plate.gate(y2_gate)
+
+        output = plate.apply(self.__calculate_median_Y2)
+
+        plot_heat_map(output, include_values=True, show_colorbar=True,
+                      cmap=cm.Reds)
+        title('Heat map of median RFP fluorescence on plate')
+
+        png_file = os.path.join(STATIC_DIR + '/img/', 'plate_gated_median_fluorescence.png')
+        print(png_file)
+        grid(False)
+        savefig(png_file)
+
 
 # If script ran from terminal
 if __name__ == '__main__':
@@ -120,5 +152,7 @@ if __name__ == '__main__':
     plotting.scatter()
     plotting.threshold_gate()
     plotting.plate_gated_counts()
+    plotting.plate_gated_median_fluorescence()
+
     print(os.path.basename(__file__))
     print(__name__)
