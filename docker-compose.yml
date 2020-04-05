@@ -10,7 +10,10 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
   web:
     build: .
-    command: python /code/djangoweb/manage.py runserver 0.0.0.0:8000
+    command: bash -c "
+        python /code/djangoweb/manage.py runserver 0.0.0.0:8000
+        && python3.6 manage.py makemigrations api
+      "
     volumes:
       - .:/code
     ports:
