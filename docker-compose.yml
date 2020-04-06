@@ -17,6 +17,7 @@ services:
       "
     volumes:
       - .:/code
+      - ./shared:/shared
     ports:
       - 8080:8080
     depends_on:
@@ -30,6 +31,7 @@ services:
       "
     volumes:
       - ./basicanalysis:/usr/src/app
+      - ./shared:/shared
     ports:
       - 3000:3000
     depends_on:
@@ -43,6 +45,7 @@ services:
       "
     volumes:
       - ./plotting:/usr/src/app
+      - ./shared:/shared
     ports:
       - 4000:4000
     depends_on:
@@ -56,6 +59,7 @@ services:
       "
     volumes:
       - ./machinelearning:/usr/src/app
+      - ./shared:/shared
     ports:
       - 5000:5000
     depends_on:
