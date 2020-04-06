@@ -5,10 +5,10 @@ app = Flask(__name__)
 api = Api(app)
 
 
-class Product(Resource) :
+class Product(Resource):
     def get(self):
         return {
-            'products' : [
+            'products': [
                 'applen',
                 'banan',
                 'frukt',
@@ -17,7 +17,9 @@ class Product(Resource) :
                 'blommor'
             ]
         }
+
+
 api.add_resource(Product, '/')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=4000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

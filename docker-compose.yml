@@ -11,17 +11,17 @@ services:
   web:
     build: .
     command: bash -c "
-        python /code/djangoweb/manage.py runserver 0.0.0.0:8000
+        python /code/djangoweb/manage.py runserver 0.0.0.0:8080
         && python3.6 manage.py makemigrations api
         && python3.6 manage.py collectstatic
       "
     volumes:
       - .:/code
     ports:
-      - 8000:8000
+      - 8080:8080
     depends_on:
       - db
-  basic:
+  basicbasicanalysis:
     build: ./basicanalysis
     image: python:3-onbuild
     command: bash -c "
@@ -31,7 +31,7 @@ services:
     volumes:
       - ./basicanalysis:/usr/src/app
     ports:
-      - 8080:80
+      - 3000:3000
     depends_on:
       - web
   plotting:
@@ -44,6 +44,19 @@ services:
     volumes:
       - ./plotting:/usr/src/app
     ports:
-      - 8090:80
+      - 4000:4000
+    depends_on:
+      - web
+  machinelearning:
+    build: ./machinelearning
+    image: python:3-onbuild
+    command: bash -c "
+      pip install -r requirements.txt
+      && python3.6 api.py
+      "
+    volumes:
+      - ./machinelearning:/usr/src/app
+    ports:
+      - 5000:5000
     depends_on:
       - web
