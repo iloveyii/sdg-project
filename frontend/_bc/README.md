@@ -18,6 +18,8 @@ The available endpoints are:
 * /loadColumns
 * /loadUser
 * /saveUser
+* /loadLocations
+* /generateHeatmap
 
 
 

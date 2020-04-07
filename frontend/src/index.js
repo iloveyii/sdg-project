@@ -8,12 +8,14 @@ import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import { LayoutProvider } from "./context/LayoutContext";
 import { UserProvider } from "./context/UserContext";
+import { SnackbarContainer } from 'uno-material-ui';
 
 ReactDOM.render(
   <LayoutProvider>
     <UserProvider>
       <ThemeProvider theme={Themes.default}>
         <CssBaseline />
+        <SnackbarContainer />
         <App />
       </ThemeProvider>
     </UserProvider>

@@ -13,6 +13,8 @@ import { withRouter } from "react-router-dom";
 import useStyles from "./styles";
 // import logo from "./logo.svg";
 import { useUserDispatch, loginUser, registerUser } from "../../context/UserContext";
+import { snackbarService } from 'uno-material-ui';
+
 var sha3_256 = require('js-sha3').sha3_256;
 
 function Login(props) {
@@ -187,15 +189,7 @@ function Login(props) {
                 ) : (
                   <Button
                     onClick={() =>
-                      registerUser(
-                        userDispatch,
-                        loginValue,
-                        sha3_256(passwordValue),
-                        nameValue,
-                        props.history,
-                        setIsLoading,
-                        setError,
-                      )
+                      registerUser(userDispatch,loginValue,sha3_256(passwordValue),nameValue,props.history,setIsLoading,setError,)
                     }
                     disabled={
                       loginValue.length === 0 ||

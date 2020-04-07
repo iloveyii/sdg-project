@@ -37,8 +37,13 @@ export default function DashboardOptions(props) {
   return (
     <div className={classes.pageTitleContainer}>
     <Grid container spacing={2}>
+    <Grid item xs={12}>
+      <Typography className={classes.typo} variant="h2" size="sm">
+        Select an option:
+      </Typography>
+    </Grid>
       {upload && (
-        <Grid item xs={12} md={3} lg={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <Button
             className={classes.button}
             variant="outlined"
@@ -54,7 +59,7 @@ export default function DashboardOptions(props) {
       )}
       
       {analyze && (
-        <Grid item xs={12} md={3} lg={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <Button
             className={classes.button}
             variant="outlined"
@@ -70,7 +75,7 @@ export default function DashboardOptions(props) {
       )}      
       
       {stats && (
-        <Grid item xs={12} md={3} lg={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <Button
             className={classes.button}
             variant="outlined"
@@ -86,7 +91,7 @@ export default function DashboardOptions(props) {
       )}
       
       {profile && (
-        <Grid item xs={12} md={3} lg={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <Button
             className={classes.button}
             variant="outlined"
@@ -102,7 +107,7 @@ export default function DashboardOptions(props) {
       )}
       
       {user && (
-        <Grid item xs={12} md={3} lg={3}>
+        <Grid item xs={12} sm={6} md={3} lg={3}>
           <Button
             className={classes.button}
             variant="outlined"

@@ -1,4 +1,5 @@
 import React from "react";
+import { snackbarService } from 'uno-material-ui';
 
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
@@ -76,10 +77,10 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
         dispatch({ type: "LOGIN_SUCCESS" });
         setError(null);
         setIsLoading(false);
-  
+        
         history.push("/app/dashboard");
     } else {
-
+      snackbarService.showSnackbar('Login Failed. Check username or password.', 'error');
       dispatch({ type: "LOGIN_FAILURE" });
       setError(true);
       setIsLoading(false);
@@ -110,13 +111,15 @@ function registerUser(dispatch, login, password, name, history, setIsLoading, se
   .then(response => response.json())
   .then(function(response){
     if (response["status"]){
+      snackbarService.showSnackbar('Registration Successful. Log in using your credentials.', 'success');
       dispatch({ type: "ACCOUNT_CREATED" });
       setError(null);
-      setIsLoading(false);
     } else {
+      snackbarService.showSnackbar('Registration Failed. Contact the admin.', 'error');
       console.log("failed");
     }
     
+    setIsLoading(false);
   })
   .catch(err => console.error(err))  
 

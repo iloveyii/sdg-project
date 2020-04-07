@@ -33,6 +33,7 @@ def read_data(filename):
     df = FCMeasurement(ID='Test Sample', datafile=datafile)
     return df
 
+#Not Required 
 def implementMain():
     ichannelx = 4       #FL-1
     ichannely = 6       #FL-3
@@ -47,9 +48,6 @@ def implementMain():
         channelnames = sample.channel_names
         channelx = channelnames[int(ichannelx)-1]
         channely = channelnames[int(ichannely)-1]
-
-    #tsample = sample.transform('hlog', channels=[channelx, channely], b=1000.0)
-    #Transformation is selected in the FE
         
         data1 = sample.data[channelx]
         data2 = sample.data[channely]
@@ -59,17 +57,7 @@ def implementMain():
         print('Raw Data Saved...', outfile)
         print(channelnames)
         
-    """
-    If you want, you can modify the above code as follows (after selecting the channels)     
-        tsample = sample.transform('hlog', channels=[channelx, channely], b=1000.0)
-        #tsample = sample.transform('glog', channels=[channelx, channely])
-        
-        data1 = tsample[channelx]
-        data2 = tsample[channely]
-        data3= pd.concat([data1,data2], axis=1)
-        savedataclassic(data3,'transformdata.csv')
-        print('Transform Data Saved...')
-    """
+
 def cleanTupleString(strings):
     newString = ''.join(json.dumps(strings))
 
@@ -81,9 +69,12 @@ def cleanTupleString(strings):
     return newString
     
 def getColumnNames(filename):
-    print("Reading columns from .fcs file ", filename)
-    sample = read_data(filename)
-    channelnames = cleanTupleString(sample.channel_names)
+    try:    
+        print("Reading columns from .fcs file ", filename)
+        sample = read_data(filename)
+        channelnames = cleanTupleString(sample.channel_names)
+    except:
+        return False
     return channelnames
 
 def getPlotData(channelx, channely, transformation, filename):
@@ -91,14 +82,26 @@ def getPlotData(channelx, channely, transformation, filename):
     shortfilename = filename.split('.')[0]
     sample = read_data(filename)
     
-    data1 = sample.data[channelx]
-    data2 = sample.data[channely]
+    data1 = ""
+    data2 = ""
+    if (transformation.strip() == "hlog"):
+        tsample = sample.transform('hlog', channels=[channelx, channely], b=1000.0)
+        data1 = tsample[channelx]
+        data2 = tsample[channely]
+#    elif (transformation.strip() == "glog"):
+#        tsample = sample.transform('glog', channels=[channelx, channely])
+#        data1 = tsample[channelx]
+#        data2 = tsample[channely]
+    else:
+        data1 = sample.data[channelx]
+        data2 = sample.data[channely]
+    
+    
     data3 = pd.concat([data1,data2], axis=1)
     
     outfile = shortfilename + 'out.csv'
     save_data_file(data3,outfile)
     print('Plot Data Saved...', outfile)
-#    print(channelnames)
     
     return data1, data2, data3.to_json(orient='records')
 
@@ -108,6 +111,6 @@ def getPlotData(channelx, channely, transformation, filename):
 #implementMain()
 #sampl = getColumnNames("A06 Ut SY.FCS")
 
-#data1, data2, data3 = getPlotData("FSC-A", "PE-A", "hlog", "A06 Ut SY.FCS")
+#data1, data2, data3 = getPlotData("FSC-A", "PE-A", "glog", "A06 Ut SY.FCS")
 #jsn = data3.to_json(orient='records')
 # 

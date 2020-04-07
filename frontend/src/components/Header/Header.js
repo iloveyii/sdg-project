@@ -46,7 +46,7 @@ export default function Header(props) {
           
         </IconButton>
         <Typography variant="h6" weight="medium" className={classes.logotype}>
-          FCS Analyzer
+          Prostate Cancer Cell Analysis Tool
         </Typography>
         <div className={classes.grow} />
         

@@ -3,14 +3,14 @@ from psycopg2.extras import RealDictCursor
 from config import config
 import json
 
-def loadData(query):
+def loadData(query, values):
     """ Query a table """
     conn = None
     try:
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor(cursor_factory=RealDictCursor)
-        cur.execute(query, (52))
+        cur.execute(query, values)
         rows = cur.fetchall()
         # print("The number of parts: ", cur.rowcount)
         # for row in rows:
@@ -46,7 +46,7 @@ def loadOne(query, values, formatJson):
 
 def saveMeta(location, category, dateTime,fileName,uploadName,columnNames):
     """ Save fcs meta """
-    sql = """INSERT INTO tbmeta(location,category,datetime,filename,uploadname,channels)
+    sql = """INSERT INTO tbmeta(location,category,recorddate,filename,uploadname,channels)
             VALUES(%s,%s,%s,%s,%s,%s) RETURNING id;"""
     conn = None
     vendor_id = None
@@ -92,6 +92,7 @@ def saveEntry(sql, values):
     finally:
         if conn is not None:
             conn.close()
+        
  
     return vendor_id
 

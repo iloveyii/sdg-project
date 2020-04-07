@@ -26,6 +26,7 @@ import {DropzoneArea} from 'material-ui-dropzone';
 import { green } from '@material-ui/core/colors';
 
 // import ChartingSection from '../components/ChartingSection';
+import { snackbarService } from 'uno-material-ui';
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -84,7 +85,7 @@ const useStyles = makeStyles(theme => ({
 export default function Upload() {
     const classes = useStyles();
     var [location, setLocation] = useState("");
-    var [dateTime, setDateTime] = useState(new Date().toISOString().substring(0,16));//"2019-03-06T10:30"
+    var [dateTime, setDateTime] = useState(new Date().toISOString().substring(0,10));//"2019-03-06T10:30"
     var [files, setFiles] = useState([]);
     var [category, setCategory] = useState("Cancer");
     var [disabled, setDisabled] = useState(true);
@@ -106,7 +107,6 @@ export default function Upload() {
         if (files.length < 1){
             setDisabled(false);
         }
-
     }
 
     const uploadFcs = (e) => {
@@ -130,16 +130,18 @@ export default function Upload() {
         })
         .then(response => response.json())
         .then(function(response){
-            if (response){
+            if (response['status']){
                 setSuccess(true);
-                setLoading(false);
                 setDisabled(true);
                 setLocation("");
                 setFiles([]);
                 setButtonText("Upload Complete")
-                // console.log(response);
+                snackbarService.showSnackbar('Upload Successful', 'success');
                 return response;
+            } else {
+                snackbarService.showSnackbar(response['message'], 'error');
             }
+            setLoading(false);
         })
         .catch(err => console.error(err))  
         setDisplayChart(true);
@@ -158,8 +160,8 @@ export default function Upload() {
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 id="datetime"
-                                label="Date/ Time"
-                                type="datetime-local"
+                                label="Date"
+                                type="date"
                                 variant="outlined"
                                 required
                                 value={dateTime}
@@ -169,6 +171,7 @@ export default function Upload() {
                                     shrink: true,
                                 }}
                                 fullWidth
+                                autoFocus
                             />
                         </Grid>
                         <Grid item xs={12} sm={12}>
@@ -181,7 +184,7 @@ export default function Upload() {
                                 onChange={e => setLocation(e.target.value)}
                                 id="location"
                                 label="Location"
-                                autoFocus
+                                
                             />
                         </Grid>
                     
@@ -199,7 +202,6 @@ export default function Upload() {
                                         name: 'Category',
                                         id: 'SelectCategory',
                                     }}
-
                                 >
                                     <MenuItem value={'Cancer'}>Cancer </MenuItem>
                                     <MenuItem value={'No Cancer'}>No Cancer</MenuItem>

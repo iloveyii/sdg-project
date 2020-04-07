@@ -9,6 +9,7 @@ export default makeStyles(theme => ({
   },
   typo: {
     color: theme.palette.text.hint,
+    marginLeft: theme.spacing(3),
   },
   button: {
     // flexGrow: 1
