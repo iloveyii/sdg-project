@@ -22,6 +22,7 @@ ECOLI_FILE = 'ecoli.fcs'
 
 class MachineLearning:
     def __init__(self):
+        self.response = {}
         # Locate sample data included with this package
         print('Raw dir in init :', SHARED_RAW_DIR)
         fcs_file_path = os.path.join(SHARED_RAW_DIR, FCS_FILE)
@@ -43,10 +44,11 @@ class MachineLearning:
         flow.HistogramView(scale='logicle',
                            channel='Y2-A').plot(ex)
 
-        png_file = os.path.join(SHARED_PLOT_DIR, 'ml.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, 'histogram.png')
         print(png_file)
         grid(True)
         savefig(png_file)
+        self.response['histogram'] = 'histogram.png'
 
         g = flow.GaussianMixtureOp(name="Gauss",
                                    channels=["Y2-A"],
@@ -61,10 +63,13 @@ class MachineLearning:
         print(png_file)
         grid(True)
         savefig(png_file)
+        self.response['gausian'] = 'gausian.png'
+
         print(type(ex2.data.head()))
 
         png_file = os.path.join(SHARED_PLOT_DIR, 'gausian_table.png')
         self.__df_to_png(ex2.data.head(), png_file)
+        self.response['gausian_table'] = 'gausian_table.png'
 
         subplots(clear=True)
         g = flow.GaussianMixtureOp(name="Gauss",
@@ -78,9 +83,11 @@ class MachineLearning:
         g.default_view().plot(ex2)
         png_file = os.path.join(SHARED_PLOT_DIR, 'gausian_posterior.png')
         savefig(png_file)
+        self.response['gausian_posterior'] = 'gausian_posterior.png'
 
         png_file = os.path.join(SHARED_PLOT_DIR, 'gausian_posterior_table.png')
         self.__df_to_png(ex2.data.head(), png_file)
+        self.response['gausian_posterior_table'] = 'gausian_posterior_table.png'
 
         # We can use this second metadata column to filter out events with low posterior probabilities:
         ex2.query("Gauss_1_posterior > 0.9 | Gauss_2_posterior > 0.9").data.head()
@@ -90,6 +97,7 @@ class MachineLearning:
                            subset="Gauss_1_posterior > 0.9 | Gauss_2_posterior > 0.9").plot(ex2)
         png_file = os.path.join(SHARED_PLOT_DIR, 'gausian_filtered_low_posterior.png')
         savefig(png_file)
+        self.response['gausian_filtered_low_posterior'] = 'gausian_filtered_low_posterior.png'
 
         subplots(clear=True)
         # Basic usage, assigning each event to one of the mixture components: (the isolines in the default_view() are 1, 2 and 3 standard deviations away from the mean.)
@@ -104,6 +112,7 @@ class MachineLearning:
         g.default_view().plot(ex2, alpha=0.1)
         png_file = os.path.join(SHARED_PLOT_DIR, 'gausian_mixture_model_two_channels.png')
         savefig(png_file)
+        self.response['gausian_mixture_model_two_channels'] = 'gausian_mixture_model_two_channels.png'
 
         subplots(clear=True)
         # K-Means
@@ -120,6 +129,7 @@ class MachineLearning:
                              yscale='log').plot(ex)
         png_file = os.path.join(SHARED_PLOT_DIR, 'flow_peaks.png')
         savefig(png_file)
+        self.response['flow_peaks'] = 'flow_peaks.png'
 
         # K-MEANS2
         self.k_means2(ex)
@@ -137,10 +147,7 @@ class MachineLearning:
         k.default_view(yfacet="Dox").plot(ex2)
         png_file = os.path.join(SHARED_PLOT_DIR, 'k_means.png')
         savefig(png_file)
-        data = {
-            'k-means': png_file
-        }
-        return data
+        self.response['k_means'] = 'k_means.png'
 
     def k_means2(self, ex):
         k = flow.KMeansOp(name="KMeans",
@@ -154,10 +161,7 @@ class MachineLearning:
         k.default_view().plot(ex2)
         png_file = os.path.join(SHARED_PLOT_DIR, 'k_means2.png')
         savefig(png_file)
-        data = {
-            'k-means2': png_file
-        }
-        return data
+        self.response['k_means2'] = 'k_means2.png'
 
     def __df_to_png(self, df, file_path):
         # Clear prev sub plot
@@ -170,9 +174,10 @@ class MachineLearning:
 
         table(ax, df, loc='center')  # where df is your data frame
         savefig(file_path)
+        return self.response
 
-    def __read_fcs_file_to_fcm(self):
-        pass
+    def get_plots(self):
+        return self.response
 
 
 # If script ran from terminal
