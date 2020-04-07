@@ -56,6 +56,12 @@
             <p class="lead" id="basic-info"></p>
         </div>
     </div>
+       <div class="row" id="machinelearning">
+        <div class="col-md-12 order-md-0">
+            <h4>ML Plots</h4>
+            <div class="lead" id="machine-learning"></div>
+        </div>
+    </div>
 
     <footer class="my-5 pt-5 text-muted text-center text-small">
         <p class="mb-1">&copy; 2017-2018 Company Name</p>
@@ -78,6 +84,7 @@
         crossorigin="anonymous"></script>
 <script>
     const url = '/api/basic'
+    const url_ml = '/api/analysis'
 
     function getBasicInfo() {
         return new Promise((resolve, reject) => {
@@ -91,7 +98,23 @@
         })
     }
 
+    function getMLPlots() {
+        return new Promise((resolve, reject) => {
+            const response = fetch(url_ml).then(response => response.json()).then(plots => {
+                const mlPlots = document.getElementById('machine-learning');
+                Object.keys(plots).forEach( key => {
+                    const image = document.createElement('img')
+                    image.src = '/static/plots/' + plots[key]
+                    mlPlots.append(image)
+                })
+                console.log(plots)
+                return resolve(plots)
+            })
+        })
+    }
+
     getBasicInfo()
+    getMLPlots()
 
 </script>
 </html>

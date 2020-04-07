@@ -11,7 +11,8 @@ services:
   web:
     build: .
     command: bash -c "
-        python /code/djangoweb/manage.py runserver 0.0.0.0:8080
+        pip install requests
+        && python /code/djangoweb/manage.py runserver 0.0.0.0:8080
         && python3.6 manage.py makemigrations api
         && python3.6 manage.py collectstatic
       "
@@ -57,7 +58,7 @@ services:
     command: bash -c "
       pip install -r requirements.txt
       && pip3 uninstall bottleneck -y
-      && pip install bottleneck==1.2
+      && pip3 install bottleneck==1.2
       && python3.6 api.py
       "
     volumes:

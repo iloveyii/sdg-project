@@ -7,3 +7,4 @@ djangoweb/api/migrations/__pycache__
 machinelearning/__pycache__/
 shared/plots
 shared/static
+djangoweb/api/static/plots

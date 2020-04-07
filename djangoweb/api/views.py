@@ -8,6 +8,7 @@ import ast
 import json
 import re
 from api.models import Model
+import requests
 
 from django.core.files.storage import FileSystemStorage
 
@@ -72,38 +73,33 @@ def analysis(request):
             'age': 19
         }
     }
-    a = Model.objects.all()
+    URL = 'http://machinelearning:5000'
+    r = requests.get(URL)
+    print(r.json())
+    # a = Model.objects.all()
     # print(serializers.serialize('json', a))
-    # json_str = json.dumps(data)
+    json_str = json.dumps(data)
     # print(json_str)
-    json_str = serializers.serialize('json', a)
-    return HttpResponse(json_str)
+    #  json_str = serializers.serialize('json', r.json())
+    return HttpResponse(r)
 
 
 @csrf_exempt
 def get_plot(request):
-    tr = Transformed()
-    x = 'FSC-A'
-    y = 'SSC-A'
-    df = tr.get_plot_data(x,y, 'hlog', 'fname.tst')
-    labels = df[x].to_list()
-    series = df[y].to_list()
-    data = [
-        labels, series
-    ]
-    json_str = json.dumps(data)
-    return HttpResponse(json_str)
+    pass
 
 
 # ANALYSIS METHODS
 def basic(request):
     # TEST RUN
+    """
     basic = Basic()
     # basic.plot_columns('V2-A')
     channels = basic.get_channel_names()
     meta = basic.get_meta()
+    """
     data = {
-        'channel_names': channels,
+        'channel_names': 'channels',
         # 'meta': meta.keys()  #(meta['__header__']).decode("UTF-8")
         # 'head': basic.head().to_json()
     }
@@ -111,7 +107,7 @@ def basic(request):
     # print(meta['__header__'])
     json_str = json.dumps(data)
     # print(json_str)
-    # json_str = serializers.serialize('json', a)
+    # son_str = serializers.serialize('json', a)
     return HttpResponse(json_str)
 
 

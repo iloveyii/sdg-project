@@ -6,7 +6,7 @@ urlpatterns = [
     # Static pages
     url('about', views.about, name='about'),
     url('react', views.react, name='react'),
-    # DB data
+    # ML analysis in json
     url('analysis', views.analysis, name='analysis'),
     # Cell analysis routes
     url('basic', views.basic, name='basic'),
