@@ -23,9 +23,9 @@ services:
       - 8080:8080
     depends_on:
       - db
-  basicbasicanalysis:
+  basicanalysis:
     build: ./basicanalysis
-    image: python:3-onbuild
+    image: alikth/basic_cell:latest
     command: bash -c "
         pip install -r requirements.txt
         && python3.6 api.py
