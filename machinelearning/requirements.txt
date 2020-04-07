@@ -1,3 +1,4 @@
 Flask==0.12
 flask-restful==0.3.5
 FlowCytometryTools
+cytoflow

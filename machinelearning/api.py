@@ -1,12 +1,13 @@
 from flask import Flask
 from flask_restful import Resource, Api
-
+import MachineLearning
 app = Flask(__name__)
 api = Api(app)
 
 
 class Product(Resource):
     def get(self):
+        mlearn = MachineLearning()
         return {
             'products': [
                 'applen',
