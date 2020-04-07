@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import useStyles from "./styles";
-// import logo from "./logo.svg";
+import logo from "./molecule.svg";
 import { useUserDispatch, loginUser, registerUser } from "../../context/UserContext";
 import { snackbarService } from 'uno-material-ui';
 
@@ -32,10 +32,10 @@ function Login(props) {
 
   return (
     <Grid container className={classes.container}>
-      {/* <div className={classes.logotypeContainer}>
+      <div className={classes.logotypeContainer}>
         <img src={logo} alt="logo" className={classes.logotypeImage} />
-        <Typography className={classes.logotypeText}>FCS Analyzer</Typography>
-      </div> */}
+        <Typography className={classes.logotypeText}>Prostate Cell Analyzer</Typography>
+      </div>
       <div className={classes.formContainer}>
         <div className={classes.form}>
           <Tabs

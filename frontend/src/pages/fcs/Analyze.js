@@ -120,11 +120,12 @@ export default function Analyze() {
                 var output = response.map(s => ({x:s[xval], y:s[yval]}));
                 setDataToPlot(output);
                 setGraphTitle("Scatter Plot: " + xval + " Vs. " + yval);
+                setExpanded("panel3");
             }
         })
         .catch(err => console.error(err)) 
         
-        setExpanded("panel3");
+        
         
     };
 

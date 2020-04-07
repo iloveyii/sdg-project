@@ -115,10 +115,8 @@ function registerUser(dispatch, login, password, name, history, setIsLoading, se
       dispatch({ type: "ACCOUNT_CREATED" });
       setError(null);
     } else {
-      snackbarService.showSnackbar('Registration Failed. Contact the admin.', 'error');
-      console.log("failed");
+      snackbarService.showSnackbar('Registration Failed. Try another email', 'error');
     }
-    
     setIsLoading(false);
   })
   .catch(err => console.error(err))  

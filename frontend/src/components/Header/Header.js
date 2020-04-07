@@ -33,20 +33,21 @@ export default function Header(props) {
             classes.headerMenuButton,
             classes.headerMenuButtonCollapse,
           )}
-        >
           
-            <MenuIcon
-              classes={{
-                root: classNames(
-                  classes.headerIcon,
-                  classes.headerIconCollapse,
-                ),
-              }}
-            />
+        >
+                
+          <MenuIcon
+            classes={{
+              root: classNames(
+                classes.headerIcon,
+                classes.headerIconCollapse,
+              ),
+            }}
+          />
           
         </IconButton>
         <Typography variant="h6" weight="medium" className={classes.logotype}>
-          Prostate Cancer Cell Analysis Tool
+          Prostate Cell Analysis Tool
         </Typography>
         <div className={classes.grow} />
         

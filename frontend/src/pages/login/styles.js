@@ -33,7 +33,7 @@ export default makeStyles(theme => ({
   logotypeText: {
     color: "white",
     fontWeight: 500,
-    fontSize: 84,
+    fontSize: 54,
     [theme.breakpoints.down("md")]: {
       fontSize: 48,
     },
