@@ -91,24 +91,10 @@ def get_plot(request):
 
 # ANALYSIS METHODS
 def basic(request):
-    # TEST RUN
-    """
-    basic = Basic()
-    # basic.plot_columns('V2-A')
-    channels = basic.get_channel_names()
-    meta = basic.get_meta()
-    """
-    data = {
-        'channel_names': 'channels',
-        # 'meta': meta.keys()  #(meta['__header__']).decode("UTF-8")
-        # 'head': basic.head().to_json()
-    }
-    # print('Meta :')
-    # print(meta['__header__'])
-    json_str = json.dumps(data)
-    # print(json_str)
-    # son_str = serializers.serialize('json', a)
-    return HttpResponse(json_str)
+    URL = 'http://basicanalysis:3000'
+    r = requests.get(URL)
+    print(r.json())
+    return HttpResponse(r)
 
 
 def transformed(request):
