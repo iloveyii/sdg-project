@@ -5,3 +5,5 @@ djangoweb/static
 djangoweb/data
 djangoweb/api/migrations/__pycache__
 machinelearning/__pycache__/
+shared/plots
+shared/static

@@ -53,8 +53,7 @@ services:
   machinelearning:
     build:
       context: ./machinelearning
-      dockerfile: ../Dockerfile
-    # image: python:3-onbuild
+    image:  alikth/ml_cell:latest
     command: bash -c "
       pip install -r requirements.txt
       && python3.6 api.py

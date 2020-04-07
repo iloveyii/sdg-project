@@ -9,9 +9,9 @@ import cytoflow as flow
 # if your figures are too big or too small, you can scale them by changing matplotlib's DPI
 import matplotlib
 
-STATIC_DIR = os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/../static/')
-SHARED_PLOT_DIR = os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/../shared/plots/')
-SHARED_RAW_DIR = os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/../shared/raw/')
+STATIC_DIR = os.path.realpath('/shared/static/')
+SHARED_PLOT_DIR = os.path.realpath('/shared/plots/')
+SHARED_RAW_DIR = os.path.realpath('/shared/raw/')
 
 BIN_WIDTH = 100
 CSV_FILE = 'fcs_file.csv'
