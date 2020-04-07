@@ -50,12 +50,6 @@ def about(request):
     return render(request, 'about.html')
 
 
-def binary_to_dict(the_binary):
-    jsn = ''.join(chr(int(x, 2)) for x in the_binary.split())
-    d = json.loads(jsn)
-    return d
-
-
 def react(request):
     print("Inside react")
     return render(request, 'index.html')
@@ -65,7 +59,8 @@ def welcome(request):
     return render(request, 'welcome.html')
 
 
-# DB DATA
+# MachineLearning plots
+@csrf_exempt
 def analysis(request):
     data = {
         'user': {
@@ -78,18 +73,14 @@ def analysis(request):
     print(r.json())
     # a = Model.objects.all()
     # print(serializers.serialize('json', a))
-    json_str = json.dumps(data)
+    # json_str = json.dumps(data)
     # print(json_str)
     #  json_str = serializers.serialize('json', r.json())
     return HttpResponse(r)
 
 
+# Plotting plots
 @csrf_exempt
-def get_plot(request):
-    pass
-
-
-# ANALYSIS METHODS
 def basic(request):
     URL = 'http://basicanalysis:3000'
     r = requests.get(URL)
@@ -97,19 +88,9 @@ def basic(request):
     return HttpResponse(r)
 
 
-def transformed(request):
-    tr = Transformed()
-    df = tr.transform_data()
-    return HttpResponse(df.to_json())
-
-
-def heatmap(request):
-    hmap = Hmap()
-    df = hmap.generate_hmap()
-    return HttpResponse(df.to_json())
-
-
-def gated(request):
-    gated = Gated()
-    df = gated.generate_gated()
-    return HttpResponse(df.to_json())
+@csrf_exempt
+def plotting(request):
+    URL = 'http://plotting:4000'
+    r = requests.get(URL)
+    print(r.json())
+    return HttpResponse(r)

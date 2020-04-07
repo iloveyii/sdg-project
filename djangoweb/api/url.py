@@ -10,11 +10,8 @@ urlpatterns = [
     url('analysis', views.analysis, name='analysis'),
     # Cell analysis routes
     url('basic', views.basic, name='basic'),
-    url('transformed', views.transformed, name='transformed'),
-    url('heatmap', views.heatmap, name='heatmap'),
-    url('gated', views.gated, name='gated'),
     # Upload file
-    url('plot', views.get_plot, name='plot'),
+    url('plotting', views.plotting, name='plotting'),
     url('upload', views.upload, name='upload'),
     # Welcome page
     url('', views.welcome, name='welcome'),

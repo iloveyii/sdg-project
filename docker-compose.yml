@@ -39,7 +39,7 @@ services:
       - web
   plotting:
     build: ./plotting
-    image: python:3-onbuild
+    image: alikth/basic_cell:latest
     command: bash -c "
         pip install -r requirements.txt
         && python3.6 api.py
@@ -66,3 +66,5 @@ services:
       - ./shared:/shared
     ports:
       - 5000:5000
+    depends_on:
+      - web

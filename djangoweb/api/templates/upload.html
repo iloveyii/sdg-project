@@ -34,7 +34,7 @@
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="fcs_file"
                                        name="fcs_file"
-                                       aria-describedby="fcs_file" />
+                                       aria-describedby="fcs_file"/>
                                 <label class="custom-file-label" for="fcs_file">Choose file</label>
                             </div>
                             <div class="input-group-append">
@@ -50,16 +50,22 @@
         </div>
     </div>
 
-    <div class="row" id="basic">
+    <div class="row" id="basic-div">
         <div class="col-md-12 order-md-0">
             <h4>Basic info</h4>
             <p class="lead" id="basic-info"></p>
         </div>
     </div>
-       <div class="row" id="machinelearning">
+    <div class="row" id="machine-learning-div">
         <div class="col-md-12 order-md-0">
             <h4>ML Plots</h4>
             <div class="lead" id="machine-learning"></div>
+        </div>
+    </div>
+     <div class="row" id="plotting-div">
+        <div class="col-md-12 order-md-0">
+            <h4>Gating , Transformation</h4>
+            <div class="lead" id="plotting"></div>
         </div>
     </div>
 
@@ -85,6 +91,7 @@
 <script>
     const url = '/api/basic'
     const url_ml = '/api/analysis'
+    const url_plotting = '/api/plotting'
 
     function getBasicInfo() {
         return new Promise((resolve, reject) => {
@@ -102,9 +109,24 @@
         return new Promise((resolve, reject) => {
             const response = fetch(url_ml).then(response => response.json()).then(plots => {
                 const mlPlots = document.getElementById('machine-learning');
-                Object.keys(plots).forEach( key => {
+                Object.keys(plots).forEach(key => {
                     const image = document.createElement('img')
-                    image.src = '/static/plots/' + plots[key]
+                    image.src = '/static/plots/plots/' + plots[key]
+                    mlPlots.append(image)
+                })
+                console.log(plots)
+                return resolve(plots)
+            })
+        })
+    }
+
+    function getPlotting() {
+        return new Promise((resolve, reject) => {
+            const response = fetch(url_plotting).then(response => response.json()).then(plots => {
+                const mlPlots = document.getElementById('plotting');
+                Object.keys(plots).forEach(key => {
+                    const image = document.createElement('img')
+                    image.src = '/static/plots/plotting/' + plots[key]
                     mlPlots.append(image)
                 })
                 console.log(plots)
@@ -115,6 +137,7 @@
 
     getBasicInfo()
     getMLPlots()
+    getPlotting()
 
 </script>
 </html>

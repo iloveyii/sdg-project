@@ -1,23 +1,20 @@
 from flask import Flask
 from flask_restful import Resource, Api
+from plotting import Plotting
 
 app = Flask(__name__)
 api = Api(app)
 
 
-class Product(Resource) :
+class Data(Resource):
     def get(self):
-        return {
-            'products' : [
-                'applen',
-                'banan',
-                'frukt',
-                'choklad',
-                'mjölk',
-                'blommor'
-            ]
-        }
-api.add_resource(Product, '/')
+        plotting = Plotting()
+        plots = plotting.get_plots()
+
+        return plots
+
+
+api.add_resource(Data, '/')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=4000, debug=True)

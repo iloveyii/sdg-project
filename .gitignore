@@ -9,3 +9,5 @@ shared/plots
 shared/static
 djangoweb/api/static/plots
 basicanalysis/__pycache__/
+plotting/__pycache__/
+
