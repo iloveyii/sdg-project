@@ -6,12 +6,14 @@ import json
 
 STATIC_DIR = os.path.realpath('/shared/static/')
 SHARED_PLOT_DIR = os.path.realpath('/shared/plots/')
-SHARED_RAW_DIR = os.path.realpath('/shared/raw/')
+SHARED_RAW_DIR = os.path.realpath('/shared/raw/cell/')
 RAW_DIR = SHARED_RAW_DIR
 
 BIN_WIDTH = 100
 CSV_FILE = 'fcs_file.csv'
-FCS_FILE = 'RFP_Well_A3.fcs'
+# FCS_FILE = 'RFP_Well_A3.fcs'
+# FCS_FILE = 'a1_24h_noc200.fcs'
+FCS_FILE = 'a03_kranvatten_mars_sybr.fcs'
 FCS_FILE_A4 = 'CFP_Well_A4.fcs'
 ECOLI_FILE = 'ecoli.fcs'
 
@@ -25,7 +27,7 @@ class Basic:
 
     def read_data(self):
         self.sample = FCMeasurement(ID='Test Sample', datafile=self.datafile)
-        self.sample = self.sample.transform('hlog', b=500)
+        # self.sample = self.sample.transform('hlog', b=500)
 
     def plot_columns(self, col1):
         self.sample.plot(col1, bins=100, alpha=0.9, color='green')

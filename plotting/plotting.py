@@ -9,11 +9,13 @@ from FlowCytometryTools import FCPlate
 from FlowCytometryTools.core.graph import plot_heat_map
 
 SHARED_PLOTTING_DIR = os.path.realpath('/shared/plotting/')
-SHARED_RAW_DIR = os.path.realpath('/shared/raw/')
+SHARED_RAW_DIR = os.path.realpath('/shared/raw/cell/')
 
 BIN_WIDTH = 100
 CSV_FILE = 'fcs_file.csv'
-FCS_FILE = 'RFP_Well_A3.fcs'
+# FCS_FILE = 'RFP_Well_A3.fcs'
+FCS_FILE = 'a1_24h_noc200.fcs'
+# FCS_FILE = 'a03_kranvatten_mars_sybr.fcs'
 FCS_FILE_A4 = 'CFP_Well_A4.fcs'
 ECOLI_FILE = 'ecoli.fcs'
 
@@ -35,53 +37,63 @@ class Plotting:
             return False
         # Load data
         tsample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
+        self.channel_names = tsample.channel_names
         self.ssample = tsample
-        self.sample = tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500.0)
+        self.sample = tsample  # tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500.0)
 
-    def histogram(self):
+    def histogram(self, channel_name=''):
+        if not channel_name:
+            channel_name = self.channel_names[0]
         # Plot Histogram
-        self.sample.plot('Y2-A', bins=100, alpha=0.9, color='green')
+        self.sample.plot(channel_name, bins=100, alpha=0.9, color='green')
         png_file = os.path.join(SHARED_PLOTTING_DIR, 'histogram1d.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['histogram1d']='histogram1d.png'
+        self.response['histogram1d'] = 'histogram1d.png'
         # show()
 
-    def histogram2d(self):
+    def histogram2d(self, channel_name1='', channel_name2=''):
         # Plot Histogram 2D
-        self.sample.plot(['Y2-A', 'B1-A'], bins=100, alpha=0.9, cmap=cm.hot)
+        if not channel_name1:
+            channel_name1 = self.channel_names[0]
+            channel_name2 = self.channel_names[1]
+        self.sample.plot([channel_name1, channel_name2], bins=100, alpha=0.9, cmap=cm.hot)
         png_file = os.path.join(SHARED_PLOTTING_DIR, 'histogram2d.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['histogram2d']='histogram2d.png'
+        self.response['histogram2d'] = 'histogram2d.png'
 
-
-    def scatter(self):
+    def scatter(self, channel_name1='', channel_name2=''):
+        if not channel_name1:
+            channel_name1 = self.channel_names[0]
+            channel_name2 = self.channel_names[1]
         # Plot scatter
-        self.sample.plot(['Y2-A', 'B1-A'], kind='scatter', alpha=0.6, color='gray')
+        self.sample.plot([channel_name1, channel_name2], kind='scatter', alpha=0.6, color='gray')
         png_file = os.path.join(SHARED_PLOTTING_DIR, 'scatter.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['scatter']='scatter.png'
+        self.response['scatter'] = 'scatter.png'
 
-    def threshold_gate(self):
+    def threshold_gate(self, channel_name=''):
+        if not channel_name:
+            channel_name = self.channel_names[0]
         # Create a threshold gates
-        y2_gate = ThresholdGate(1000.0, 'Y2-A', region='above')
+        y2_gate = ThresholdGate(1000.0, channel_name, region='above')
 
         # Gate
         gated_sample = self.sample.gate(y2_gate)
 
         # Plot
         ax1 = subplot(121);
-        self.sample.plot('Y2-A', gates=[y2_gate], bins=100, alpha=0.9)
+        self.sample.plot(channel_name, gates=[y2_gate], bins=100, alpha=0.9)
         y2_gate.plot(color='k', linewidth=4, linestyle='-')
         title('Original Sample')
 
         ax2 = subplot(122, sharey=ax1, sharex=ax1);
-        gated_sample.plot('Y2-A', gates=[y2_gate], bins=100, color='y', alpha=0.9);
+        gated_sample.plot(channel_name, gates=[y2_gate], bins=100, color='y', alpha=0.9);
         title('Gated Sample');
 
         tight_layout()
@@ -89,24 +101,27 @@ class Plotting:
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['threshold_gate']='threshold_gate.png'
+        self.response['threshold_gate'] = 'threshold_gate.png'
 
-    def plate_gated_counts(self):
+    def plate_gated_counts(self, channel_name1='', channel_name2=''):
+        if not channel_name1:
+            channel_name1 = self.channel_names[0]
+            channel_name2 = self.channel_names[1]
         # Plot - Counting fluorescent events¶
-        self.sample.plot(['Y2-A', 'B1-A'], kind='scatter', alpha=0.6, color='gray')
+        self.sample.plot([channel_name1, channel_name2], kind='scatter', alpha=0.6, color='gray')
 
         # Clear prev sub plot
         subplots(clear=True)
 
         # Load plate
         plate = FCPlate.from_dir(ID='Demo Plate', path=SHARED_RAW_DIR, parser='name')
-        plate = plate.transform('hlog', channels=['Y2-A', 'B1-A'], b=500.0)
+        plate = plate.transform('hlog', channels=[channel_name1, channel_name2], b=500.0)
 
         # Drop empty cols / rows
         plate = plate.dropna()
 
         # Create a threshold gates
-        y2_gate = ThresholdGate(1000.0, 'Y2-A', region='above')
+        y2_gate = ThresholdGate(1000.0, channel_name1, region='above')
 
         # Plot
         plate = plate.gate(y2_gate)
@@ -118,15 +133,20 @@ class Plotting:
         print(png_file)
         grid(False)
         savefig(png_file)
-        self.response['plate_gated_counts']='plate_gated_counts.png'
+        self.response['plate_gated_counts'] = 'plate_gated_counts.png'
 
-    def __calculate_median_Y2(self, well):
-        return well.data['Y2-A'].median()
+    def __calculate_median_Y2(self, well, channel_name):
+        if not channel_name:
+            channel_name = self.channel_names[0]
+        return well.data[channel_name].median()
 
-    def plate_gated_median_fluorescence(self):
+    def plate_gated_median_fluorescence(self, channel_name1='', channel_name2=''):
+        if not channel_name1:
+            channel_name1 = self.channel_names[0]
+            channel_name2 = self.channel_names[1]
         # Load plate
         plate = FCPlate.from_dir(ID='Demo Plate', path=SHARED_RAW_DIR, parser='name')
-        plate = plate.transform('hlog', channels=['Y2-A', 'B1-A'], b=500.0)
+        plate = plate.transform('hlog', channels=[channel_name1, channel_name2], b=500.0)
 
         # Clear prev sub plot
         subplots(clear=True)
@@ -135,8 +155,7 @@ class Plotting:
         plate = plate.dropna()
 
         # Create a threshold gates
-        from FlowCytometryTools import ThresholdGate
-        y2_gate = ThresholdGate(1000.0, 'Y2-A', region='above')
+        y2_gate = ThresholdGate(1000.0, channel_name1, region='above')
 
         # Plot
         plate = plate.gate(y2_gate)
@@ -151,24 +170,31 @@ class Plotting:
         print(png_file)
         grid(False)
         savefig(png_file)
-        self.response['plate_gated_median_fluorescence']='plate_gated_median_fluorescence.png'
+        self.response['plate_gated_median_fluorescence'] = 'plate_gated_median_fluorescence.png'
 
-    def __custom_compensate(self, original_sample):
+    def __custom_compensate(self, original_sample, channel_name1='', channel_name2=''):
+        if not channel_name1:
+            channel_name1 = self.channel_names[0]
+            channel_name2 = self.channel_names[1]
         # Copy the original sample
         new_sample = original_sample.copy()
         new_data = new_sample.data
         original_data = original_sample.data
 
         # Our transformation goes here
-        new_data['Y2-A'] = original_data['Y2-A'] - 0.15 * original_data['FSC-A']
-        new_data['FSC-A'] = original_data['FSC-A'] - 0.32 * original_data['Y2-A']
+        new_data[channel_name1] = original_data[channel_name1] - 0.15 * original_data[channel_name2]
+        new_data[channel_name2] = original_data[channel_name2] - 0.32 * original_data[channel_name1]
         new_data = new_data.dropna()  # Removes all NaN entries
         new_sample.data = new_data
         return new_sample
 
-    def compensation(self):
+    def compensation(self, channel_name1='', channel_name2=''):
+        if not channel_name1:
+            channel_name1 = self.channel_names[0]
+            channel_name2 = self.channel_names[1]
         # Load data
-        sample = self.sample.transform('hlog')
+        # sample = self.sample.transform('hlog')
+        sample = self.sample
         compensated_sample = sample.apply(self.__custom_compensate)
 
         ###
@@ -180,8 +206,8 @@ class Plotting:
         subplots(clear=True)
 
         # Plot
-        sample.plot(['Y2-A', 'FSC-A'], kind='scatter', color='gray', alpha=0.6, label='Original');
-        compensated_sample.plot(['Y2-A', 'FSC-A'], kind='scatter', color='green', alpha=0.6,
+        sample.plot([channel_name1, channel_name2], kind='scatter', color='gray', alpha=0.6, label='Original');
+        compensated_sample.plot([channel_name1, channel_name2], kind='scatter', color='green', alpha=0.6,
                                 label='Compensated');
 
         legend(loc='best')
@@ -189,22 +215,27 @@ class Plotting:
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['compensation']='compensation.png'
+        self.response['compensation'] = 'compensation.png'
 
-    def __transform_using_this_method(self, original_sample):
+    def __transform_using_this_method(self, original_sample, channel_name=''):
         """ This function implements a log transformation on the data. """
+        if not channel_name:
+            channel_name = self.channel_names[0]
         # Copy the original sample
         new_sample = original_sample.copy()
         new_data = new_sample.data
 
         # Our transformation goes here
-        new_data['Y2-A'] = log(new_data['Y2-A'])
+        new_data[channel_name] = log(new_data[channel_name])
         new_data = new_data.dropna()  # Removes all NaN entries
         new_sample.data = new_data
         return new_sample
 
-    def custom_transformation(self):
+    def custom_transformation(self, channel_name=''):
+        if not channel_name:
+            channel_name = self.channel_names[0]
         # Load data
+        # sample = self.ssample.transform('hlog')
         sample = self.ssample
 
         # Transform using our own custom method
@@ -219,7 +250,7 @@ class Plotting:
         subplots(clear=True)
 
         # Plot
-        custom_transform_sample.plot(['Y2-A'], color='green', alpha=0.9);
+        custom_transform_sample.plot([channel_name], alpha=0.9);
         grid(True)
 
         title('Custom log transformation')
@@ -227,7 +258,7 @@ class Plotting:
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['custom_transformation']='custom_transformation.png'
+        self.response['custom_transformation'] = 'custom_transformation.png'
 
     def get_plots(self):
         self.histogram()
