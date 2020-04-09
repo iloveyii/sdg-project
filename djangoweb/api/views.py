@@ -7,7 +7,7 @@ from django.shortcuts import render
 import ast
 import json
 import re
-from api.models import Model
+from api.models.models import Model
 import requests
 
 from django.core.files.storage import FileSystemStorage
@@ -49,6 +49,8 @@ def upload(request):
 
 
 def about(request):
+    a = Model.objects.all()
+    print(serializers.serialize('json', a))
     return render(request, 'about.html')
 
 

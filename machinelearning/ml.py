@@ -17,7 +17,7 @@ BIN_WIDTH = 100
 CSV_FILE = 'fcs_file.csv'
 # FCS_FILE = 'RFP_Well_A3.fcs'
 FCS_FILE = 'a1_24h_noc200.fcs'
-FCS_FILE_A4 = 'CFP_Well_A4.fcs'
+FCS_FILE_A4 = 'cfp_well_a4.fcs'
 ECOLI_FILE = 'ecoli.fcs'
 
 
