@@ -124,5 +124,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'data/raw')  # 'data' is my media folder
+MEDIA_ROOT = os.path.join('/shared', 'raw', 'cell')  # 'data' is my media folder
 MEDIA_URL = '/media/'

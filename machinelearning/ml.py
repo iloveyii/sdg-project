@@ -5,12 +5,12 @@ import pandas as pd
 
 from pandas.tools.plotting import table  # EDIT: see deprecation warnings below
 import cytoflow as flow
-
+import requests
 # if your figures are too big or too small, you can scale them by changing matplotlib's DPI
 import matplotlib
 
 STATIC_DIR = os.path.realpath('/shared/static/')
-SHARED_PLOT_DIR = os.path.realpath('/shared/plots/')
+SHARED_PLOT_DIR = os.path.realpath('/shared/machinelearning/')
 SHARED_RAW_DIR = os.path.realpath('/shared/raw/cell/')
 
 BIN_WIDTH = 100
@@ -22,17 +22,22 @@ ECOLI_FILE = 'ecoli.fcs'
 
 
 class MachineLearning:
-    def __init__(self):
+    def __init__(self, fcs_file_name=FCS_FILE, fcs_file_a4_name=FCS_FILE_A4, ecoli_file_name=ECOLI_FILE):
         self.response = {}
         # Locate sample data included with this package
         print('Raw dir in init :', SHARED_RAW_DIR)
-        fcs_file_path = os.path.join(SHARED_RAW_DIR, FCS_FILE)
+        fcs_file_path = os.path.join(SHARED_RAW_DIR, fcs_file_name)
         print('FCS File', fcs_file_path)
-        fcs_file_a4_path = os.path.join(SHARED_RAW_DIR, FCS_FILE_A4)
+        fcs_file_a4_path = os.path.join(SHARED_RAW_DIR, fcs_file_a4_name)
         print('FCS File 4', fcs_file_a4_path)
         af_op = flow.AutofluorescenceOp()
-        print(af_op.channel)
-
+        # Get channel_names
+        URL = 'http://basicanalysis:3000'
+        r = requests.get(URL)
+        self.channel_names = r.json()
+        self.channel_name1 = self.channel_names[0]
+        self.channel_name2 = self.channel_names[1]
+        print(r.json())
         tube1 = flow.Tube(file=fcs_file_path,
                           conditions={"Dox": 10.0})
         tube2 = flow.Tube(file=fcs_file_a4_path,
@@ -40,12 +45,12 @@ class MachineLearning:
 
         import_op = flow.ImportOp(conditions={"Dox": "float"},
                                   tubes=[tube1, tube2],
-                                  channels={'V2-A': 'V2-A',
-                                            'Y2-A': 'Y2-A'})
+                                  channels={self.channel_name1: self.channel_name1,
+                                            self.channel_name2: self.channel_name2})
 
         ex = import_op.apply()
         flow.HistogramView(scale='logicle',
-                           channel='Y2-A').plot(ex)
+                           channel=self.channel_name2).plot(ex)
 
         png_file = os.path.join(SHARED_PLOT_DIR, 'histogram.png')
         print(png_file)
@@ -54,8 +59,8 @@ class MachineLearning:
         self.response['histogram'] = 'histogram.png'
 
         g = flow.GaussianMixtureOp(name="Gauss",
-                                   channels=["Y2-A"],
-                                   scale={"Y2-A": "logicle"},
+                                   channels=[self.channel_name1],
+                                   scale={self.channel_name1: "logicle"},
                                    num_components=2)
 
         g.estimate(ex)
@@ -76,8 +81,8 @@ class MachineLearning:
 
         subplots(clear=True)
         g = flow.GaussianMixtureOp(name="Gauss",
-                                   channels=["V2-A"],
-                                   scale={"V2-A": "logicle"},
+                                   channels=[self.channel_name1],
+                                   scale={self.channel_name1: "logicle"},
                                    num_components=2,
                                    posteriors=True)
 
@@ -94,7 +99,7 @@ class MachineLearning:
 
         # We can use this second metadata column to filter out events with low posterior probabilities:
         ex2.query("Gauss_1_posterior > 0.9 | Gauss_2_posterior > 0.9").data.head()
-        flow.HistogramView(channel="V2-A",
+        flow.HistogramView(channel=self.channel_name1,
                            huefacet="Gauss",
                            scale="logicle",
                            subset="Gauss_1_posterior > 0.9 | Gauss_2_posterior > 0.9").plot(ex2)
@@ -105,9 +110,9 @@ class MachineLearning:
         subplots(clear=True)
         # Basic usage, assigning each event to one of the mixture components: (the isolines in the default_view() are 1, 2 and 3 standard deviations away from the mean.)
         g = flow.GaussianMixtureOp(name="Gauss",
-                                   channels=["V2-A", "Y2-A"],
-                                   scale={"V2-A": "logicle",
-                                          "Y2-A": "logicle"},
+                                   channels=[self.channel_name1, self.channel_name2],
+                                   scale={self.channel_name1: "logicle",
+                                          self.channel_name2: "logicle"},
                                    num_components=2)
 
         g.estimate(ex)
@@ -122,13 +127,13 @@ class MachineLearning:
         self.k_means(ex)
 
         # FlowPeaks
-        ecoli_file_path = os.path.join(SHARED_RAW_DIR, ECOLI_FILE)
+        ecoli_file_path = os.path.join(SHARED_RAW_DIR, ecoli_file_name)
         print('Ecoli ', ecoli_file_path)
         ex = flow.ImportOp(tubes=[flow.Tube(file=ecoli_file_path)]).apply()
 
-        flow.ScatterplotView(xchannel="FSC-A",
+        flow.ScatterplotView(xchannel=self.channel_name1,
                              xscale='log',
-                             ychannel="FSC-H",
+                             ychannel=self.channel_name2,
                              yscale='log').plot(ex)
         png_file = os.path.join(SHARED_PLOT_DIR, 'flow_peaks.png')
         savefig(png_file)
@@ -139,9 +144,9 @@ class MachineLearning:
 
     def k_means(self, ex):
         k = flow.KMeansOp(name="KMeans",
-                          channels=["V2-A", "Y2-A"],
-                          scale={"V2-A": "logicle",
-                                 "Y2-A": "logicle"},
+                          channels=[self.channel_name1, self.channel_name2],
+                          scale={self.channel_name1: "logicle",
+                                 self.channel_name2: "logicle"},
                           num_clusters=2,
                           by=['Dox'])
 
@@ -154,9 +159,9 @@ class MachineLearning:
 
     def k_means2(self, ex):
         k = flow.KMeansOp(name="KMeans",
-                          channels=["FSC-A", "FSC-H"],
-                          scale={"FSC-A": "log",
-                                 "FSC-H": "log"},
+                          channels=[self.channel_name1, self.channel_name2],
+                          scale={self.channel_name1: "log",
+                                 self.channel_name2: "log"},
                           num_clusters=3)
 
         k.estimate(ex)

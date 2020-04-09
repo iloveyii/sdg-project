@@ -24,15 +24,17 @@ def upload(request):
         print(upload_file.name)
         print(upload_file.size)
         fs = FileSystemStorage()
-        filename_formatted = re.sub('[^0-9a-zA-Z.]+', '_', 'fcs_file.fcs')
+        filename_formatted = (re.sub('[^0-9a-zA-Z.]+', '_', upload_file.name)).lower()
+        fs.delete(filename_formatted)
         filename = fs.save(filename_formatted, upload_file)
+
         uploaded_file_url = fs.url(filename)
         # analyze = Analysis(upload_file.name)
         data = {
             'name': upload_file.name,
             'size': upload_file.size,
             'file_url': uploaded_file_url,
-            # 'analysis': analyze.do()
+            'path': fs.path(filename_formatted)
         }
         json_str = json.dumps(data)
         return HttpResponse(json_str)
