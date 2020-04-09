@@ -55,6 +55,7 @@ services:
     build:
       context: ./machinelearning
     image:  alikth/ml_cell:latest
+    restart: always
     command: bash -c "
       pip install -r requirements.txt
       && pip3 uninstall bottleneck -y

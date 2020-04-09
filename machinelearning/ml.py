@@ -11,11 +11,12 @@ import matplotlib
 
 STATIC_DIR = os.path.realpath('/shared/static/')
 SHARED_PLOT_DIR = os.path.realpath('/shared/plots/')
-SHARED_RAW_DIR = os.path.realpath('/shared/raw/')
+SHARED_RAW_DIR = os.path.realpath('/shared/raw/cell/')
 
 BIN_WIDTH = 100
 CSV_FILE = 'fcs_file.csv'
-FCS_FILE = 'RFP_Well_A3.fcs'
+# FCS_FILE = 'RFP_Well_A3.fcs'
+FCS_FILE = 'a1_24h_noc200.fcs'
 FCS_FILE_A4 = 'CFP_Well_A4.fcs'
 ECOLI_FILE = 'ecoli.fcs'
 
@@ -29,6 +30,8 @@ class MachineLearning:
         print('FCS File', fcs_file_path)
         fcs_file_a4_path = os.path.join(SHARED_RAW_DIR, FCS_FILE_A4)
         print('FCS File 4', fcs_file_a4_path)
+        af_op = flow.AutofluorescenceOp()
+        print(af_op.channel)
 
         tube1 = flow.Tube(file=fcs_file_path,
                           conditions={"Dox": 10.0})
