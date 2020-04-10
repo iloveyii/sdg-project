@@ -49,8 +49,20 @@ def upload(request):
 
 
 def about(request):
+    model = Model()
+    # model.create('filename', 'plot_paths', 'results')
     a = Model.objects.all()
-    print(serializers.serialize('json', a))
+    # print(serializers.serialize('json', a))
+    value = request.COOKIES.get('sid')
+    s = requests.Session()
+    cookie_obj = requests.cookies.create_cookie(name='sid', value=value)
+    s.cookies.set_cookie(cookie_obj)
+    r = s.get('http://node_auth_server:8090/api/v1/islogin')
+    is_login = r.json()
+    print(value, r.json())
+    if is_login['login'] == 'success':
+        print('You are logged in')
+
     return render(request, 'about.html')
 
 

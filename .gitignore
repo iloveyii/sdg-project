@@ -11,4 +11,5 @@ djangoweb/api/static/plots
 basicanalysis/__pycache__/
 plotting/__pycache__/
 __pycache__
-
+node_modules
+node_auth_server/node_modules

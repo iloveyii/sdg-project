@@ -24,3 +24,44 @@ class Model(models.Model):
 
     def read(self):
         return Model.objects.all()
+
+
+class User(models.Model):
+    email = models.CharField(max_length=100, default='')
+    # date = models.DateTimeField(default=timezone.now)
+    password = models.TextField(default='')
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.email
+
+    def create(self, email, password):
+        a = User()
+        a.email = email
+        a.password = password
+        a.save()
+
+    def read(self):
+        return User.objects.all()
+
+
+class UserFiles(models.Model):
+    user_id = models.IntegerField()
+    filename_1 = models.CharField(max_length=100, default='')
+    filename_2 = models.CharField(max_length=100, default='')
+    filename_3 = models.CharField(max_length=100, default='')
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.email
+
+    def create(self, email, password):
+        a = User()
+        a.email = email
+        a.password = password
+        a.save()
+
+    def read(self):
+        return User.objects.all()

@@ -3,11 +3,14 @@ version: '3'
 services:
   db:
     image: postgres:12.2-alpine
+    restart: always
     environment:
       POSTGRES_DB: nice_marmot
       POSTGRES_USER: runner
       POSTGRES_PASSWORD: ""
       POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5433:5432
   web:
     build: .
     command: bash -c "
@@ -21,11 +24,28 @@ services:
       - ./shared:/shared
     ports:
       - 8080:8080
+    restart: always
     depends_on:
       - db
+  node_auth_server:
+    build: ./node_auth_server
+    image: node:latest
+    restart: always
+    command: bash -c "
+      cd /node_auth_server
+      && npm install
+      && npm run migrate
+      && npm start
+      "
+    volumes:
+      - ./node_auth_server:/node_auth_server
+      - ./shared:/shared
+    ports:
+      - 8090:8090
   basicanalysis:
     build: ./basicanalysis
     image: alikth/basic_cell:latest
+    restart: always
     command: bash -c "
         pip install -r requirements.txt
         && python3.6 api.py
@@ -40,6 +60,7 @@ services:
   plotting:
     build: ./plotting
     image: alikth/basic_cell:latest
+    restart: always
     command: bash -c "
         pip install -r requirements.txt
         && python3.6 api.py
