@@ -37,6 +37,9 @@ def if_login(request):
 # Create your views here.
 @csrf_exempt
 def upload(request):
+    global if_login
+    if not if_login(request):
+        return redirect('/api/login.html')
     if request.method == 'POST' and request.FILES[FILE_FIELD_NAME]:
         upload_file = request.FILES[FILE_FIELD_NAME]
         print('FILE is POSTED', upload_file)
@@ -99,10 +102,26 @@ def welcome(request):
     return render(request, 'welcome.html')
 
 
+def logout(request):
+    global sid
+    sid = ''
+    """
+    s = requests.Session()
+    cookie_obj = requests.cookies.create_cookie(name='sid', value=sid)
+    s.cookies.set_cookie(cookie_obj)
+    r = s.get('http://node_auth_server:8090/api/v1/logout')
+    print(r.json())
+    response = HttpResponse(render(request, 'login.html'))
+    response.set_cookie('sid', 'sid')
+    """
+    return redirect('/api/login.html')
+
+
 @csrf_exempt
 def login(request):
     global sid
     print('LOGIN SID: ', request.COOKIES.get('sid'))
+    response = HttpResponse(render(request, 'login.html'))
     if request.method == 'POST':
         form = request.POST
         print(form)
@@ -114,11 +133,11 @@ def login(request):
             if is_login['login'] == 'success':
                 sid = r.cookies['sid']
                 print(is_login, sid)
+                response = HttpResponse(render(request, 'upload.html'))
             else:
                 sid = ''
         except Exception as inst:
             print('Err', inst)
-    response = HttpResponse(render(request, 'login.html'))
     response.set_cookie('sid', sid)
     return response
 

@@ -130,6 +130,11 @@ app.get('/api/v1/islogin', async (req, res) => {
     return res.status(200).json({login: 'success', user_id: 's' + req.session.userId})
 })
 
+app.get('/api/v1/logout', async (req, res) => {
+    req.session.userId = null
+    return res.status(200).json({logout: 'success'})
+})
+
 app.post('/api/v1/login', async (req, res) => {
     const {email, password} = req.body
     if (!email || !password) return res.status(200).json({login: 'fail'})
