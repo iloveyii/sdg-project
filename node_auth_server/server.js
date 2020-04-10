@@ -171,27 +171,14 @@ app.post('/api/v1/register', async (req, res) => {
     const {username, email, password} = req.body
     const user = await Login.findOne({where: {email: email}})
     if (user) {
-        if (req.headers['content-type'] === 'application/json') {
-            return res.status(201).json({register: 'fail', err: 'Email already exists!'})
-        }
-        return res.send(`
-            <h1>This email is already registered</h1>
-            <a href="/api/v1/login">Login</a>
-        `)
+        return res.status(201).json({register: 'fail', err: 'Email already exists!'})
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
         Login.create({
             username: username, email: email, password: hashedPassword
         }).then(user => {
-            if (req.headers['content-type'] === 'application/json') {
-                res.status(201).json({register: 'success'})
-            } else {
-                return res.send(`
-                    <h1>User successfully registered</h1>
-                    <a href="/api/v1/login">Login</a>
-                `)
-            }
+            res.status(201).json({register: 'success'})
             req.session.userId = user.dataValues.id
             console.log('user registered : ', user.dataValues)
         });

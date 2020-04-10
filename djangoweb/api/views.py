@@ -118,6 +118,36 @@ def logout(request):
 
 
 @csrf_exempt
+def register(request):
+    errors = {}
+    if request.method == 'POST':
+        form = request.POST
+        if not form['email'] or not form['password'] or not form['confirm_password']:
+            errors = {
+                'msg': 'Email and password cannot be blank.'
+            }
+            print('Errors:', errors, form)
+        else:
+            # submit for to auth server
+            s = requests.Session()
+            # form['username'] = 'django'
+            try:
+                r = s.post('http://node_auth_server:8090/api/v1/register', form)
+                is_login = r.json()
+                print('Response from auth server : ', is_login)
+                if is_login['login'] == 'success':
+                    sid = r.cookies['sid']
+                    print(is_login, sid)
+                    response = HttpResponse(render(request, 'upload.html'))
+                else:
+                    sid = ''
+            except Exception as inst:
+                print('Err', inst)
+            return redirect('/api/login.html')
+    return render(request, 'register.html', context=errors)
+
+
+@csrf_exempt
 def login(request):
     global sid
     print('LOGIN SID: ', request.COOKIES.get('sid'))
