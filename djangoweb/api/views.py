@@ -135,10 +135,13 @@ def register(request):
                 r = s.post('http://node_auth_server:8090/api/v1/register', form)
                 is_login = r.json()
                 print('Response from auth server : ', is_login)
-                if is_login['login'] == 'success':
-                    sid = r.cookies['sid']
-                    print(is_login, sid)
-                    response = HttpResponse(render(request, 'upload.html'))
+                if is_login['register'] == 'success':
+                    r = s.post('http://node_auth_server:8090/api/v1/login', form)
+                    is_login = r.json()
+                    if is_login['login'] == 'success':
+                        response = HttpResponse(render(request, 'upload.html'))
+                        response.set_cookie('sid', r.cookies['sid'])
+                        return response
                 else:
                     sid = ''
             except Exception as inst:
