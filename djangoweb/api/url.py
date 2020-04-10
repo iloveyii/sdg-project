@@ -11,6 +11,7 @@ urlpatterns = [
     # Cell analysis routes
     url('basic', views.basic, name='basic'),
     # Upload file
+    url('login', views.login, name='login'),
     url('plotting', views.plotting, name='plotting'),
     url('upload', views.upload, name='upload'),
     # Welcome page

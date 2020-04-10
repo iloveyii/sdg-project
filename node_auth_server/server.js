@@ -128,7 +128,6 @@ app.get('/api/v1/islogin', async (req, res) => {
         return res.status(200).json({login: 'fail', user_id: 'f' + req.session.userId})
     }
     return res.status(200).json({login: 'success', user_id: 's' + req.session.userId})
-
 })
 
 app.post('/api/v1/login', async (req, res) => {
@@ -140,14 +139,10 @@ app.post('/api/v1/login', async (req, res) => {
         if (req.headers['content-type'] === 'application/json') {
             return res.status(200).json({login: 'success'})
         } else {
-            return res.redirect('/api/v1/random-games')
+            return res.status(200).json({login: 'success'})
         }
     }
-    if (req.headers['content-type'] === 'application/json') {
-        return res.status(200).json({login: 'fail'})
-    } else {
-        return res.redirect('/api/v1/login')
-    }
+    return res.status(200).json({login: 'fail'})
 });
 
 
