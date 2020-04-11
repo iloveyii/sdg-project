@@ -63,22 +63,24 @@
             <hr class="mb-4">
         </div>
     </div>
-    <div class="row" id="machine-learning-div">
-        <div class="col-md-12 order-md-0">
-            <h4>ML Plots</h4>
-            <div class="lead" id="machine-learning"></div>
-            <hr class="mb-4">
-        </div>
-    </div>
+
     <div class="row" id="plotting-div">
         <div class="col-md-12 order-md-0">
             <h4>Gating , Transformation</h4>
-            <div class="lead" id="plotting"></div>
+            <div class="row" id="plotting"></div>
+            <hr class="mb-4">
+        </div>
+    </div>
+    <div class="row" id="machine-learning-div">
+        <div class="col-md-12 order-md-0">
+            <h4>ML Plots</h4>
+            <div class="row" id="machine-learning"></div>
+            <hr class="mb-4">
         </div>
     </div>
 
     <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">&copy; 2017-2018 Company Name</p>
+        <p class="mb-1">&copy; 2020-2021 HKR</p>
         <ul class="list-inline">
             <li class="list-inline-item"><a href="#">Privacy</a></li>
             <li class="list-inline-item"><a href="#">Terms</a></li>
@@ -127,9 +129,8 @@
             const response = fetch(url_ml + '?ch1=' + document.getElementById('channel-names-1').value + '&ch2=' + document.getElementById('channel-names-2').value).then(response => response.json()).then(plots => {
                 mlPlots.innerHTML = '';
                 Object.keys(plots).forEach(key => {
-                    const image = document.createElement('img')
-                    image.src = '/static/plots/machinelearning/' + plots[key]
-                    mlPlots.append(image)
+                    const src = '/static/plots/machinelearning/' + plots[key]
+                    mlPlots.append(createPlot('col-sm-12 py-2', key, 'Heading', 'Para', src))
                 })
                 console.log(plots)
                 return resolve(plots)
@@ -153,14 +154,74 @@
             ).then(response => response.json()).then(plots => {
                 mlPlots.innerHTML = '';
                 Object.keys(plots).forEach(key => {
-                    const image = document.createElement('img')
-                    image.src = '/static/plots/plotting/' + plots[key]
-                    mlPlots.append(image)
+                    /*const image = document.createElement('img')
+                    image.src = '/static/plots/plotting/' + plots[key] */
+                    const src = '/static/plots/plotting/' + plots[key]
+                    mlPlots.append(createPlot('col-sm-6 py-2', key, 'Heading', 'Para', src))
                 })
                 console.log(plots)
                 return resolve(plots)
             })
         })
+    }
+
+    function createPlot(container_class, title, heading, para, image_url) {
+        const container = document.createElement('div');
+        container.className = container_class;
+        const card = document.createElement('div');
+        card.className = 'card';
+        const card_header = document.createElement('div');
+        card_header.className = 'card-header';
+        card_header.innerText = title[0].toUpperCase() + title.slice(1).split('_').join(" ");
+        ;
+        const card_body = document.createElement('div');
+        card_body.className = 'card-body';
+        const row = document.createElement('div');
+        row.className = 'row';
+        const col_sm_8 = document.createElement('div');
+        col_sm_8.className = 'col-sm-8';
+        const plot = document.createElement('img');
+        plot.src = image_url;
+        plot.className = 'img-fluid';
+        const col_sm_4 = document.createElement('div');
+        col_sm_4.className = 'col-sm-4';
+        const card_title = document.createElement('h5');
+        card_title.className = 'card-title';
+        card_title.innerText = heading;
+        const card_text = document.createElement('p');
+        card_text.className = 'card-text';
+        card_text.innerText = para;
+        col_sm_4.append(card_title)
+        col_sm_4.append(card_text)
+        col_sm_8.append(plot)
+        row.append(col_sm_8)
+        row.append(col_sm_4)
+        card_body.append(row)
+        card.append(card_header)
+        card.append(card_body)
+        container.append(card)
+        return container;
+        /*
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    Histogram
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-8"></div>
+                        <div class="col-sm-4">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional
+                                content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+         */
     }
 
     function create_channel_checkboxes(select_id, channels) {
