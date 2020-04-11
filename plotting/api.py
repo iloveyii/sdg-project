@@ -10,7 +10,10 @@ api = Api(app)
 class Data(Resource):
     def get(self):
         file_id = request.args.get('id')
-        plotting = Plotting(file_id)
+        ch1 = request.args.get('ch1')
+        ch2 = request.args.get('ch2')
+        print('PLOTTING chs', ch1, ch2)
+        plotting = Plotting(file_id, ch1, ch2)
         plots = plotting.get_plots()
 
         return plots

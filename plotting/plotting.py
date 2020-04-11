@@ -21,9 +21,11 @@ ECOLI_FILE = 'ecoli.fcs'
 
 
 class Plotting:
-    def __init__(self, file_id):
+    def __init__(self, file_id, ch1=False, ch2=False):
         fcs_file_name = file_id + '_fcs_file.fcs'
         self.file_id = file_id
+        self.channel_name1 = ch1
+        self.channel_name2 = ch2
         global SHARED_RAW_DIR
         self.response = {}
         # Locate sample data included with this package
@@ -40,6 +42,8 @@ class Plotting:
         # Load data
         tsample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
         self.channel_names = tsample.channel_names
+        if not self.channel_name1 and not self.channel_name2:
+            self.channel_names = [self.channel_name1, self.channel_name2]
         self.ssample = tsample
         self.sample = tsample  # tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500.0)
 
@@ -48,11 +52,11 @@ class Plotting:
             channel_name = self.channel_names[0]
         # Plot Histogram
         self.sample.plot(channel_name, bins=100, alpha=0.9, color='green')
-        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_histogram1d.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('histogram1d.png'))
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['histogram1d'] = self.file_id + '_histogram1d.png'
+        self.response['histogram1d'] = self.get_file_name('histogram1d.png')
         # show()
 
     def histogram2d(self, channel_name1='', channel_name2=''):
@@ -61,11 +65,11 @@ class Plotting:
             channel_name1 = self.channel_names[0]
             channel_name2 = self.channel_names[1]
         self.sample.plot([channel_name1, channel_name2], bins=100, alpha=0.9, cmap=cm.hot)
-        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_histogram2d.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('histogram2d.png'))
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['histogram2d'] = self.file_id + '_histogram2d.png'
+        self.response['histogram2d'] = self.get_file_name('histogram2d.png')
 
     def scatter(self, channel_name1='', channel_name2=''):
         if not channel_name1:
@@ -73,11 +77,11 @@ class Plotting:
             channel_name2 = self.channel_names[1]
         # Plot scatter
         self.sample.plot([channel_name1, channel_name2], kind='scatter', alpha=0.6, color='gray')
-        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_scatter.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('scatter.png'))
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['scatter'] = self.file_id + '_scatter.png'
+        self.response['scatter'] = self.get_file_name('scatter.png')
 
     def threshold_gate(self, channel_name=''):
         if not channel_name:
@@ -99,11 +103,11 @@ class Plotting:
         title('Gated Sample');
 
         tight_layout()
-        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_threshold_gate.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('threshold_gate.png'))
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['threshold_gate'] = self.file_id + '_threshold_gate.png'
+        self.response['threshold_gate'] = self.get_file_name('threshold_gate.png')
 
     def plate_gated_counts(self, channel_name1='', channel_name2=''):
         if not channel_name1:
@@ -131,11 +135,11 @@ class Plotting:
                       cmap=cm.Oranges)
         title('Heat map of fluorescent counts on plate')
 
-        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_plate_gated_counts.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('plate_gated_counts.png'))
         print(png_file)
         grid(False)
         savefig(png_file)
-        self.response['plate_gated_counts'] = self.file_id + '_plate_gated_counts.png'
+        self.response['plate_gated_counts'] = self.get_file_name('plate_gated_counts.png')
 
     def __calculate_median_Y2(self, well, channel_name):
         if not channel_name:
@@ -168,11 +172,11 @@ class Plotting:
                       cmap=cm.Reds)
         title('Heat map of median RFP fluorescence on plate')
 
-        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_plate_gated_median_fluorescence.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('plate_gated_median_fluorescence.png'))
         print(png_file)
         grid(False)
         savefig(png_file)
-        self.response['plate_gated_median_fluorescence'] = self.file_id + '_plate_gated_median_fluorescence.png'
+        self.response['plate_gated_median_fluorescence'] = self.get_file_name('plate_gated_median_fluorescence.png')
 
     def __custom_compensate(self, original_sample, channel_name1='', channel_name2=''):
         if not channel_name1:
@@ -213,11 +217,11 @@ class Plotting:
                                 label='Compensated');
 
         legend(loc='best')
-        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_compensation.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('compensation.png'))
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['compensation'] = self.file_id + '_compensation.png'
+        self.response['compensation'] = self.get_file_name('compensation.png')
 
     def __transform_using_this_method(self, original_sample, channel_name=''):
         """ This function implements a log transformation on the data. """
@@ -256,33 +260,53 @@ class Plotting:
         grid(True)
 
         title('Custom log transformation')
-        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_custom_transformation.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('custom_transformation.png'))
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['custom_transformation'] = self.file_id + '_custom_transformation.png'
+        self.response['custom_transformation'] = self.get_file_name('custom_transformation.png')
 
     def get_plots(self):
         if self.check_if_images_exist():
             return self.response
-        self.histogram()
-        self.histogram2d()
+        self.histogram(self.channel_name1)
+        self.histogram2d(self.channel_name1, self.channel_name2)
 
-        self.scatter()
-        self.threshold_gate()
+        self.scatter(self.channel_name1, self.channel_name2)
+        self.threshold_gate(self.channel_name1)
 
-        self.compensation()
-        self.custom_transformation()
+        self.compensation(self.channel_name1, self.channel_name2)
+        self.custom_transformation(self.channel_name1)
         return self.response
 
-    def check_if_images_exist(self):
+    def check_if_images_exist2(self):
         dir = os.scandir(SHARED_PLOTTING_DIR)
         print('CHECK if images exist ', dir)
 
         for file in dir:
             if file.name.startswith(self.file_id):
-                parts = file.name.split(self.file_id+'_')
+                parts = file.name.split(self.file_id + '_')
                 file_name = parts[1]
+                keys = file_name.split('.')
+                key = keys[0]
+                print(key, file.name)
+                self.response[key] = file.name
+        return bool(self.response)
+
+    def get_file_name(self, file_part):
+        return "{}_{}_{}__{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(), file_part)
+
+    def check_if_images_exist(self):
+        directory = os.scandir(SHARED_PLOTTING_DIR)
+        print('CHECK if images exist ', directory)
+        user_channels = self.get_file_name('')
+        for file in directory:
+            if file.name.startswith(user_channels):
+                parts = file.name.partition('__')
+                if len(parts) != 3:
+                    print(file.name, user_channels, parts, sys.getdefaultencoding())
+                    continue
+                file_name = parts[2]
                 keys = file_name.split('.')
                 key = keys[0]
                 print(key, file.name)

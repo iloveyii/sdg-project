@@ -148,7 +148,9 @@
         const mlPlots = document.getElementById('plotting');
         showLoadingFor(mlPlots)
         return new Promise((resolve, reject) => {
-            const response = fetch(url_plotting).then(response => response.json()).then(plots => {
+            const response = fetch(url_plotting +
+                '?ch1=' + document.getElementById('channel-names-1').value + '&ch2=' + document.getElementById('channel-names-2').value
+            ).then(response => response.json()).then(plots => {
                 mlPlots.innerHTML = '';
                 Object.keys(plots).forEach(key => {
                     const image = document.createElement('img')
