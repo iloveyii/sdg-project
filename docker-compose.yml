@@ -15,8 +15,8 @@ services:
     build: .
     command: bash -c "
         pip install requests
-        && mkdir /shared/plotting
-        && mkdir /shared/machinelearning
+        && mkdir -p /shared/plotting
+        && mkdir -p /shared/machinelearning
         && python manage.py makemigrations api
         && python manage.py collectstatic
         && python /code/djangoweb/manage.py runserver 0.0.0.0:8080
