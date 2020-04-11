@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 import ast
+import os, shutil
 import sys
 import json
 import re
@@ -16,6 +17,8 @@ from django.core.files.storage import FileSystemStorage
 
 FILE_FIELD_NAME = 'fcs_file'
 sid = ''
+SHARED_PLOTTING_DIR = os.path.realpath('/shared/plotting/')
+SHARED_ML_DIR = os.path.realpath('/shared/machinelearning/')
 
 
 def if_login(request):
@@ -41,6 +44,27 @@ def format_to_filename(string1, no_dot=False):
     if no_dot:
         return re.sub('[^0-9a-zA-Z]+', '_', string1).lower()
     return re.sub('[^0-9a-zA-Z.]+', '_', string1).lower()
+
+
+def clear_user_files(request):
+    file_id = get_logged_in_email_to_file_format(request)
+    try:
+        directory = os.scandir(SHARED_ML_DIR)
+        for file in directory:
+            if file.name.startswith(file_id):
+                file_path = os.path.join(SHARED_ML_DIR, file.name)
+                os.remove(file_path)
+    except Exception as e:
+        print('Failed to delete %s. Reason: %s' % (SHARED_ML_DIR, e))
+
+    try:
+        directory = os.scandir(SHARED_PLOTTING_DIR)
+        for file in directory:
+            if file.name.startswith(file_id):
+                file_path = os.path.join(SHARED_PLOTTING_DIR, file.name)
+                os.remove(file_path)
+    except Exception as e:
+        print('Failed to delete %s. Reason: %s' % (SHARED_PLOTTING_DIR, e))
 
 
 # Create your views here.
@@ -70,6 +94,8 @@ def upload(request):
         }
         json_str = json.dumps(data)
         # return HttpResponse(json_str)
+        # Clean prev files
+        clear_user_files(request)
         return render(request, 'upload.html', context=data)
     else:
         text = """<h1>welcome to my app - hello !</h1>"""
@@ -180,6 +206,11 @@ def register(request):
                 print('Err', inst)
             return redirect('/api/login.html')
     return render(request, 'register.html', context=errors)
+
+
+@csrf_exempt
+def forgot_password(request):
+    return render(request, 'forgot_password.html')
 
 
 @csrf_exempt
