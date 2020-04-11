@@ -22,17 +22,18 @@ ECOLI_FILE = 'ecoli.fcs'
 
 
 class MachineLearning:
-    def __init__(self, fcs_file_name=FCS_FILE, fcs_file_a4_name=FCS_FILE_A4, ecoli_file_name=ECOLI_FILE):
+    def __init__(self, file_id):
+        fcs_file_name = file_id + '_fcs_file.fcs'
         self.response = {}
         # Locate sample data included with this package
         print('Raw dir in init :', SHARED_RAW_DIR)
         fcs_file_path = os.path.join(SHARED_RAW_DIR, fcs_file_name)
         print('FCS File', fcs_file_path)
-        fcs_file_a4_path = os.path.join(SHARED_RAW_DIR, fcs_file_a4_name)
+        fcs_file_a4_path = os.path.join(SHARED_RAW_DIR, FCS_FILE_A4)
         print('FCS File 4', fcs_file_a4_path)
         af_op = flow.AutofluorescenceOp()
         # Get channel_names
-        URL = 'http://basicanalysis:3000'
+        URL = 'http://basicanalysis:3000?id=' + file_id
         r = requests.get(URL)
         self.channel_names = r.json()
         self.channel_name1 = self.channel_names[0]
@@ -127,7 +128,8 @@ class MachineLearning:
         self.k_means(ex)
 
         # FlowPeaks
-        ecoli_file_path = os.path.join(SHARED_RAW_DIR, ecoli_file_name)
+        """
+        ecoli_file_path = os.path.join(SHARED_RAW_DIR, ECOLI_FILE)
         print('Ecoli ', ecoli_file_path)
         ex = flow.ImportOp(tubes=[flow.Tube(file=ecoli_file_path)]).apply()
 
@@ -138,7 +140,7 @@ class MachineLearning:
         png_file = os.path.join(SHARED_PLOT_DIR, 'flow_peaks.png')
         savefig(png_file)
         self.response['flow_peaks'] = 'flow_peaks.png'
-
+        """
         # K-MEANS2
         self.k_means2(ex)
 

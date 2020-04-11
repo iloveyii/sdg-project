@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 import ast
+import sys
 import json
 import re
 from api.models.models import Model
@@ -28,25 +29,34 @@ def if_login(request):
         is_logged_in = r.json()
         print(value, r.json())
         if is_logged_in['login'] == 'success':
+            print('USER Logged In')
             return True
+        print('USER NOT Logged In')
         return False
     except Exception as inst:
         print('Err', inst)
 
 
+def format_to_filename(string1, no_dot=False):
+    if no_dot:
+        return re.sub('[^0-9a-zA-Z]+', '_', string1).lower()
+    return re.sub('[^0-9a-zA-Z.]+', '_', string1).lower()
+
+
 # Create your views here.
 @csrf_exempt
 def upload(request):
-    global if_login
+    global if_login, get_logged_in_user, format_to_filename
     if not if_login(request):
         return redirect('/api/login.html')
     if request.method == 'POST' and request.FILES[FILE_FIELD_NAME]:
+        user = get_logged_in_user(request)
         upload_file = request.FILES[FILE_FIELD_NAME]
         print('FILE is POSTED', upload_file)
         print(upload_file.name)
         print(upload_file.size)
         fs = FileSystemStorage()
-        filename_formatted = (re.sub('[^0-9a-zA-Z.]+', '_', upload_file.name)).lower()
+        filename_formatted = format_to_filename(user['email'], True) + '_' + 'fcs_file.fcs'
         fs.delete(filename_formatted)
         filename = fs.save(filename_formatted, upload_file)
 
@@ -68,6 +78,15 @@ def upload(request):
         }
         return render(request, 'upload.html', context=context)
         # return HttpResponse(text)
+
+
+def get_logged_in_email_to_file_format(request):
+    if if_login(request):
+        user = get_logged_in_user(request)
+        if user:
+            email = user['email']
+            return format_to_filename(email, True)
+    return False
 
 
 def about(request):
@@ -98,6 +117,8 @@ def react(request):
 
 
 def welcome(request):
+    global get_logged_in_user
+    print(get_logged_in_user(request))
     print('WElcome SID: ', sid)
     return render(request, 'welcome.html')
 
@@ -115,6 +136,19 @@ def logout(request):
     response.set_cookie('sid', 'sid')
     """
     return redirect('/api/login.html')
+
+
+def get_logged_in_user(request):
+    value = sid or request.COOKIES.get('sid')
+    s = requests.Session()
+    cookie_obj = requests.cookies.create_cookie(name='sid', value=value)
+    s.cookies.set_cookie(cookie_obj)
+    r = s.get('http://node_auth_server:8090/api/v1/get_logged_in_user')
+    is_logged_in = r.json()
+    print('get_logged_in_user Response from auth server : ', is_logged_in)
+    if is_logged_in['status'] == 'success':
+        return is_logged_in
+    return False
 
 
 @csrf_exempt
@@ -142,8 +176,6 @@ def register(request):
                         response = HttpResponse(render(request, 'upload.html'))
                         response.set_cookie('sid', r.cookies['sid'])
                         return response
-                else:
-                    sid = ''
             except Exception as inst:
                 print('Err', inst)
             return redirect('/api/login.html')
@@ -177,30 +209,39 @@ def login(request):
 
 # MachineLearning plots
 @csrf_exempt
-def analysis(request):
-    data = {
-        'user': {
-            'name': 'Alex',
-            'age': 19
+def machine_learning(request):
+    id = get_logged_in_email_to_file_format(request)
+    if not id:
+        response = {
+            'status': 'fail',
+            'msg': 'User not logged in'
         }
-    }
-    URL = 'http://machinelearning:5000'
-    r = requests.get(URL)
-    print(r.json())
+    else:
+        URL = 'http://machinelearning:5000?id=' + id
+        r = requests.get(URL)
+        response = r.json()
+    # print(r.json())
     # a = Model.objects.all()
     # print(serializers.serialize('json', a))
     # json_str = json.dumps(data)
     # print(json_str)
     #  json_str = serializers.serialize('json', r.json())
-    return HttpResponse(r)
+    return HttpResponse(json.dumps(response))
 
 
 # Plotting plots
 @csrf_exempt
 def basic(request):
-    URL = 'http://basicanalysis:3000'
-    r = requests.get(URL)
-    print(r.json())
+    id = get_logged_in_email_to_file_format(request)
+    if not id:
+        response = {
+            'status': 'fail',
+            'msg': 'User not logged in'
+        }
+    else:
+        URL = 'http://basicanalysis:3000?id=' + id
+        r = requests.get(URL)
+        print(r.json())
     return HttpResponse(r)
 
 

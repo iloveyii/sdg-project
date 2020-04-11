@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from flask_restful import Resource, Api
 from basic import Basic
 
@@ -8,8 +9,10 @@ api = Api(app)
 
 class Data(Resource):
     def get(self):
-        basic = Basic()
+        file_id = request.args.get('id')
+        basic = Basic(file_id)
         channels = basic.get_channel_names()
+        print('BASIC Flask channels :', channels)
 
         return channels
 

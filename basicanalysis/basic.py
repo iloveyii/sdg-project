@@ -19,8 +19,9 @@ ECOLI_FILE = 'ecoli.fcs'
 
 
 class Basic:
-    def __init__(self):
-        self.datafile = os.path.join(RAW_DIR, FCS_FILE)
+    def __init__(self, file_id):
+        fcs_file_name = file_id + '_fcs_file.fcs'
+        self.datafile = os.path.join(RAW_DIR, fcs_file_name)
         print('Path to data file is : ' + self.datafile)
         self.sample = False
         self.read_data()

@@ -167,6 +167,16 @@ app.get('/api/v1/register', async (req, res) => {
     `)
 });
 
+app.get('/api/v1/get_logged_in_user', async (req, res) => {
+    const userId = req.session.userId
+    if (!userId) return res.status(201).json({status: 'fail', email: ''})
+
+    const user = await Login.findOne({where: {id: userId}})
+    if (user) {
+        return res.status(201).json({status: 'success', email: user.email})
+    }
+})
+
 app.post('/api/v1/register', async (req, res) => {
     const {username, email, password} = req.body
     const user = await Login.findOne({where: {email: email}})
