@@ -69,8 +69,8 @@ def upload(request):
             'path': fs.path(filename_formatted)
         }
         json_str = json.dumps(data)
-        return HttpResponse(json_str)
-
+        # return HttpResponse(json_str)
+        return render(request, 'upload.html', context=data)
     else:
         text = """<h1>welcome to my app - hello !</h1>"""
         context = {
@@ -241,13 +241,22 @@ def basic(request):
     else:
         URL = 'http://basicanalysis:3000?id=' + id
         r = requests.get(URL)
-        print(r.json())
-    return HttpResponse(r)
+        response = r.json()
+        print(response)
+    return HttpResponse(json.dumps(response))
 
 
 @csrf_exempt
 def plotting(request):
-    URL = 'http://plotting:4000'
-    r = requests.get(URL)
-    print(r.json())
-    return HttpResponse(r)
+    id = get_logged_in_email_to_file_format(request)
+    if not id:
+        response = {
+            'status': 'fail',
+            'msg': 'User not logged in'
+        }
+    else:
+        URL = 'http://plotting:4000?id=' + id
+        r = requests.get(URL)
+        response = r.json()
+        print(response)
+    return HttpResponse(json.dumps(response))

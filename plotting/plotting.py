@@ -21,17 +21,19 @@ ECOLI_FILE = 'ecoli.fcs'
 
 
 class Plotting:
-    def __init__(self):
+    def __init__(self, file_id):
+        fcs_file_name = file_id + '_fcs_file.fcs'
+        self.file_id = file_id
         global SHARED_RAW_DIR
         self.response = {}
         # Locate sample data included with this package
         # SHARED_RAW_DIR = os.path.join(FlowCytometryTools.__path__[0], 'tests', 'data', 'Plate01')
         print('Raw dir in init :', SHARED_RAW_DIR)
         self.csv_file = os.path.join(SHARED_PLOTTING_DIR, CSV_FILE)
-        self.__read_fcs_file_to_fcm()
+        self.__read_fcs_file_to_fcm(fcs_file_name)
 
-    def __read_fcs_file_to_fcm(self):
-        fcs_file = os.path.join(SHARED_RAW_DIR, FCS_FILE)
+    def __read_fcs_file_to_fcm(self, fcs_file_name):
+        fcs_file = os.path.join(SHARED_RAW_DIR, fcs_file_name)
         if not os.path.exists(fcs_file):
             print('FCS file does not exist ', fcs_file)
             return False
@@ -46,11 +48,11 @@ class Plotting:
             channel_name = self.channel_names[0]
         # Plot Histogram
         self.sample.plot(channel_name, bins=100, alpha=0.9, color='green')
-        png_file = os.path.join(SHARED_PLOTTING_DIR, 'histogram1d.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_histogram1d.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['histogram1d'] = 'histogram1d.png'
+        self.response['histogram1d'] = self.file_id + '_histogram1d.png'
         # show()
 
     def histogram2d(self, channel_name1='', channel_name2=''):
@@ -59,11 +61,11 @@ class Plotting:
             channel_name1 = self.channel_names[0]
             channel_name2 = self.channel_names[1]
         self.sample.plot([channel_name1, channel_name2], bins=100, alpha=0.9, cmap=cm.hot)
-        png_file = os.path.join(SHARED_PLOTTING_DIR, 'histogram2d.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_histogram2d.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['histogram2d'] = 'histogram2d.png'
+        self.response['histogram2d'] = self.file_id + '_histogram2d.png'
 
     def scatter(self, channel_name1='', channel_name2=''):
         if not channel_name1:
@@ -71,11 +73,11 @@ class Plotting:
             channel_name2 = self.channel_names[1]
         # Plot scatter
         self.sample.plot([channel_name1, channel_name2], kind='scatter', alpha=0.6, color='gray')
-        png_file = os.path.join(SHARED_PLOTTING_DIR, 'scatter.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_scatter.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['scatter'] = 'scatter.png'
+        self.response['scatter'] = self.file_id + '_scatter.png'
 
     def threshold_gate(self, channel_name=''):
         if not channel_name:
@@ -97,11 +99,11 @@ class Plotting:
         title('Gated Sample');
 
         tight_layout()
-        png_file = os.path.join(SHARED_PLOTTING_DIR, 'threshold_gate.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_threshold_gate.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['threshold_gate'] = 'threshold_gate.png'
+        self.response['threshold_gate'] = self.file_id + '_threshold_gate.png'
 
     def plate_gated_counts(self, channel_name1='', channel_name2=''):
         if not channel_name1:
@@ -129,11 +131,11 @@ class Plotting:
                       cmap=cm.Oranges)
         title('Heat map of fluorescent counts on plate')
 
-        png_file = os.path.join(SHARED_PLOTTING_DIR, 'plate_gated_counts.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_plate_gated_counts.png')
         print(png_file)
         grid(False)
         savefig(png_file)
-        self.response['plate_gated_counts'] = 'plate_gated_counts.png'
+        self.response['plate_gated_counts'] = self.file_id + '_plate_gated_counts.png'
 
     def __calculate_median_Y2(self, well, channel_name):
         if not channel_name:
@@ -166,11 +168,11 @@ class Plotting:
                       cmap=cm.Reds)
         title('Heat map of median RFP fluorescence on plate')
 
-        png_file = os.path.join(SHARED_PLOTTING_DIR, 'plate_gated_median_fluorescence.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_plate_gated_median_fluorescence.png')
         print(png_file)
         grid(False)
         savefig(png_file)
-        self.response['plate_gated_median_fluorescence'] = 'plate_gated_median_fluorescence.png'
+        self.response['plate_gated_median_fluorescence'] = self.file_id + '_plate_gated_median_fluorescence.png'
 
     def __custom_compensate(self, original_sample, channel_name1='', channel_name2=''):
         if not channel_name1:
@@ -211,11 +213,11 @@ class Plotting:
                                 label='Compensated');
 
         legend(loc='best')
-        png_file = os.path.join(SHARED_PLOTTING_DIR, 'compensation.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_compensation.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['compensation'] = 'compensation.png'
+        self.response['compensation'] = self.file_id + '_compensation.png'
 
     def __transform_using_this_method(self, original_sample, channel_name=''):
         """ This function implements a log transformation on the data. """
@@ -254,11 +256,11 @@ class Plotting:
         grid(True)
 
         title('Custom log transformation')
-        png_file = os.path.join(SHARED_PLOTTING_DIR, 'custom_transformation.png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.file_id + '_custom_transformation.png')
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['custom_transformation'] = 'custom_transformation.png'
+        self.response['custom_transformation'] = self.file_id + '_custom_transformation.png'
 
     def get_plots(self):
         self.histogram()

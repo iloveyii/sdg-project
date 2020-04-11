@@ -111,7 +111,7 @@
                 const mlPlots = document.getElementById('machine-learning');
                 Object.keys(plots).forEach(key => {
                     const image = document.createElement('img')
-                    image.src = '/static/plots/plots/' + plots[key]
+                    image.src = '/static/plots/machinelearning/' + plots[key]
                     mlPlots.append(image)
                 })
                 console.log(plots)
@@ -137,7 +137,7 @@
 
     getBasicInfo()
     //getMLPlots()
-    //getPlotting()
+    getPlotting()
 
 </script>
 </body>

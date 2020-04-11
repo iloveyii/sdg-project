@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from flask_restful import Resource, Api
 from plotting import Plotting
 
@@ -8,7 +9,8 @@ api = Api(app)
 
 class Data(Resource):
     def get(self):
-        plotting = Plotting()
+        file_id = request.args.get('id')
+        plotting = Plotting(file_id)
         plots = plotting.get_plots()
 
         return plots
