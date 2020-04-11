@@ -54,12 +54,20 @@
         <div class="col-md-12 order-md-0">
             <h4>Basic info</h4>
             <p class="lead" id="basic-info"></p>
+
+            <select class="form-control" id="channel-names-1"></select>
+            <br/>
+            <select class="form-control" id="channel-names-2"></select>
+            <br/>
+            <button onclick="showPlots()" class="btn btn-success">Display</button>
+            <hr class="mb-4">
         </div>
     </div>
     <div class="row" id="machine-learning-div">
         <div class="col-md-12 order-md-0">
             <h4>ML Plots</h4>
             <div class="lead" id="machine-learning"></div>
+            <hr class="mb-4">
         </div>
     </div>
     <div class="row" id="plotting-div">
@@ -99,16 +107,25 @@
                 const basicInfo = document.getElementById('basic-info');
                 const pre = document.createElement('pre').innerText = JSON.stringify(info)
                 basicInfo.append(pre)
-                console.log(info)
+                console.log(info);
+                ['channel-names-1', 'channel-names-2'].forEach((sid, index) => {
+                    create_channel_checkboxes(sid, info)
+                    let s = document.getElementById(sid);
+                    s.value = info[index];
+                });
+
                 return resolve(info)
             })
         })
     }
 
     function getMLPlots() {
+        const mlPlots = document.getElementById('machine-learning');
+        showLoadingFor(mlPlots)
+
         return new Promise((resolve, reject) => {
-            const response = fetch(url_ml).then(response => response.json()).then(plots => {
-                const mlPlots = document.getElementById('machine-learning');
+            const response = fetch(url_ml + '?ch1=' + document.getElementById('channel-names-1').value + '&ch2=' + document.getElementById('channel-names-2').value).then(response => response.json()).then(plots => {
+                mlPlots.innerHTML = '';
                 Object.keys(plots).forEach(key => {
                     const image = document.createElement('img')
                     image.src = '/static/plots/machinelearning/' + plots[key]
@@ -120,10 +137,19 @@
         })
     }
 
+    function showLoadingFor(mlPlots) {
+        const image = document.createElement('img');
+        image.src = '/static/img/loading.gif';
+        mlPlots.innerHTML = '';
+        mlPlots.append(image);
+    }
+
     function getPlotting() {
+        const mlPlots = document.getElementById('plotting');
+        showLoadingFor(mlPlots)
         return new Promise((resolve, reject) => {
             const response = fetch(url_plotting).then(response => response.json()).then(plots => {
-                const mlPlots = document.getElementById('plotting');
+                mlPlots.innerHTML = '';
                 Object.keys(plots).forEach(key => {
                     const image = document.createElement('img')
                     image.src = '/static/plots/plotting/' + plots[key]
@@ -135,9 +161,21 @@
         })
     }
 
+    function create_channel_checkboxes(select_id, channels) {
+        const select = document.getElementById(select_id);
+        channels.forEach(channel => {
+            const option = document.createElement('option');
+            option.innerHTML = channel;
+            select.append(option);
+        });
+    }
+
+    function showPlots() {
+        getMLPlots()
+        getPlotting()
+    }
+
     getBasicInfo()
-    getMLPlots()
-    getPlotting()
 
 </script>
 </body>

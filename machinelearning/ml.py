@@ -22,10 +22,13 @@ ECOLI_FILE = 'ecoli.fcs'
 
 
 class MachineLearning:
-    def __init__(self, file_id):
+    def __init__(self, file_id, ch1=False, ch2=False):
         fcs_file_name = file_id + '_fcs_file.fcs'
         self.file_id = file_id
         self.response = {}
+        self.channel_name1 = ch1
+        self.channel_name2 = ch2
+        print('ML setting ch names from params', ch1, ch2)
         # Check if images already exist
         if self.check_if_images_exist():
             return None
@@ -37,12 +40,14 @@ class MachineLearning:
         print('FCS File 4', fcs_file_a4_path)
         af_op = flow.AutofluorescenceOp()
         # Get channel_names
-        URL = 'http://basicanalysis:3000?id=' + file_id
-        r = requests.get(URL)
-        self.channel_names = r.json()
-        self.channel_name1 = self.channel_names[0]
-        self.channel_name2 = self.channel_names[1]
-        print(r.json())
+        if not ch1 or not ch2:
+            URL = 'http://basicanalysis:3000?id=' + file_id
+            r = requests.get(URL)
+            self.channel_names = r.json()
+            self.channel_name1 = self.channel_names[0]
+            self.channel_name2 = self.channel_names[1]
+            print(r.json())
+
         tube1 = flow.Tube(file=fcs_file_path,
                           conditions={"Dox": 10.0})
         tube2 = flow.Tube(file=fcs_file_a4_path,
@@ -57,11 +62,11 @@ class MachineLearning:
         flow.HistogramView(scale='logicle',
                            channel=self.channel_name2).plot(ex)
 
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_histogram.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('histogram.png'))
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['histogram'] = self.file_id + '_histogram.png'
+        self.response['histogram'] = self.get_file_name('histogram.png')
 
         g = flow.GaussianMixtureOp(name="Gauss",
                                    channels=[self.channel_name1],
@@ -72,17 +77,17 @@ class MachineLearning:
         g.default_view().plot(ex)
         ex2 = g.apply(ex)
         g.default_view().plot(ex2)
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_gausian.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('gausian.png'))
         print(png_file)
         grid(True)
         savefig(png_file)
-        self.response['gausian'] = self.file_id + '_gausian.png'
+        self.response['gausian'] = self.get_file_name('gausian.png')
 
         print(type(ex2.data.head()))
 
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_gausian_table.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('gausian_table.png'))
         self.__df_to_png(ex2.data.head(), png_file)
-        self.response['gausian_table'] = self.file_id + '_gausian_table.png'
+        self.response['gausian_table'] = self.get_file_name('gausian_table.png')
 
         subplots(clear=True)
         g = flow.GaussianMixtureOp(name="Gauss",
@@ -94,13 +99,13 @@ class MachineLearning:
         g.estimate(ex)
         ex2 = g.apply(ex)
         g.default_view().plot(ex2)
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_gausian_posterior.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('gausian_posterior.png'))
         savefig(png_file)
-        self.response['gausian_posterior'] = self.file_id + '_gausian_posterior.png'
+        self.response['gausian_posterior'] = self.get_file_name('gausian_posterior.png')
 
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_gausian_posterior_table.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('gausian_posterior_table.png'))
         self.__df_to_png(ex2.data.head(), png_file)
-        self.response['gausian_posterior_table'] = self.file_id + '_gausian_posterior_table.png'
+        self.response['gausian_posterior_table'] = self.get_file_name('gausian_posterior_table.png')
 
         # We can use this second metadata column to filter out events with low posterior probabilities:
         ex2.query("Gauss_1_posterior > 0.9 | Gauss_2_posterior > 0.9").data.head()
@@ -108,9 +113,9 @@ class MachineLearning:
                            huefacet="Gauss",
                            scale="logicle",
                            subset="Gauss_1_posterior > 0.9 | Gauss_2_posterior > 0.9").plot(ex2)
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_gausian_filtered_low_posterior.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('gausian_filtered_low_posterior.png'))
         savefig(png_file)
-        self.response['gausian_filtered_low_posterior'] = self.file_id + '_gausian_filtered_low_posterior.png'
+        self.response['gausian_filtered_low_posterior'] = self.get_file_name('gausian_filtered_low_posterior.png')
 
         subplots(clear=True)
         # Basic usage, assigning each event to one of the mixture components: (the isolines in the default_view() are 1, 2 and 3 standard deviations away from the mean.)
@@ -123,9 +128,10 @@ class MachineLearning:
         g.estimate(ex)
         ex2 = g.apply(ex)
         g.default_view().plot(ex2, alpha=0.1)
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_gausian_mixture_model_two_channels.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('gausian_mixture_model_two_channels.png'))
         savefig(png_file)
-        self.response['gausian_mixture_model_two_channels'] = self.file_id + '_gausian_mixture_model_two_channels.png'
+        self.response['gausian_mixture_model_two_channels'] = self.get_file_name(
+            'gausian_mixture_model_two_channels.png')
 
         subplots(clear=True)
         # K-Means
@@ -148,14 +154,20 @@ class MachineLearning:
         # K-MEANS2
         self.k_means2(ex)
 
+    def get_file_name(self, file_part):
+        return "{}_{}_{}__{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(), file_part)
+
     def check_if_images_exist(self):
         dir = os.scandir(SHARED_PLOT_DIR)
         print('CHECK if images exist ', dir)
-
+        user_channels = self.get_file_name('')
         for file in dir:
-            if file.name.startswith(self.file_id):
-                parts = file.name.split(self.file_id+'_')
-                file_name = parts[1]
+            if file.name.startswith(user_channels):
+                parts = file.name.partition('__')
+                if len(parts) != 3:
+                    print(file.name, user_channels, parts, sys.getdefaultencoding())
+                    continue
+                file_name = parts[2]
                 keys = file_name.split('.')
                 key = keys[0]
                 print(key, file.name)
@@ -173,9 +185,9 @@ class MachineLearning:
         k.estimate(ex)
         ex2 = k.apply(ex)
         k.default_view(yfacet="Dox").plot(ex2)
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_k_means.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('k_means.png'))
         savefig(png_file)
-        self.response['k_means'] = self.file_id + '_k_means.png'
+        self.response['k_means'] = self.get_file_name('k_means.png')
 
     def k_means2(self, ex):
         k = flow.KMeansOp(name="KMeans",
@@ -187,9 +199,9 @@ class MachineLearning:
         k.estimate(ex)
         ex2 = k.apply(ex)
         k.default_view().plot(ex2)
-        png_file = os.path.join(SHARED_PLOT_DIR, self.file_id + '_k_means2.png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name('k_means2.png'))
         savefig(png_file)
-        self.response['k_means2'] = self.file_id + '_k_means2.png'
+        self.response['k_means2'] = self.get_file_name('k_means2.png')
 
     def __df_to_png(self, df, file_path):
         # Clear prev sub plot

@@ -248,7 +248,13 @@ def machine_learning(request):
             'msg': 'User not logged in'
         }
     else:
-        URL = 'http://machinelearning:5000?id=' + id
+        params = ''
+        if request.GET['ch1'] and request.GET['ch2']:
+            ch1 = request.GET['ch1']
+            ch2 = request.GET['ch2']
+            print(ch1, ch2)
+            params = "&ch1={}&ch2={}".format(ch1, ch2)
+        URL = 'http://machinelearning:5000?id=' + id + params
         r = requests.get(URL)
         response = r.json()
     # print(r.json())

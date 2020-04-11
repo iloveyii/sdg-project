@@ -10,7 +10,9 @@ api = Api(app)
 class Product(Resource):
     def get(self):
         file_id = request.args.get('id')
-        ml = MachineLearning(file_id)
+        ch1 = request.args.get('ch1')
+        ch2 = request.args.get('ch2')
+        ml = MachineLearning(file_id, ch1, ch2)
         plots = ml.get_plots()
         print(request.args.get('id'))
         return plots
