@@ -17,6 +17,7 @@ services:
         pip install requests
         && mkdir -p /shared/plotting
         && mkdir -p /shared/machinelearning
+        && ln -s /shared /code/djangoweb/api/static/plots
         && python /code/djangoweb/manage.py makemigrations api
         && python /code/djangoweb/manage.py collectstatic
         && python /code/djangoweb/manage.py runserver 0.0.0.0:8080
