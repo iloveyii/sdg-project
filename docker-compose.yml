@@ -15,9 +15,11 @@ services:
     build: .
     command: bash -c "
         pip install requests
-        && python /code/djangoweb/manage.py runserver 0.0.0.0:8080
+        && mkdir /shared/plotting
+        && mkdir /shared/machinelearning
         && python manage.py makemigrations api
         && python manage.py collectstatic
+        && python /code/djangoweb/manage.py runserver 0.0.0.0:8080
       "
     volumes:
       - .:/code
@@ -34,6 +36,7 @@ services:
     command: bash -c "
       cd /node_auth_server
       && npm install
+      && npm install bcrypt
       && npm run migrate
       && npm start
       "

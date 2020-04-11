@@ -10,6 +10,8 @@ api = Api(app)
 class Product(Resource):
     def get(self):
         file_id = request.args.get('id')
+        if not file_id:
+            file_id = 'hazrat_kth_se'
         ch1 = request.args.get('ch1')
         ch2 = request.args.get('ch2')
         ml = MachineLearning(file_id, ch1, ch2)

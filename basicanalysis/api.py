@@ -10,6 +10,8 @@ api = Api(app)
 class Data(Resource):
     def get(self):
         file_id = request.args.get('id')
+        if not file_id:
+            file_id = 'hazrat_kth_se'
         basic = Basic(file_id)
         channels = basic.get_channel_names()
         print('BASIC Flask channels :', channels)

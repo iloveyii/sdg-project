@@ -21,7 +21,7 @@ ECOLI_FILE = 'ecoli.fcs'
 
 
 class Plotting:
-    def __init__(self, file_id, ch1=False, ch2=False):
+    def __init__(self, file_id='hazrat_kth_se', ch1=False, ch2=False):
         fcs_file_name = file_id + '_fcs_file.fcs'
         self.file_id = file_id
         self.channel_name1 = ch1
@@ -38,12 +38,15 @@ class Plotting:
         fcs_file = os.path.join(SHARED_RAW_DIR, fcs_file_name)
         if not os.path.exists(fcs_file):
             print('FCS file does not exist ', fcs_file)
-            return False
+            # return False
+            fcs_file = os.path.join(SHARED_RAW_DIR, 'hazrat_kth_se_fcs_file.fcs')
         # Load data
         tsample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
         self.channel_names = tsample.channel_names
         if not self.channel_name1 and not self.channel_name2:
             self.channel_names = [self.channel_name1, self.channel_name2]
+            self.channel_name1 = self.channel_names[0]
+            self.channel_name2 = self.channel_names[1]
         self.ssample = tsample
         self.sample = tsample  # tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500.0)
 
@@ -294,6 +297,7 @@ class Plotting:
         return bool(self.response)
 
     def get_file_name(self, file_part):
+        print(self.file_id, self.channel_name2.lower())
         return "{}_{}_{}__{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(), file_part)
 
     def check_if_images_exist(self):
