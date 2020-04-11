@@ -26,6 +26,9 @@ class MachineLearning:
         fcs_file_name = file_id + '_fcs_file.fcs'
         self.file_id = file_id
         self.response = {}
+        # Check if images already exist
+        if self.check_if_images_exist():
+            return None
         # Locate sample data included with this package
         print('Raw dir in init :', SHARED_RAW_DIR)
         fcs_file_path = os.path.join(SHARED_RAW_DIR, fcs_file_name)
@@ -144,6 +147,20 @@ class MachineLearning:
         """
         # K-MEANS2
         self.k_means2(ex)
+
+    def check_if_images_exist(self):
+        dir = os.scandir(SHARED_PLOT_DIR)
+        print('CHECK if images exist ', dir)
+
+        for file in dir:
+            if file.name.startswith(self.file_id):
+                parts = file.name.split(self.file_id+'_')
+                file_name = parts[1]
+                keys = file_name.split('.')
+                key = keys[0]
+                print(key, file.name)
+                self.response[key] = file.name
+        return bool(self.response)
 
     def k_means(self, ex):
         k = flow.KMeansOp(name="KMeans",

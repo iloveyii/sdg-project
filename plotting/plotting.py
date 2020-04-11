@@ -263,6 +263,8 @@ class Plotting:
         self.response['custom_transformation'] = self.file_id + '_custom_transformation.png'
 
     def get_plots(self):
+        if self.check_if_images_exist():
+            return self.response
         self.histogram()
         self.histogram2d()
 
@@ -271,8 +273,21 @@ class Plotting:
 
         self.compensation()
         self.custom_transformation()
-
         return self.response
+
+    def check_if_images_exist(self):
+        dir = os.scandir(SHARED_PLOTTING_DIR)
+        print('CHECK if images exist ', dir)
+
+        for file in dir:
+            if file.name.startswith(self.file_id):
+                parts = file.name.split(self.file_id+'_')
+                file_name = parts[1]
+                keys = file_name.split('.')
+                key = keys[0]
+                print(key, file.name)
+                self.response[key] = file.name
+        return bool(self.response)
 
 
 # If script ran from terminal
