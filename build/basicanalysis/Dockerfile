@@ -17,3 +17,4 @@ RUN pip3 install flask-restful==0.3.5
 # 5. sudo docker tag ml_cell:latest alikth/ml_cell
 # 6. sudo docker push alikth/ml_cell
 # ssh to container: sudo docker exec -it docker-django_web_1 bash
+# Clean space - delete all non running containers: docker system prune

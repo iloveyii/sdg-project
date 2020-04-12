@@ -1,24 +1,21 @@
 import React from 'react'
 import {ThemeContext} from '../contexts/ThemeContextProvider'
 
-class Navbar extends React.Component {
-    static contextType = ThemeContext;
+const Navbar = () => {
+    const {isLightTheme, light, dark, toggleTheme} = React.useContext(ThemeContext);
+    const theme = isLightTheme ? light : dark;
 
-    render() {
-        console.log(this.context);
-        const {isLightTheme, light, dark} = this.context;
-        const theme = isLightTheme ? light : dark;
-        return (
-            <nav style={{background:theme.ui, color: theme.syntax}}>
-                <h1>FCS</h1>
-                <ul>
-                    <li>Home</li>
-                    <li>About</li>
-                    <li>Contact</li>
-                </ul>
-            </nav>
-        )
-    }
+    return (
+        <nav style={{background: theme.bg, color: theme.syntax}}>
+            <h1>FCS</h1>
+            <ul className="inline">
+                <li style={{background: theme.ui}} className="list-inline-item">Home</li>
+                <li style={{background: theme.ui}} className="list-inline-item">About</li>
+                <li style={{background: theme.ui}} className="list-inline-item">Contact</li>
+                <li style={{background: theme.ui}} className="list-inline-item"><button onClick={toggleTheme}>Change theme</button></li>
+            </ul>
+        </nav>
+    )
 }
 
 export default Navbar;
