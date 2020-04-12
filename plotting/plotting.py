@@ -96,14 +96,14 @@ class Plotting:
         gated_sample = self.sample.gate(y2_gate)
 
         # Plot
-        ax1 = subplot(121);
+        ax1 = subplot(121)
         self.sample.plot(channel_name, gates=[y2_gate], bins=100, alpha=0.9)
         y2_gate.plot(color='k', linewidth=4, linestyle='-')
         title('Original Sample')
 
-        ax2 = subplot(122, sharey=ax1, sharex=ax1);
-        gated_sample.plot(channel_name, gates=[y2_gate], bins=100, color='y', alpha=0.9);
-        title('Gated Sample');
+        ax2 = subplot(122, sharey=ax1, sharex=ax1)
+        gated_sample.plot(channel_name, gates=[y2_gate], bins=100, color='y', alpha=0.9)
+        title('Gated Sample')
 
         tight_layout()
         png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('threshold_gate.png'))

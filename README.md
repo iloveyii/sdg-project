@@ -16,11 +16,11 @@ Firebase                   |  IFTTT
 ![fb](https://github.com/iloveyii/iot-lab/blob/master/images/thingy.jpg)  | ![fb](https://github.com/iloveyii/iot-lab/blob/master/images/hkr.png)   
 
 ##[DEMO APP](https://hkr-iot-lab1.firebaseapp.com/)
-![screenshot](https://github.com/iloveyii/cell-analysis/blob/master/run.gif)
+![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/run.gif)
 
 ## Installation
    * Clone repo `git clone https://github.com/iloveyii/iot-lab`
-   * sudo docker-compose up 
+   * `sudo docker-compose up `
    * Browse to to http://localhost:80. Please stop any service on port 80 before running.    
 
 ## Implementation
@@ -96,8 +96,7 @@ perm true
    * firebase init functions
    * firebase deploy --only functions --debug
 
-## SD card
-   * Clone SD cards 
-```bash
-    sudo dd if=/dev/sda of=~/sda.img bs=4096 conv=notrunc,noerror status=progress
-```
+## Contributions
+   * Two docker images prepare for this project and hosted on https://hub.docker.gom
+   * A Droplet purchased and deployed on Digital Ocean.
+   * An open source project for Cancer cell analysis using Flow Cytometry on github.

@@ -102,6 +102,44 @@
     const url = '/api/basic'
     const url_ml = '/api/machine-learning'
     const url_plotting = '/api/plotting'
+    const data_plotting = {
+        histogram1d: {
+            heading: 'Histogram 1 D',
+            p: `
+                This is the histogram in one dimension for the FCS file
+            `
+        },
+        histogram2d: {
+            heading: 'Histogram 2 D',
+            p: `This is the histogram in two dimensions for the FCS file. It is plotting using the provided two channels from the
+                select lists.
+            `
+        },
+        compensation: {
+            heading: 'Compensation',
+            p: `This is obtained by interchanging channels data and multiplied
+                (by 0.15 for channel 1, by 0.32 form channel 2) and subtracted from respective channels.
+            `
+        },
+        custom_transformation: {
+            heading: 'Custom Transformation',
+            p: `
+                This is custom transformation plot. The custom transformation is obtained by taking the log of each channel.
+            `
+        },
+        scatter: {
+            heading: 'Scatter plot',
+            p: `
+                This is scatter plot for the two channels selected.
+            `
+        },
+        threshold_gate: {
+            heading: 'Threshold Gate',
+            p: `
+                This is threshold gate plot. This is obtained by applying x and y gating on axes.
+            `
+        }
+    }
 
     function getBasicInfo() {
         return new Promise((resolve, reject) => {
@@ -130,7 +168,10 @@
                 mlPlots.innerHTML = '';
                 Object.keys(plots).forEach(key => {
                     const src = '/static/plots/machinelearning/' + plots[key]
-                    mlPlots.append(createPlot('col-sm-12 py-2', key, 'Heading', 'Para', src))
+                    console.log(key)
+                    heading = data_plotting[key] ? data_plotting[key].heading : 'Heading';
+                    para = data_plotting[key] ? data_plotting[key].p : 'para';
+                    mlPlots.append(createPlot('col-sm-12 py-2', key, heading, para, src))
                 })
                 console.log(plots)
                 return resolve(plots)
@@ -157,7 +198,10 @@
                     /*const image = document.createElement('img')
                     image.src = '/static/plots/plotting/' + plots[key] */
                     const src = '/static/plots/plotting/' + plots[key]
-                    mlPlots.append(createPlot('col-sm-6 py-2', key, 'Heading', 'Para', src))
+                    console.log(key)
+                    heading = data_plotting[key] ? data_plotting[key].heading : 'Heading';
+                    para = data_plotting[key] ? data_plotting[key].p : 'para';
+                    mlPlots.append(createPlot('col-sm-6 py-2', key, heading, para, src))
                 })
                 console.log(plots)
                 return resolve(plots)
@@ -190,7 +234,7 @@
         const card_text = document.createElement('p');
         card_text.className = 'card-text';
         card_text.innerText = para;
-        
+
         col_sm_4.append(card_title)
         col_sm_4.append(card_text)
         col_sm_8.append(plot)
