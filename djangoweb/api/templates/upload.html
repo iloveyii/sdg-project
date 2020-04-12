@@ -111,7 +111,7 @@
                 basicInfo.append(pre)
                 console.log(info);
                 ['channel-names-1', 'channel-names-2'].forEach((sid, index) => {
-                    create_channel_checkboxes(sid, info)
+                    create_selection_options(sid, info)
                     let s = document.getElementById(sid);
                     s.value = info[index];
                 });
@@ -173,7 +173,6 @@
         const card_header = document.createElement('div');
         card_header.className = 'card-header';
         card_header.innerText = title[0].toUpperCase() + title.slice(1).split('_').join(" ");
-        ;
         const card_body = document.createElement('div');
         card_body.className = 'card-body';
         const row = document.createElement('div');
@@ -191,6 +190,7 @@
         const card_text = document.createElement('p');
         card_text.className = 'card-text';
         card_text.innerText = para;
+        
         col_sm_4.append(card_title)
         col_sm_4.append(card_text)
         col_sm_8.append(plot)
@@ -224,7 +224,7 @@
          */
     }
 
-    function create_channel_checkboxes(select_id, channels) {
+    function create_selection_options(select_id, channels) {
         const select = document.getElementById(select_id);
         channels.forEach(channel => {
             const option = document.createElement('option');
