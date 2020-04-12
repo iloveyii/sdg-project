@@ -16,7 +16,7 @@ Firebase                   |  IFTTT
 ![fb](https://github.com/iloveyii/iot-lab/blob/master/images/thingy.jpg)  | ![fb](https://github.com/iloveyii/iot-lab/blob/master/images/hkr.png)   
 
 ##[DEMO APP](https://hkr-iot-lab1.firebaseapp.com/)
-
+![screenshot](https://github.com/iloveyii/cell-analysis/blob/master/run.gif)
 
 ## Installation
    * Clone repo `git clone https://github.com/iloveyii/iot-lab`
