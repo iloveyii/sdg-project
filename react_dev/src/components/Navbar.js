@@ -7,12 +7,11 @@ const Navbar = () => {
 
     return (
         <nav style={{background: theme.bg, color: theme.syntax}}>
-            <h1>FCS</h1>
             <ul className="inline">
-                <li style={{background: theme.ui}} className="list-inline-item">Home</li>
-                <li style={{background: theme.ui}} className="list-inline-item">About</li>
-                <li style={{background: theme.ui}} className="list-inline-item">Contact</li>
-                <li style={{background: theme.ui}} className="list-inline-item"><button onClick={toggleTheme}>Change theme</button></li>
+                <li style={{background: theme.ui}} className="list-inline-item">
+                    <h1>CELL ANALYSIS</h1>
+                </li>
+                <li style={{background: theme.ui}} className="list-inline-item"><button onClick={toggleTheme}>C</button></li>
             </ul>
         </nav>
     )
