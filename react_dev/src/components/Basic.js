@@ -12,19 +12,31 @@ const Options = (props) => {
 
 const Basic = () => {
     const {basic, dispatch} = useContext(BasicContext);
-    useEffect(() => {
-        api.read().then(basic => dispatch({type: 'ADD_BASIC', payload: {channels: basic}}))
-    }, []);
+    const [current_channels, setCurrentChannels] = React.useState({channel1: '1', channel2: '22'});
 
-    const [channels, setChannels] = React.useState({channel1: '1', channel2: '22'});
+    useEffect(() => {
+        api.read().then(basic => {
+            dispatch({
+                type: 'ADD_BASIC',
+                payload: {channels: basic}
+            });
+            setCurrentChannels({channel1: basic[0], channel2: basic[1]})
+        })
+    }, []);
+    /*useEffect(() => {
+        setCurrentChannels(basic.current_channels);
+    }, []); */
+
 
     const setContextChannels = () => {
-        api.read().then(() => dispatch({type: 'SET_CHANNELS', payload: {current_channels:   channels}}))
+        api.read().then(() => dispatch({type: 'SET_CHANNELS', payload: {current_channels}}))
     };
 
     if (Object.keys(basic).length === 0) return <p>Loading...</p>;
     const channels1 = [...basic.channels];
     const channels2 = [...basic.channels];
+
+
     channels2.shift();
     console.log('BASIC')
     return (
@@ -33,11 +45,17 @@ const Basic = () => {
                 <h1>Basic info </h1>
                 <p className="lead" id="basic-info"></p>
 
-                <select className="form-control" id="channel-names-1" onChange={(e)=>setChannels({channel1:e.target.value, channel2: channels.channel2})}>
+                <select className="form-control" id="channel-names-1" onChange={(e) => setCurrentChannels({
+                    channel1: e.target.value,
+                    channel2: current_channels.channel2
+                })}>
                     <Options basic={channels1}/>
                 </select>
                 <br/>
-                <select className="form-control" id="channel-names-2" onChange={(e)=>setChannels({channel1:channels.channel1, channel2:e.target.value })}>
+                <select className="form-control" id="channel-names-2" onChange={(e) => setCurrentChannels({
+                    channel1: current_channels.channel1,
+                    channel2: e.target.value
+                })}>
                     <Options basic={channels2}/>
                 </select>
                 <br/>
