@@ -12,7 +12,7 @@ const Upload = () => {
         const formData = new FormData();
         const files = fileRef.current.files;
         formData.append("fcs_file", files[0]);
-        axios.post('http://localhost/api/upload', formData, {
+        axios.post('/api/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -24,8 +24,9 @@ const Upload = () => {
                         type: 'ADD_BASIC',
                         payload: {channels: basic}
                     });
+                    window.location.reload(false);
                 }
-            })
+            });
         }).catch(err => console.log('Error occurred ', err))
     };
 
