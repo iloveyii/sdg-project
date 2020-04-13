@@ -15,6 +15,7 @@ services:
     build: .
     command: bash -c "
         pip install requests
+        && pip install django-cors-headers
         && mkdir -p /shared/plotting
         && mkdir -p /shared/machinelearning
         && rm /code/djangoweb/api/static/plots

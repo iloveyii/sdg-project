@@ -8,6 +8,10 @@ const basicReducer = (state, action) => {
         case 'SET_CHANNELS':
             const newState = {...state, ...action.payload};
             return newState;
+        case 'UPDATE_TS':
+            const newState2 = {...state, ...action.payload, ts: Date.now()};
+            return newState2;
+
         default:
             return state;
     }

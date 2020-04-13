@@ -12,7 +12,7 @@ const Ml = () => {
 
     const image_url = 'http://localhost/static/plots/machinelearning/';
     useEffect(() => {
-        api.read().then(ml => dispatch({type: 'ADD_ML', payload: {ml}}))
+        api.read(basic.current_channels).then(ml => dispatch({type: 'ADD_ML', payload: {ml}}))
     }, [basic]);
 
     if (Object.keys(ml).length === 0) return null;

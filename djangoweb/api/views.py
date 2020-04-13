@@ -19,7 +19,10 @@ FILE_FIELD_NAME = 'fcs_file'
 sid = ''
 SHARED_PLOTTING_DIR = os.path.realpath('/shared/plotting/')
 SHARED_ML_DIR = os.path.realpath('/shared/machinelearning/')
-
+CORS_ORIGIN_WHITELIST = (
+    '*',
+    'localhost:3000'
+)
 
 def if_login(request):
     global sid

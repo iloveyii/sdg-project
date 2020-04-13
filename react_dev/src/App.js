@@ -16,8 +16,8 @@ function App() {
             <ThemeContextProvider>
                 <Navbar/>
                 <Container>
-                    <Upload/>
                     <BasicContextProvider>
+                        <Upload/>
                         <Basic/>
                         <PlottingsContextProvider>
                             <Plottings/>

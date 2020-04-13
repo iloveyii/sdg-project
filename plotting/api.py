@@ -1,13 +1,16 @@
 from flask import Flask
 from flask import request
+from flask_wtf.csrf import CSRFProtect
 from flask_restful import Resource, Api
 from plotting import Plotting
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 api = Api(app)
 
 
 class Data(Resource):
+    @csrf.exempt
     def get(self):
         file_id = request.args.get('id')
         if not file_id:
