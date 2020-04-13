@@ -18,7 +18,7 @@ services:
         && pip install django-cors-headers
         && mkdir -p /shared/plotting
         && mkdir -p /shared/machinelearning
-        && rm /code/djangoweb/api/static/plots
+        && rm /code/djangoweb/api/static/plots -rf
         && ln -s /code/shared /code/djangoweb/api/static/plots
         && python /code/djangoweb/manage.py makemigrations api
         && python /code/djangoweb/manage.py runserver 0.0.0.0:8080
