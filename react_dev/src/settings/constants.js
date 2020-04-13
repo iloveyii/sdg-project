@@ -1,1 +1,1 @@
-export const apiServer = 'http://localhost:9090/';
+export const apiServer = 'http://localhost';

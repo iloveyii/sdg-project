@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {apiServer} from '../settings/constants';
-const endPoint = '';
-const server = 'http://localhost:9090/basic.php';
+const endPoint = '/api/basic';
+const server = apiServer + endPoint;
 
 const api = {
     read: () =>

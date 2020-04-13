@@ -13,27 +13,35 @@ const Options = (props) => {
 const Basic = () => {
     const {basic, dispatch} = useContext(BasicContext);
     useEffect(() => {
-        api.read().then(basic => dispatch({type: 'ADD_BASIC', payload: {basic}}))
+        api.read().then(basic => dispatch({type: 'ADD_BASIC', payload: {channels: basic}}))
     }, []);
 
-    if (basic.length === 0) return <p>Loading...</p>;
-    const basic2 = [...basic];
-    basic2.shift();
+    const [channels, setChannels] = React.useState({channel1: '1', channel2: '22'});
+
+    const setContextChannels = () => {
+        api.read().then(() => dispatch({type: 'SET_CHANNELS', payload: {current_channels:   channels}}))
+    };
+
+    if (Object.keys(basic).length === 0) return <p>Loading...</p>;
+    const channels1 = [...basic.channels];
+    const channels2 = [...basic.channels];
+    channels2.shift();
+    console.log('BASIC')
     return (
         <div className="row" id="basic-div">
             <div className="col-md-12 order-md-0">
-                <h1>Basic info</h1>
+                <h1>Basic info </h1>
                 <p className="lead" id="basic-info"></p>
 
-                <select className="form-control" id="channel-names-1">
-                    <Options basic={basic}/>
+                <select className="form-control" id="channel-names-1" onChange={(e)=>setChannels({channel1:e.target.value, channel2: channels.channel2})}>
+                    <Options basic={channels1}/>
                 </select>
                 <br/>
-                <select className="form-control" id="channel-names-2">
-                    <Options basic={basic2}/>
+                <select className="form-control" id="channel-names-2" onChange={(e)=>setChannels({channel1:channels.channel1, channel2:e.target.value })}>
+                    <Options basic={channels2}/>
                 </select>
                 <br/>
-                <button onClick={() => null} className="btn btn-success">Display</button>
+                <button onClick={() => setContextChannels()} className="btn btn-success">Display</button>
                 <hr className="mb-4"/>
             </div>
         </div>

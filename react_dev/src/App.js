@@ -19,13 +19,13 @@ function App() {
                     <Upload/>
                     <BasicContextProvider>
                         <Basic/>
+                        <PlottingsContextProvider>
+                            <Plottings/>
+                        </PlottingsContextProvider>
+                        <MlContextProvider>
+                            <Ml/>
+                        </MlContextProvider>
                     </BasicContextProvider>
-                    <PlottingsContextProvider>
-                        <Plottings/>
-                    </PlottingsContextProvider>
-                    <MlContextProvider>
-                        <Ml/>
-                    </MlContextProvider>
                 </Container>
             </ThemeContextProvider>
 

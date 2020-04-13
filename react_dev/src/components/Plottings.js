@@ -2,14 +2,17 @@ import React, {useEffect, useContext} from 'react';
 import Plot from './Plot';
 import {PlottingsContext} from '../contexts/PlottingsContextProvider';
 import api from '../api/plottings';
+import {BasicContext} from "../contexts/BasicContextProvider";
 
 
 const Plottings = () => {
     const {plottings, dispatch} = useContext(PlottingsContext);
+    const {basic} = useContext(BasicContext);
+
     const image_url = 'http://localhost/static/plots/plotting/';
     useEffect(() => {
         api.read().then(plottings => dispatch({type: 'ADD_PLOTTINGS', payload: {plottings}}))
-    }, []);
+    }, [basic]);
 
     if (Object.keys(plottings).length === 0) return null;
 

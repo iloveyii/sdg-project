@@ -2,14 +2,18 @@ import React, {useEffect, useContext} from 'react';
 import Plot from './Plot';
 import {MlContext} from '../contexts/MlContextProvider';
 import api from '../api/ml';
+import {BasicContext} from "../contexts/BasicContextProvider";
 
 
 const Ml = () => {
     const {ml, dispatch} = useContext(MlContext);
+    const {basic} = useContext(BasicContext);
+    console.log('ML basic', basic)
+
     const image_url = 'http://localhost/static/plots/machinelearning/';
     useEffect(() => {
         api.read().then(ml => dispatch({type: 'ADD_ML', payload: {ml}}))
-    }, []);
+    }, [basic]);
 
     if (Object.keys(ml).length === 0) return null;
 
