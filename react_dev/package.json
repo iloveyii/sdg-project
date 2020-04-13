@@ -15,7 +15,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "mv_index_to_upload_html": "mv ./build/index.html ../djangoweb/api/templates/upload.html",
+    "rm_js_in_static": "rm ../djangoweb/api/static/js -rf",
+    "mv_js_to_static": "npm run rm_js_in_static && mv ./build/static/js ../djangoweb/api/static/js",
+    "rm_static": "rm ./build/static -rf",
+    "cp_assets": "cp ./build/* ../djangoweb/api/static/ -rf",
+    "deploy": "rm ./build -rf && npm run build && npm run mv_index_to_upload_html && npm run mv_js_to_static && npm run rm_static && npm run cp_assets"
   },
   "eslintConfig": {
     "extends": "react-app"

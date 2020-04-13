@@ -15,4 +15,5 @@ basicanalysis/__pycache__/
 plotting/__pycache__/
 __pycache__
 node_modules
-node_auth_cdserver/node_modules
+node_auth_server/node_modules
+djangoweb/api/static/
