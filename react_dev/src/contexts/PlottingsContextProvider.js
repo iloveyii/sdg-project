@@ -1,16 +1,16 @@
 import React from 'react';
+import plottingsReducer from '../reducers/plottingsReducer';
 
-const PlottingsContext = React.createContext();
+export const PlottingsContext = React.createContext();
+
 
 const PlottingsContextProvider = (props) => {
-    const [plottings, setPlottings] = React.useState([
-        {histogram: '/path/to/image'}
-    ]);
+    const [plottings, dispatch] = React.useReducer(plottingsReducer, {});
     return (
-        <PlottingsContext.Provider value={{plottings}}>
+        <PlottingsContext.Provider value={{plottings, dispatch}}>
             {props.children}
         </PlottingsContext.Provider>
     )
-}
+};
 
 export default PlottingsContextProvider;
