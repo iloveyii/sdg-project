@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import axios from 'axios';
 import {BasicContext} from "../contexts/BasicContextProvider";
+import api from "../api/basic";
 
 
 const Upload = () => {
@@ -17,12 +18,15 @@ const Upload = () => {
             }
         }).then(data => {
             console.log('File uploaded');
-            if(dispatch)
-                dispatch({type: 'UPDATE_TS'});
-            console.log('File uploaded dispatchd');
-
-        })
-            .catch(err => console.log('Error occurred ', err))
+            api.read().then(basic => {
+                if (basic) {
+                    dispatch({
+                        type: 'ADD_BASIC',
+                        payload: {channels: basic}
+                    });
+                }
+            })
+        }).catch(err => console.log('Error occurred ', err))
     };
 
     return (

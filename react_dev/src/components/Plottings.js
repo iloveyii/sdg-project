@@ -10,6 +10,7 @@ const Plottings = () => {
     const {basic} = useContext(BasicContext);
 
     const image_url = 'http://localhost/static/plots/plotting/';
+
     useEffect(() => {
         api.read(basic.current_channels).then(plottings => dispatch({type: 'ADD_PLOTTINGS', payload: {plottings}}))
     }, [basic]);

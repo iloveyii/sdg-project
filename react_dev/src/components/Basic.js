@@ -3,42 +3,49 @@ import {BasicContext} from "../contexts/BasicContextProvider";
 import api from "../api/basic";
 
 const Options = (props) => {
-    const {basic} = props;
-    if (!basic) return <option value="1">Loading...</option>
+    const {channels} = props;
+    console.log('Options: ', props)
+    if (!channels) return <option value="1">Loading...</option>
     return (
-        basic.map(b => <option key={b} value={b}>{b}</option>)
+        channels.map(ch => <option key={ch} value={ch}>{ch}</option>)
     )
 };
 
 const Basic = () => {
     const {basic, dispatch} = useContext(BasicContext);
     const [current_channels, setCurrentChannels] = React.useState({channel1: '1', channel2: '22'});
+    const [channels1, setChannels1] = React.useState([]);
+    const [channels2, setChannels2] = React.useState([]);
 
     useEffect(() => {
+        console.log('useEffect 1', basic)
         api.read().then(basic => {
-            dispatch({
-                type: 'ADD_BASIC',
-                payload: {channels: basic}
-            });
-            setCurrentChannels({channel1: basic[0], channel2: basic[1]})
+            if(basic) {
+                dispatch({
+                    type: 'ADD_BASIC',
+                    payload: {channels: basic}
+                });
+                setCurrentChannels({channel1: basic[0], channel2: basic[1]});
+            }
         })
     }, []);
-    /*useEffect(() => {
-        setCurrentChannels(basic.current_channels);
-    }, []); */
 
+    useEffect(() => {
+        console.log('useEffect 2', basic);
+        if(basic && basic.channels && basic.channels.length) {
+            const channels1 = [...basic.channels]; setChannels1(channels1);
+            const channels2 = [...basic.channels];
+            channels2.shift(); setChannels2(channels2);
+            console.log('useEffect 2 IF ', channels1, channels2);
+        }
+    }, [basic]);
 
     const setContextChannels = () => {
         api.read().then(() => dispatch({type: 'SET_CHANNELS', payload: {current_channels}}))
     };
 
     if (Object.keys(basic).length === 0) return <p>Loading...</p>;
-    const channels1 = [...basic.channels];
-    const channels2 = [...basic.channels];
 
-
-    channels2.shift();
-    console.log('BASIC')
     return (
         <div className="row" id="basic-div">
             <div className="col-md-12 order-md-0">
@@ -49,14 +56,14 @@ const Basic = () => {
                     channel1: e.target.value,
                     channel2: current_channels.channel2
                 })}>
-                    <Options basic={channels1}/>
+                    <Options channels={channels1}/>
                 </select>
                 <br/>
                 <select className="form-control" id="channel-names-2" onChange={(e) => setCurrentChannels({
                     channel1: current_channels.channel1,
                     channel2: e.target.value
                 })}>
-                    <Options basic={channels2}/>
+                    <Options channels={channels2}/>
                 </select>
                 <br/>
                 <button onClick={() => setContextChannels()} className="btn btn-success">Display</button>
