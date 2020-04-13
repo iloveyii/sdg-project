@@ -10,7 +10,7 @@ const Ml = () => {
     const {basic} = useContext(BasicContext);
     console.log('ML basic', basic)
 
-    const image_url = 'http://localhost/static/plots/machinelearning/';
+    const image_url = '/static/plots/machinelearning/';
 
     useEffect(() => {
         api.read(basic.current_channels).then(ml => dispatch({type: 'ADD_ML', payload: {ml}}))
