@@ -39,6 +39,6 @@ const Ml = () => {
             }
         </div>
     )
-}
+};
 
 export default Ml;

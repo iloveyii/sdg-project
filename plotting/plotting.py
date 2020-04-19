@@ -39,14 +39,17 @@ class Plotting:
         if not os.path.exists(fcs_file):
             print('FCS file does not exist ', fcs_file)
             # return False
-            fcs_file = os.path.join(SHARED_RAW_DIR, 'hazrat_kth_se_fcs_file.fcs')
+            fcs_file = os.path.join(SHARED_RAW_DIR, 'fcs_file.fcs') # running from cli
         # Load data
         tsample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
         self.channel_names = tsample.channel_names
         if not self.channel_name1 and not self.channel_name2:
-            self.channel_names = [self.channel_name1, self.channel_name2]
+            print('Check if channel names False', self.channel_names)
             self.channel_name1 = self.channel_names[0]
             self.channel_name2 = self.channel_names[1]
+        else:
+            self.channel_names = [self.channel_name1, self.channel_name2]
+
         self.ssample = tsample
         self.sample = tsample  # tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500.0)
 
@@ -54,6 +57,9 @@ class Plotting:
         if not channel_name:
             channel_name = self.channel_names[0]
         # Plot Histogram
+        if not channel_name:
+            channel_name = self.channel_name1
+            print('Channel name: ', channel_name)
         self.sample.plot(channel_name, bins=100, alpha=0.9, color='green')
         png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('histogram1d.png'))
         print(png_file)
@@ -320,6 +326,10 @@ class Plotting:
 
 # If script ran from terminal
 if __name__ == '__main__':
+    script_path = os.path.abspath(__file__)
+    dir_path = os.path.dirname(script_path)
+    SHARED_RAW_DIR = os.path.realpath(os.path.join(dir_path, '../', 'shared/raw/cell/'))
+    SHARED_PLOTTING_DIR = os.path.realpath(os.path.join(dir_path, '../', 'shared/plotting/'))
     plotting = Plotting()
     plotting.histogram()
     plotting.histogram2d()
