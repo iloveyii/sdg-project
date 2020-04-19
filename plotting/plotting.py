@@ -19,13 +19,20 @@ FCS_FILE = 'a1_24h_noc200.fcs'
 FCS_FILE_A4 = 'CFP_Well_A4.fcs'
 ECOLI_FILE = 'ecoli.fcs'
 
+transformations = {
+    'hlog': 'hlog',
+    'tlog': 'tlog'
+}
+
 
 class Plotting:
-    def __init__(self, file_id='hazrat_kth_se', ch1=False, ch2=False):
+    def __init__(self, file_id='hazrat_kth_se', ch1=False, ch2=False, transformation=False, bins=100):
         fcs_file_name = file_id + '_fcs_file.fcs'
         self.file_id = file_id
         self.channel_name1 = ch1
         self.channel_name2 = ch2
+        self.transformation = transformations['hlog']
+        self.bins = bins
         global SHARED_RAW_DIR
         self.response = {}
         # Locate sample data included with this package
@@ -39,9 +46,12 @@ class Plotting:
         if not os.path.exists(fcs_file):
             print('FCS file does not exist ', fcs_file)
             # return False
-            fcs_file = os.path.join(SHARED_RAW_DIR, 'fcs_file.fcs') # running from cli
+            fcs_file = os.path.join(SHARED_RAW_DIR, 'fcs_file.fcs')  # running from cli
         # Load data
         tsample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
+        if self.transformation:
+            tsample = tsample.transform(self.transformation, b=self.bins)
+
         self.channel_names = tsample.channel_names
         if not self.channel_name1 and not self.channel_name2:
             print('Check if channel names False', self.channel_names)
@@ -50,7 +60,6 @@ class Plotting:
         else:
             self.channel_names = [self.channel_name1, self.channel_name2]
 
-        self.ssample = tsample
         self.sample = tsample  # tsample.transform('hlog', channels=['Y2-A', 'B1-A', 'V2-A'], b=500.0)
 
     def histogram(self, channel_name=''):
@@ -251,7 +260,7 @@ class Plotting:
             channel_name = self.channel_names[0]
         # Load data
         # sample = self.ssample.transform('hlog')
-        sample = self.ssample
+        sample = self.sample
 
         # Transform using our own custom method
         custom_transform_sample = sample.apply(self.__transform_using_this_method)
