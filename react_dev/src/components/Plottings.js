@@ -3,13 +3,13 @@ import Plot from './Plot';
 import {PlottingsContext} from '../contexts/PlottingsContextProvider';
 import api from '../api/plottings';
 import {BasicContext} from "../contexts/BasicContextProvider";
-
+import {apiServer} from "../settings/constants";
 
 const Plottings = () => {
     const {plottings, dispatch} = useContext(PlottingsContext);
     const {basic} = useContext(BasicContext);
 
-    const image_url = '/static/plots/plotting/';
+    const image_url = apiServer + '/static/plots/plotting/';
 
     useEffect(() => {
         api.read(basic.current_channels).then(plottings => dispatch({type: 'ADD_PLOTTINGS', payload: {plottings}}))

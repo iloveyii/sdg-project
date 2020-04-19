@@ -1,13 +1,13 @@
 import React from 'react'
-
+import {apiServer} from "../settings/constants";
 
 class Header extends React.Component {
     render() {
         return (
             <div className="py-5 text-center">
-                <img src="/static/img/logo192.png" width="200" alt="img"/>
+                <img src={apiServer + "/static/img/logo192.png"} width="200" alt="img"/>
                 <br/>
-                <a href="/api/logout" className="btn btn-warning">Logout</a>
+                <a href={apiServer + "/api/logout"} className="btn btn-warning">Logout</a>
             </div>
         )
     }

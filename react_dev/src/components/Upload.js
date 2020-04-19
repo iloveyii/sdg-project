@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import axios from 'axios';
 import {BasicContext} from "../contexts/BasicContextProvider";
 import api from "../api/basic";
-
+import {apiServer} from "../settings/constants";
 
 const Upload = () => {
     const fileRef = React.createRef();
@@ -12,7 +12,7 @@ const Upload = () => {
         const formData = new FormData();
         const files = fileRef.current.files;
         formData.append("fcs_file", files[0]);
-        axios.post('/api/upload', formData, {
+        axios.post(apiServer + '/api/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
