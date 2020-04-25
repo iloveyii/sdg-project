@@ -24,6 +24,7 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:3000'
 )
 
+
 def if_login(request):
     global sid
     try:

@@ -94,13 +94,13 @@ app.post('/api/v1/games', (req, res) => {
 app.post('/api/v1/login-games', redirectLogin, async (req, res) => {
     const {questions} = req.body;
     console.log(questions);
-    await questions.forEach(async question => {
-        await Poll.upsert({
+    questions.forEach(question => {
+        Poll.upsert({
             loginId: req.session.userId,
             gameId: question.id,
             checked: question.checked
         })
-    })
+    });
     res.status(201).json({poll: 'success'});
 });
 
@@ -147,7 +147,7 @@ app.post('/api/v1/login', async (req, res) => {
             return res.status(200).json({login: 'success'})
         }
     }
-    return res.status(200).json({login: 'fail'})
+    return res.status(200).json({login: 'fail', msg: 'User not found'})
 });
 
 

@@ -33,7 +33,7 @@ services:
       - db
   node_auth_server:
     build: ./node_auth_server
-    image: node:latest
+    image: node:8
     restart: always
     command: bash -c "
       cd /node_auth_server
