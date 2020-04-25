@@ -274,6 +274,7 @@ def machine_learning(request):
 @csrf_exempt
 def basic(request):
     id = get_logged_in_email_to_file_format(request)
+    id = 'hazrat_kth_se';
     if not id:
         response = {
             'status': 'fail',
