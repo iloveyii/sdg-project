@@ -12,8 +12,8 @@ class Model {
     setChannels = null;
 
     constructor() {
-        const [_channels, setChannels ] = useState([]);
-        this._channels = _channels;
+        const [channels, setChannels ] = useState([]);
+        this._channels = channels;
         this.setChannels = setChannels;
     }
 
