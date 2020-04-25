@@ -13,7 +13,6 @@ import { withRouter } from "react-router-dom";
 import useStyles from "./styles";
 import logo from "./molecule.svg";
 import { useUserDispatch, loginUser, registerUser } from "../../context/UserContext";
-import { snackbarService } from 'uno-material-ui';
 
 var sha3_256 = require('js-sha3').sha3_256;
 

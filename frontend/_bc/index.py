@@ -4,8 +4,10 @@ from tornado.escape import json_decode
 import json
 
 from preprocess import getColumnNames, getPlotData #, applyModel
-from heatmapgen_test import generateGatedOutputsPlusHeatmap
+from heatmap import generateGatedOutputsPlusHeatmap
+from differences import generateDifferences
 from db import loadOne, loadData, saveMeta, saveEntry, listArrayToJson
+from helper import getFcsFilesToUse, getGatedHeatData, getGatedLineData
 from pathlib import Path, PurePath
 
 import asyncio
@@ -32,65 +34,109 @@ class UploadHandler(BaseHandler):
         response = {"status":False}
         files = self.request.files["file"]
         for f in files:
-            colNames = getColumnNames(f.filename)
+            fpath = PurePath.joinpath(dirpath,f.filename) 
+            sizeBefore = 0
+            if (fpath.is_file()): #check if file exists already
+                sizeBefore = (fpath.stat().st_size)
 
-            if(colNames != False):
-                #Write record to relational database
-                sql = """INSERT INTO tbmeta(location,category,uploaddate,filename,uploadname,channels)
-                VALUES(%s,%s,%s,%s,%s,%s) RETURNING id;"""
-                values = []
-                values.append(self.get_argument("location"))
-                values.append(self.get_argument("category"))
-                values.append(self.get_argument("dateTime"))
-                values.append("xxxxxxxxxxxx")
-                values.append(f.filename)
-                values.append(colNames)
-
-                saveEntry(sql, values)
-                
+            if (sizeBefore == len(f.body)): #check if file is same size as saved file
+                response["message"] = f.filename + ' Already exists in the database'
+            else:
                 #Save the file in folder
-                fh = open(f"{dirpath}/{f.filename}", "wb") #wb is write in binary to accept any file format
+                fh = open(f"{fpath}", "wb") #wb is write in binary to accept any file format
                 fh.write(f.body)
                 fh.close()
 
-                response["status"] = True
-            else:
-                response["message"] = f.filename + " is not a valid FCS file."
+                colNames = getColumnNames(f.filename)
+                
+
+                if(colNames != False):
+                    #Write record to relational database
+                    sql = """INSERT INTO tbmeta(location,category,uploaddate,filename,uploadname,channels)
+                    VALUES(%s,%s,%s,%s,%s,%s) RETURNING id;"""
+                    values = []
+                    values.append(self.get_argument("location"))
+                    values.append(self.get_argument("category"))
+                    values.append(self.get_argument("dateTime"))
+                    values.append(f.filename.split('.')[0])
+                    values.append(f.filename)
+                    values.append(colNames)
+
+                    saveEntry(sql, values)
+
+                    response["status"] = True
+                else:
+                    Path.unlink(fpath) #Remove the file if it had been saved
+                    response["message"] = f.filename + " is not a valid FCS file."
 
         self.write(json.dumps(response))
 
 class PlotGraphHandler(BaseHandler):
-    def get(self):        
-        fcsFilename = self.get_query_argument("fcs")
+    def get(self):  
+        response = {"status":False}      
+        selectedFcsFile = self.get_query_argument("fcs")
         xval = self.get_query_argument("xval")
         yval = self.get_query_argument("yval")
         transformation = self.get_query_argument("transformation")
+        filesList = getFcsFilesToUse(self.get_query_argument("allfcs"),".fcs")
+        #Get all files
+        ##loop through and prepare them for next step
+        print(filesList)
+        for item in filesList:
+            # print(item)
+            # print(selectedFcsFile)
+            if (item != selectedFcsFile):
+                getPlotData(xval, yval, transformation, item)
         
-        data1, data2, data3 = getPlotData(xval, yval, transformation, fcsFilename)
+        results = getPlotData(xval, yval, transformation, selectedFcsFile)
+        if(results):
+            response["status"] = True
+            response["payload"] = results
+        else:
+            response["message"] = "Something went wrong."
 
-        self.write(data3)
+        self.write(results)
 
 class GenerateHeatmapHandler(BaseHandler):
     def get(self):
         response = {"status":False}
-        fcsFilename = self.get_query_argument("allfcs")
-        print(json.loads(fcsFilename))
-        # xval = self.get_query_argument("xval")
-        # yval = self.get_query_argument("yval")
+        
         x1 = int(self.get_query_argument("x1"))
         y1 = int(self.get_query_argument("y1"))
         x2 = int(self.get_query_argument("x2"))
         y2 = int(self.get_query_argument("y2"))
-        # transformation = self.get_query_argument("transformation")
-        lfiles = ['A02 Kranvatten kvall SYBRout.csv','A06 Ut SYout.csv']
-        results = generateGatedOutputsPlusHeatmap(lfiles, x1, y1, x2, y2)
-        if(results):
+        binwidth = int(self.get_query_argument("binwidth"))
+        selectedFcsFile = self.get_query_argument("fcs")
+        selectedFiles = self.get_query_argument("allfcs")
+        
+        transformedFilesList = getFcsFilesToUse(selectedFiles,"out.csv")
+        gates = generateGatedOutputsPlusHeatmap(transformedFilesList, x1, y1, x2, y2, binwidth)
+
+        if(gates):
+            gatedFilesList = getFcsFilesToUse(selectedFiles,"-gate.csv")
+            results = generateDifferences(gatedFilesList)
+            
             response["status"] = True
-            # response["payload"] = results
+            response["payload"] = getGatedHeatData(selectedFcsFile) 
+            response["linedata"] = getGatedLineData(gatedFilesList, x1, y1, x2, y2) 
+            print("Payload ready")
         else:
             response["message"] = "Something went wrong."
 
-        self.write(response)
+        self.write(json.dumps(response))
+
+class TestHandler(BaseHandler):
+    def get(self):
+        response = {"status":False}
+
+        df = getGatedLineData(["A02 Kranvatten kvall SYBR.fcs","A05 Kranvatten Sept SYBR .fcs","A02 Kranvatten Augusti SYBR.fcs","A03 Kranvatten Mars SYBR.fcs","A03 Kranvatten morgon SYBR.fcs"], 5,5,12,12)
+
+        # print(df)
+        self.write(json.dumps(df))
+        # self.write(df)
+
+
+
 
 class GetUploadsHandler(BaseHandler):
     def get(self):
@@ -101,7 +147,6 @@ class GetUploadsHandler(BaseHandler):
         filters = ""
         params = []
         response = {"status":False}
-        print(dateTo + "---" + dateFrom + "......" + category + "]]" )
         if category.strip() != "": 
             filters = filters + "and category=%s "
             params.append(category)
@@ -209,6 +254,7 @@ if (__name__ == "__main__"):
         ("/saveUser/", SaveUserData),
         ("/loadLocations", GetLocationsHandler),
         ("/generateHeatmap/", GenerateHeatmapHandler),
+        ("/test/", TestHandler),
     ])
 
 
@@ -216,4 +262,12 @@ if (__name__ == "__main__"):
     app.listen(port)
     print("Listening on port", port)
 
-    tornado.ioloop.IOLoop.instance().start() #Starts instance only once and keeps it running
+    tornado.ioloop.IOLoop.current().start()
+
+    # tornado.ioloop.IOLoop.instance().start() #Starts instance only once and keeps it running
+
+    # ### To take advantage of multiple CPUs
+    # server = tornado.httpserver.HTTPServer(app)
+    # server.bind(port)
+    # server.start(0)  # forks one process per cpu
+    # tornado.ioloop.IOLoop.current().start()

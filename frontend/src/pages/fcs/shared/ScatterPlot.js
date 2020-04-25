@@ -1,18 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import CanvasJSReact from '../lib/canvasjs.react';
-
-// var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 
 export default function ScatterPlot(props){
 
     const [dataToPlot, setDataToPlot] = useState(props.dataToPlot);
-    const [title, setTitle] = useState(props.plotTitle);
     const [xval, setXval] = useState(props.xval);
     const [yval, setYval] = useState(props.yval);
-
-    // console.log(props.dataToPlot);
 
     useEffect( function handleDataChange() {
         if (props.dataToPlot) {
@@ -22,7 +17,6 @@ export default function ScatterPlot(props){
 
     useEffect( function handleTitleChange() {
         if (props.title) {
-            setTitle(props.title);
             setXval(props.xval);
             setYval(props.yval);
         }
@@ -34,11 +28,10 @@ export default function ScatterPlot(props){
         zoomEnabled: true,
         zoomType: "xy",
         // title:{
-        //     text: "Ice Cream Sales vs Temperature"
+        //     text: ""
         // },
         axisX: {
             title: xval,
-            // suffix: "°C",
             crosshair: {
                 enabled: true,
                 snapToDataPoint: true
@@ -46,7 +39,6 @@ export default function ScatterPlot(props){
         },
         axisY:{
             title: yval,
-            // includeZero: false,
             crosshair: {
                 enabled: true,
                 snapToDataPoint: true
@@ -55,7 +47,6 @@ export default function ScatterPlot(props){
         data: [{
             type: "scatter",
             markerSize: 5,
-            // toolTipContent: "<b>Temperature: </b>{x}°C<br/><b>Sales: </b>{y}",
             dataPoints: dataToPlot
         }]
     }
@@ -63,9 +54,6 @@ export default function ScatterPlot(props){
     return (
         
             <CanvasJSChart options = {options}
-                /* onRef={ref => this.chart = ref} */
-                
-			/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/
 			/>
         
     )

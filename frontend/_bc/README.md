@@ -4,7 +4,7 @@ This implements all endpoints
 ## Setup
 Run the following to install the modules
 ```
-pip install pandas, FlowCytometryTools, Tornado, psycopg2, asyncio
+pip install pandas, FlowCytometryTools, Tornado, psycopg2, supervisor, asyncio (only for python 2)
 ```
 The default URL is:
 ```

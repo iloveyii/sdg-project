@@ -68,7 +68,7 @@ export default function DashboardOptions(props) {
             href="#/app/analyze"
           >
             <Typography variant="h4" color="primary"  className={classes.text} weight="medium" >
-              Analyze FCS
+              Analyze
             </Typography>
           </Button>
         </Grid>

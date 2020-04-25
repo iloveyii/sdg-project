@@ -103,7 +103,7 @@ def getPlotData(channelx, channely, transformation, filename):
     save_data_file(data3,outfile)
     print('Plot Data Saved...', outfile)
     
-    return data1, data2, data3.to_json(orient='records')
+    return data3.to_json(orient='records')
 
 
 
@@ -111,6 +111,6 @@ def getPlotData(channelx, channely, transformation, filename):
 #implementMain()
 #sampl = getColumnNames("A06 Ut SY.FCS")
 
-#data1, data2, data3 = getPlotData("FSC-A", "PE-A", "glog", "A06 Ut SY.FCS")
+#data3 = getPlotData("FSC-A", "PE-A", "glog", "A06 Ut SY.FCS")
 #jsn = data3.to_json(orient='records')
 # 

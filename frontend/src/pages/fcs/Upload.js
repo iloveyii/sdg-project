@@ -2,31 +2,18 @@ import React, {useState, useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {
     Grid,
-    // CssBaseline,
-    // CircularProgress,
     Typography,
     Button,
-    // Tabs,
-    // Tab,
-    // Link,
-    // Box,
     InputLabel,
-    // FormControlLabel,
-    // Alert,
     Select,
     MenuItem,
     FormControl,
-    // Snackbar,
     TextField,
     CircularProgress
-    // Fade,
 } from "@material-ui/core";
 import {DropzoneArea} from 'material-ui-dropzone';
-// import clsx from 'clsx';
 import { green } from '@material-ui/core/colors';
-
-// import ChartingSection from '../components/ChartingSection';
-import { snackbarService } from 'uno-material-ui';
+import {toast} from "react-toastify";
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -90,12 +77,10 @@ export default function Upload() {
     var [category, setCategory] = useState("Cancer");
     var [disabled, setDisabled] = useState(true);
     var [buttonText, setButtonText] = useState("Upload");
-    var [displayChart, setDisplayChart] = useState(false);
 
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
 
     useEffect(() => {
         setLabelWidth(inputLabel.current.offsetWidth);
@@ -112,7 +97,6 @@ export default function Upload() {
     const uploadFcs = (e) => {
         
         setLoading(true);
-        setSuccess(false);
 
         const formData = new FormData();
         formData.append("dateTime", dateTime);
@@ -123,7 +107,7 @@ export default function Upload() {
             formData.append("file", file, file.name);
         });
 
-        var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";
+        var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : process.env.REACT_APP_API_PATH;
         fetch(`${urlpath}/`,{
             method: 'POST',
             body: formData
@@ -131,20 +115,20 @@ export default function Upload() {
         .then(response => response.json())
         .then(function(response){
             if (response['status']){
-                setSuccess(true);
                 setDisabled(true);
                 setLocation("");
                 setFiles([]);
-                setButtonText("Upload Complete")
-                snackbarService.showSnackbar('Upload Successful', 'success');
-                return response;
+                setButtonText("Upload Complete");
+                toast.success(" Upload Successful.");
             } else {
-                snackbarService.showSnackbar(response['message'], 'error');
+                toast.warn(response['message']);
             }
             setLoading(false);
         })
-        .catch(err => console.error(err))  
-        setDisplayChart(true);
+        .catch(err => {
+            toast.error(" Problem reaching API. Check internet connection", {autoClose: 5000});
+            setLoading(false);
+        })  
     }
 
 

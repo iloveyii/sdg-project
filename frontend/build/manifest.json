@@ -1,6 +1,6 @@
 {
-  "short_name": "FoodShare",
-  "name": "FoodShare: No Waste",
+  "short_name": "FCS_Analyzer",
+  "name": "FCS Analyzer",
   "Scope": ".",
   "icons": [
     {
@@ -9,12 +9,12 @@
       "type": "image/png"
     },
     {
-      "src": "./2.png",
+      "src": "icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "1.png",
+      "src": "icon-128x128.png",
       "type": "image/png",
       "sizes": "128x128"      
     },

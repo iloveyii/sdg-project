@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, ExpansionPanelActions} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Grid, Divider, Typography, TextField, Button, Paper} from "@material-ui/core";
+import {Grid, Divider, Typography, TextField, Button} from "@material-ui/core";
 
-import ChartPlot from './shared/ChartPlot';
 import CustomSelect from './shared/CustomSelect';
 import Scatter from './shared/ScatterPlot';
-import { snackbarService } from 'uno-material-ui';
+import Heatmap from './shared/Heatmap';
+import LineChart from './shared/LineChart';
+import {toast} from "react-toastify";
 
 const useStyles = makeStyles(theme => ({
     heading: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Analyze() {
     const classes = useStyles();
-    var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";        
+    var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : process.env.REACT_APP_API_PATH;        
 
     const [expanded, setExpanded] = useState(false);//React.useState(false);
     const [xval, setXval] = useState("");
@@ -46,9 +47,12 @@ export default function Analyze() {
     const [location, setLocation] = useState("");
     const [allLocations, setAllLocations] = useState([]);
     
-    const [enablePlotButton, setEnablePlotButton] = useState(true);
 
     const [dataToPlot, setDataToPlot] = useState([]);
+    const [lineData, setLineData] = useState([]);
+    const [lineDataKeys, setLineDataKeys] = useState([]);
+    const [gatedData, setGatedData] = useState([]);
+    
     const [title, setTitle] = useState("here");
     const [fcsSectionTitle, setFcsSectionTitle] = useState("Select FCS file");
 
@@ -56,6 +60,7 @@ export default function Analyze() {
     const [gateY1, setGateY1] = useState(5);
     const [gateX2, setGateX2] = useState(12);
     const [gateY2, setGateY2] = useState(12);
+    const [binwidth, setBinwidth] = useState(1000);
 
     async function loadFcsSelect(){
         await fetch(`${urlpath}/loadFcsFiles/?dateFrom=${dateFrom}&dateTo=${dateTo}&category=${fcsType}&location=${location}`)
@@ -64,10 +69,12 @@ export default function Analyze() {
             if (response["status"]){
                 setAllFcs(response["payload"]);
                 setTitle("success");
-                snackbarService.showSnackbar(response["payload"].length + ` FCS file(s) loaded`, 'info');
+                toast.info(response["payload"].length + ` FCS file(s) loaded`);
             }
         })
-        .catch(err => console.error(err)) 
+        .catch(err => {
+            toast.error(" Problem reaching API. Check internet connection", {autoClose: 5000});
+        }) 
     }
 
     async function loadLocations(){
@@ -78,7 +85,9 @@ export default function Analyze() {
                 setAllLocations(response["payload"]);
             }
         })
-        .catch(err => console.error(err)) 
+        .catch(err => {
+            toast.error(" Problem reaching API. Check internet connection", {autoClose: 5000});
+        }) 
     }
     
     useEffect(() => {
@@ -95,13 +104,14 @@ export default function Analyze() {
             .then(function(response){
                 if (response["status"]){
                     setAllColumns(response["payload"]);
-                    setFcsSectionTitle(`Selected FCS:   ${selectedFcs}`)
-                    setEnablePlotButton(false);
+                    setFcsSectionTitle(`Selected FCS:   ${selectedFcs}`);
                     setExpanded("panel2");
-                    snackbarService.showSnackbar(response["payload"].length + ` Columns Loaded`, 'info');
+                    toast.info(response["payload"].length + ` Columns Loaded`);
                 }
             })
-            .catch(err => console.error(err)) 
+            .catch(err => {
+                toast.error(" Problem reaching API. Check internet connection", {autoClose: 5000});
+            }) 
         }
         loadFilters();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,7 +123,7 @@ export default function Analyze() {
     };
 
     const initiatePlot = () => {
-        fetch(`${urlpath}/plotGraph/?fcs=${selectedFcs}&xval=${xval}&yval=${yval}&transformation=${transformation}`)
+        fetch(`${urlpath}/plotGraph/?fcs=${selectedFcs}&allfcs=${JSON.stringify(allFcs)}&xval=${xval}&yval=${yval}&transformation=${transformation}`)
         .then(response => response.json())
         .then(function(response){
             if (response){
@@ -123,53 +133,42 @@ export default function Analyze() {
                 setExpanded("panel3");
             }
         })
-        .catch(err => console.error(err)) 
+        .catch(err => {
+            console.log(err);
+            toast.error(" Problem reaching API. Check internet connection", {autoClose: 5000});
+        }) 
         
         
         
     };
 
-    function loadFilters(){
-        var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";
-        fetch(`${urlpath}/loadColumns/?fcs=${selectedFcs}`)
-        .then(response => response.json())
-        .then(function(response){
-            if (response["status"]){
-                setAllColumns(response["payload"]);
-                setEnablePlotButton(false);
-                setExpanded("panel2");
-            }
-        })
-        .catch(err => console.error(err)) 
-    }
-
-    function handleFilterChange(e){
-        console.log(e.target.value);
-        setDateFrom(e.target.value);
-    }
     function resetFilters(e){
         setDateFrom("");
         setDateTo("");
         setFcsType("");
         setLocation("");
         loadFcsSelect();
+        
     }
 
     function generateHeatMaps(){
-        fetch(`${urlpath}/generateHeatmap/?allfcs=${JSON.stringify(allFcs)}&x1=${gateX1}&y1=${gateY1}&x2=${gateX2}&y2=${gateY2}`)
+        fetch(`${urlpath}/generateHeatmap/?fcs=${selectedFcs}&allfcs=${JSON.stringify(allFcs)}&x1=${gateX1}&y1=${gateY1}&x2=${gateX2}&y2=${gateY2}&binwidth=${binwidth}`)
         .then(response => response.json())
         .then(function(response){
-            if (response){
-                console.log(response);
-                snackbarService.showSnackbar(` Heatmaps Generated`, 'info');
-                // var output = response.map(s => ({x:s[xval], y:s[yval]}));
-                // setDataToPlot(output);
-                // setGraphTitle("Scatter Plot: " + xval + " Vs. " + yval);
+            if (response['status']){
+                setGatedData(Object.values(response['payload']));
+                setLineData(Object.values(response['linedata']));
+                setLineDataKeys(Object.keys(response['linedata']));
+                toast.info(" Gated heatmap Generated");
+                setExpanded("panel4");
+            } else {
+                toast.warn(response['message']);
             }
         })
-        .catch(err => console.error(err)) 
-        
-        setExpanded("panel3");
+        .catch(err => {
+            console.log(err);
+            toast.error(" Problem reaching API. Check internet connection", {autoClose: 5000});
+        }) 
     }
 
     return (
@@ -461,9 +460,6 @@ export default function Analyze() {
                                         max: 200, min: 1 
                                     }
                                 }}
-                                // error
-                                // required
-                                // helperText={"Min: 1, Max: 200"}
                             />
                         </Grid>
                         <Grid item sm={3} xs={6}>
@@ -482,9 +478,24 @@ export default function Analyze() {
                                         max: 200, min: 1 
                                     }
                                 }}
-                                // error
-                                // required
-                                // helperText={"Min: 1, Max: 200"}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                id="binwidth"
+                                label="Binwidth"
+                                type="number"
+                                variant="outlined"
+                                value={binwidth}
+                                className={classes.textField}
+                                onChange={e => setBinwidth(e.target.value)}
+                                fullWidth
+                                size={'small'}
+                                InputProps={{
+                                    inputProps: { 
+                                        max: 2000, min: 100 
+                                    }
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -507,6 +518,40 @@ export default function Analyze() {
                 {/* <ChartPlot 
                 data={"is here"}
                 /> */}
+            </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+            <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel4bh-content"
+                id="panel4bh-header"
+            >
+                <Typography className={classes.heading}>{"Gated -  " + `(${gateX1},${gateY1}) : (${gateX2}, ${gateY2})`}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Heatmap 
+                    gatedData={gatedData}
+                    selectedFcs={selectedFcs}
+                    gateX1={gateX1}
+                    gateX2={gateX2}
+                    gateY1={gateY1}
+                    gateY2={gateY2}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <LineChart 
+                    lineData={lineData}
+                    lineDataKeys={lineDataKeys}
+                    selectedFcs={selectedFcs}
+                    gateX1={gateX1}
+                    gateX2={gateX2}
+                    gateY1={gateY1}
+                    gateY2={gateY2}
+                    />
+                </Grid>
+            </Grid>
             </ExpansionPanelDetails>
             </ExpansionPanel>
         </div>

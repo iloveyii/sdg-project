@@ -1,9 +1,9 @@
 import React from "react";
-import { snackbarService } from 'uno-material-ui';
+import {toast} from "react-toastify";
 
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
-var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : "";
+var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : process.env.REACT_APP_API_PATH;
 
 function userReducer(state, action) {
   switch (action.type) {
@@ -80,13 +80,16 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
         
         history.push("/app/dashboard");
     } else {
-      snackbarService.showSnackbar('Login Failed. Check username or password.', 'error');
+      toast.warn("Login Failed. Check username or password.");
       dispatch({ type: "LOGIN_FAILURE" });
-      setError(true);
       setIsLoading(false);
     }
   })
-  .catch(err => console.error(err))  
+  .catch(err => {
+    toast.error("Server is down. Contact admin", {autoClose: 5000});
+    console.error(err);
+    setIsLoading(false);
+  })  
 }
 
 
@@ -111,22 +114,25 @@ function registerUser(dispatch, login, password, name, history, setIsLoading, se
   .then(response => response.json())
   .then(function(response){
     if (response["status"]){
-      snackbarService.showSnackbar('Registration Successful. Log in using your credentials.', 'success');
+      toast.success("Registration Successful. Log in using your credentials.");
       dispatch({ type: "ACCOUNT_CREATED" });
       setError(null);
     } else {
-      snackbarService.showSnackbar('Registration Failed. Try another email', 'error');
+      toast.warn("Registration Failed. Try another email");
     }
     setIsLoading(false);
   })
-  .catch(err => console.error(err))  
+  .catch(err => {
+    toast.error("Server is down. Contact admin", {autoClose: 5000});
+    console.error(err);
+    setIsLoading(false);
+  })  
 
 }
 
 function signOut(dispatch, history) {
   window.sessionStorage.clear();
   localStorage.clear();
-
   // localStorage.removeItem("id_token");
   dispatch({ type: "SIGN_OUT_SUCCESS" });
   history.push("/login");

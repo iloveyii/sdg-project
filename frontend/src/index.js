@@ -8,14 +8,16 @@ import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import { LayoutProvider } from "./context/LayoutContext";
 import { UserProvider } from "./context/UserContext";
-import { SnackbarContainer } from 'uno-material-ui';
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.min.css'; 
+
 
 ReactDOM.render(
   <LayoutProvider>
     <UserProvider>
       <ThemeProvider theme={Themes.default}>
+        <ToastContainer position={"bottom-right"} autoClose={3000} closeButton={false}/>
         <CssBaseline />
-        <SnackbarContainer />
         <App />
       </ThemeProvider>
     </UserProvider>

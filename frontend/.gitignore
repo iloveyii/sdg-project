@@ -8,7 +8,8 @@
 /coverage
 
 # production
-#/build
+build/
+/build
 
 # misc
 .DS_Store
@@ -27,3 +28,14 @@ yarn.lock
 
 .env
 db.ini
+
+diff/*
+!diff/.gitkeep
+raw/*
+!raw/.gitkeep
+transformed/*
+!transformed/.gitkeep
+heatmap/*
+!heatmap/.gitkeep
+gated/*
+!gated/*.gitkeep
