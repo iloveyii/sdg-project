@@ -26,7 +26,7 @@ transformations = {
 
 
 class Plotting:
-    def __init__(self, file_id='hazrat_kth_se', ch1=False, ch2=False, transformation=False, bins=100):
+    def __init__(self, file_id='default', ch1=False, ch2=False, transformation=False, bins=100):
         fcs_file_name = file_id + '_fcs_file.fcs'
         self.file_id = file_id
         self.channel_name1 = ch1
@@ -47,6 +47,7 @@ class Plotting:
             print('FCS file does not exist ', fcs_file)
             # return False
             fcs_file = os.path.join(SHARED_RAW_DIR, 'fcs_file.fcs')  # running from cli
+
         # Load data
         tsample = FCMeasurement(ID='Test Sample', datafile=fcs_file)
         if self.transformation:

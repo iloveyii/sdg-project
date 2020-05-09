@@ -291,13 +291,17 @@ def basic(request):
 @csrf_exempt
 def plotting(request):
     id = get_logged_in_email_to_file_format(request)
+    params = ''
+    response = {
+        'status': 'fail',
+        'msg': 'logged in'
+    }
     if not id:
         response = {
             'status': 'fail',
             'msg': 'User not logged in'
         }
     else:
-        params = ''
         if request.GET['ch1'] and request.GET['ch2']:
             ch1 = request.GET['ch1']
             ch2 = request.GET['ch2']
@@ -305,6 +309,7 @@ def plotting(request):
             params = "&ch1={}&ch2={}".format(ch1, ch2)
         URL = 'http://plotting:4000?id=' + id + params
         r = requests.get(URL)
+        print(r)
         response = r.json()
         print(response)
     return HttpResponse(json.dumps(response))

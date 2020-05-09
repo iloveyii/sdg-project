@@ -11,7 +11,7 @@ csrf = CSRFProtect(app)
 api = Api(app)
 
 dt = datetime.now()
-gl = {'test': 'this is a test', 'ts': dt.microsecond}
+gl = {'server_start_ts': dt.microsecond}
 
 
 class Data(Resource):
@@ -20,15 +20,20 @@ class Data(Resource):
         global gl
         # return gl
         file_id = request.args.get('id')
-        if not file_id:
-            file_id = 'hazrat_kth_se'
         ch1 = request.args.get('ch1')
         ch2 = request.args.get('ch2')
-        print('PLOTTING chs', ch1, ch2)
+        if not file_id or not ch1 or not ch2:
+            file_id = 'default'
+            ch1 = 'HDR-T'
+            ch2 = 'FSC-A'
+            print('PLOTTING Default FCS and  chs', ch1, ch2)
+        else:
+            print('PLOTTING RECEIVED FCS and chs', file_id, ch1, ch2)
+
         plotting = Plotting(file_id, ch1, ch2)
         plots = plotting.get_plots()
-
-        return plots
+        gl.update(plots)
+        return gl
 
 
 api.add_resource(Data, '/')

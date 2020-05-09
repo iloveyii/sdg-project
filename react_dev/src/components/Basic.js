@@ -12,7 +12,7 @@ class Model {
     setChannels = null;
 
     constructor() {
-        const [channels, setChannels ] = useState([]);
+        const [channels, setChannels] = useState([]);
         this._channels = channels;
         this.setChannels = setChannels;
     }
@@ -24,18 +24,16 @@ class Model {
     }
 
     set channels(channels) {
-        console.log('useEffect 4', channels);
         this.setChannels(channels);
         this._channels = channels;
     };
 
     get channels() {
-        console.log('useEffect 3', this._channels);
         return this._channels;
     };
 
     set channel1(channel1) {
-        console.log('Setting channel 1', channel1)
+        console.log('Basic_ Setting channel 1', channel1)
         this._channel1 = channel1;
     }
 
@@ -44,6 +42,7 @@ class Model {
     }
 
     set channel2(channel2) {
+        console.log('Basic_ Setting channel 2', channel2)
         this._channel2 = channel2;
     }
 
@@ -52,6 +51,7 @@ class Model {
     }
 
     set transformation(transformation) {
+        console.log('Basic_ Setting transformation', transformation)
         this._transformation = transformation;
     }
 
@@ -60,7 +60,7 @@ class Model {
     }
 
     set bins(bins) {
-        console.log('Setting bins to : ', bins);
+        console.log('Basic_ Setting bins to : ', bins);
         this._bins = bins;
     }
 
@@ -80,88 +80,98 @@ class Model {
 }
 
 const Options = (props) => {
-    let {channels} = props;
+    let {channels, chosen} = props;
     channels = channels && channels.channels ? channels.channels : channels;
-    console.log('componentOptions: ', props)
+    console.log('Basic_ componentOptions: ', props)
     if (!channels || !Array.isArray(channels)) return <option value="1">Loading...</option>
     return (
-        channels.map(ch => <option key={ch} value={ch}>{ch}</option>)
+        channels.map(ch =><option key={ch} value={ch} selected={ch == chosen}>{ch}</option>)
     )
 };
 
 const Basic = () => {
     const {basic, dispatch} = useContext(BasicContext);
-    const model = new Model();
+    const [values, setValues] = useState({
+        channels: [],
+        channel1: '',
+        channel2: '',
+        transformations: [],
+        transformation: '',
+        bins: '',
+    });
 
     // componentDidMount
     useEffect(() => {
-        console.log('componentDidMount', basic);
-        model.basic = basic;
+        console.log('Basic_ componentDidMount', basic);
 
         setTimeout(() =>
-            api.read().then(basic => {
-                if (basic && basic.length > 0) {
-                    model.basic = basic;
+            api.read().then(channels => {
+                if (channels && channels.length > 0) {
+                    // This will trigger render
                     dispatch({
-                        type: 'ADD_BASIC',
-                        payload: {model}
+                        type: 'ADD_CHANNELS',
+                        payload: {channels}
                     });
+                    setValues(basic.attributes);
                 }
-            }), 5000
+            }), 2000
         )
     }, []);
 
     // componentWillReceive props
     useEffect(() => {
-        console.log('componentWillReceive props', basic);
-        model.basic = basic;
-    }, [basic]);
+        // if (basic.bins === -1) return;
+        console.log('Basic_ componentWillReceive props', basic);
+    }, [values]);
 
     const setContextAttributes = () => {
-        console.log('setContextAttributes', model.attributes);
-        dispatch({type: 'SET_ATTRIBUTES', payload: {attributes: model.attributes}});
+        console.log('Basic_ setContextAttributes', basic.attributes);
+        dispatch({type: 'SET_ATTRIBUTES', payload: {attributes: values}});
     };
 
     //if (model.channels.length === 0) return <p>Loading...</p>;
+    console.log('Basic_ calling return');
 
     return (
-        <div className="row" id="basic-div">
-            <div className="col-md-12 order-md-0">
-                <h1>Basic info  </h1>
-                <p className="lead" id="basic-info"></p>
+        <>
+            <div className="row" id="basic-div">
+                <div className="col-md-12 order-md-0">
+                    <h1>Basic {Date.now()} info {JSON.stringify(basic.attributes)} </h1>
+                    <p className="lead" id="basic-info"></p>
 
-                <select className="form-control" id="channel-name-1"
-                        onChange={(e) => model.channel1 = e.target.value}>
-                    <Options channels={model.channels}/>
-                </select>
-                <br/>
-                <select className="form-control" id="channel-name-2"
-                        onChange={(e) => model.channel2 = e.target.value}>
-                    <Options channels={model.channels.slice(1)}/>
-                </select>
-                <br/>
+                    <select className="form-control" id="channel-name-1"
+                            onChange={(e) => setValues({...values, channel1: e.target.value})}>
+                        <Options channels={values.channels} chosen={values.channel1}/>
+                    </select>
+                    <br/>
+                    <select className="form-control" id="channel-name-2"
+                            onChange={(e) => setValues({...values, channel2: e.target.value})}>
+                        <Options channels={values.channels.slice(1)} chosen={values.channel2} />
+                    </select>
+                    <br/>
 
-                <div className="row">
-                    <div className="col-md-6">
-                        <select className="form-control" id="transformations"
-                                onChange={(e) => model.transformation = e.target.value}>
-                            <Options channels={['hlog', 'tlog']}/>
-                        </select>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <select className="form-control" id="transformations"
+                                    onChange={(e) => setValues({...values, transformation: e.target.value})}>
+                                <Options channels={values.transformations} chosen={values.transformation}/>
+                            </select>
+                        </div>
+                        <div className="col-md-6">
+                            <input type="number" defaultValue={values.bins} className="form-control" id="bins"
+                                   onChange={(e) => setValues({...values, bins: e.target.value})}/>
+                        </div>
                     </div>
-                    <div className="col-md-6">
-                        <input type="number" defaultValue={100} className="form-control" id="bins"
-                               onChange={(e) => model.bins = e.target.value}/>
-                    </div>
+
+                    <br/>
+                    <button onClick={() => setContextAttributes()} className="btn btn-lg btn-success">
+                        <i className="fas fa-chart-line"></i> Display
+                    </button>
+
+                    <hr className="mb-4"/>
                 </div>
-
-                <br/>
-                <button onClick={() => setContextAttributes()} className="btn btn-lg btn-success">
-                    <i className="fas fa-chart-line"></i> Display
-                </button>
-
-                <hr className="mb-4"/>
             </div>
-        </div>
+        </>
     )
 };
 
