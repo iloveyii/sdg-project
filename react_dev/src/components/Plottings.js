@@ -13,6 +13,11 @@ const Plottings = () => {
 
     const image_url = apiServer + '/static/plots/plotting/';
 
+    // componentDidMount
+    useEffect(() => {
+        console.log('PLOT_ componentDidMount');
+    }, []);
+
     useEffect(() => {
         setLoading(true);
         api.read(basic.current_channels).then(plottings => dispatch({type: 'ADD_PLOTTINGS', payload: {plottings}}))

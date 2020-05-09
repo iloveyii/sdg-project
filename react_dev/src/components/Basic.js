@@ -80,12 +80,12 @@ class Model {
 }
 
 const Options = (props) => {
-    let {channels, chosen} = props;
+    let {channels} = props;
     channels = channels && channels.channels ? channels.channels : channels;
     console.log('Basic_ componentOptions: ', props)
     if (!channels || !Array.isArray(channels)) return <option value="1">Loading...</option>
     return (
-        channels.map(ch =><option key={ch} value={ch} selected={ch == chosen}>{ch}</option>)
+        channels.map(ch => <option key={ch} value={ch}>{ch}</option>)
     )
 };
 
@@ -139,22 +139,22 @@ const Basic = () => {
                     <h1>Basic {Date.now()} info {JSON.stringify(basic.attributes)} </h1>
                     <p className="lead" id="basic-info"></p>
 
-                    <select className="form-control" id="channel-name-1"
+                    <select className="form-control" id="channel-name-1" value={values.channel1}
                             onChange={(e) => setValues({...values, channel1: e.target.value})}>
-                        <Options channels={values.channels} chosen={values.channel1}/>
+                        <Options channels={values.channels}/>
                     </select>
                     <br/>
-                    <select className="form-control" id="channel-name-2"
+                    <select className="form-control" id="channel-name-2" value={values.channel2}
                             onChange={(e) => setValues({...values, channel2: e.target.value})}>
-                        <Options channels={values.channels.slice(1)} chosen={values.channel2} />
+                        <Options channels={values.channels.slice(1)}/>
                     </select>
                     <br/>
 
                     <div className="row">
                         <div className="col-md-6">
-                            <select className="form-control" id="transformations"
+                            <select className="form-control" id="transformations" value={values.transformation}
                                     onChange={(e) => setValues({...values, transformation: e.target.value})}>
-                                <Options channels={values.transformations} chosen={values.transformation}/>
+                                <Options channels={values.transformations}/>
                             </select>
                         </div>
                         <div className="col-md-6">
