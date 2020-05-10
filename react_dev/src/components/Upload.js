@@ -6,7 +6,7 @@ import {apiServer} from "../settings/constants";
 
 const Upload = () => {
     const fileRef = React.createRef();
-    const {basic, dispatch} = useContext(BasicContext);
+    // const {basic, dispatch} = useContext(BasicContext);
 
     const uploadFile = () => {
         const formData = new FormData();
@@ -20,10 +20,10 @@ const Upload = () => {
             console.log('File uploaded');
             api.read().then(basic => {
                 if (basic) {
-                    dispatch({
-                        type: 'ADD_BASIC',
-                        payload: {channels: basic}
-                    });
+                    // dispatch({
+                    //     type: 'ADD_BASIC',
+                    //     payload: {channels: basic}
+                    // });
                     window.location.reload(false);
                 }
             });

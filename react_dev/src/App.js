@@ -1,36 +1,27 @@
-import React from 'react';
+import React, {Component} from 'react';
+import {Route, Switch, BrowserRouter} from 'react-router-dom';
+
 import Navbar from './components/Navbar'
 import Container from './components/Container'
 import Plottings from './components/Plottings'
 import Ml from './components/Ml'
 import Upload from './components/Upload'
 import Basic from './components/Basic'
-import ThemeContextProvider from './contexts/ThemeContextProvider'
-import BasicContextProvider from './contexts/BasicContextProvider';
-import PlottingsContextProvider from './contexts/PlottingsContextProvider';
-import MlContextProvider from './contexts/MlContextProvider';
 
-function App() {
-    return (
-        <>
-            <ThemeContextProvider>
+
+class App extends Component {
+
+    render() {
+        return (
+            <>
                 <Navbar/>
                 <Container>
-                    <BasicContextProvider>
-                        <Upload/>
-                        <Basic/>
-                        <PlottingsContextProvider>
-                            <Plottings/>
-                        </PlottingsContextProvider>
-                        <MlContextProvider>
-                            <Ml/>
-                        </MlContextProvider>
-                    </BasicContextProvider>
+                    <Upload/>
+                    <Basic/>
                 </Container>
-            </ThemeContextProvider>
-
-        </>
-    );
+            </>
+        );
+    }
 }
 
 export default App;
