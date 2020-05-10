@@ -48,6 +48,7 @@ class Model {
 
     // ACTIONS
     get actions() {
+        console.log('Inside actions')
         return {
             create: (data) => ({type: this.types.create, payload: {data}}),
             create_success: (data) => ({type: this.types.create_success, payload: {data}}),
@@ -107,8 +108,9 @@ class Model {
 
                 case this.types.create_success :
                     var {form, actions} = action.payload.data;
+                    console.log('inside create_success', actions)
                     // If status ok and form has got id then add item to list and clear form
-                    state.list && state.list.push(form) || (state.list = []);
+                    // state.list && state.list.push(form) || (state.list = []);
                     if (actions.ok === 1 && form._id) form = {};
                     actions.timestamp = Date.now();
 
@@ -231,7 +233,6 @@ class Model {
 
     // API
     get api() {
-        console.log('API server', this.server)
         return {
             read: () =>
                 axios.get(this.server).then(res => res.data).catch(error => {

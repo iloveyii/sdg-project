@@ -7,8 +7,9 @@ class Basic extends ActiveRecord {
             channels: [],
             channel1: '',
             channel2: '',
-            transformation: '',
-            bins: '',
+            transformation: 'hlog',
+            transformations: ['hlog', 'tlog'],
+            bins: 100,
         };
         console.log('Plots', this.types);
     }

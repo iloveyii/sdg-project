@@ -1,6 +1,7 @@
 import Model from './Model';
 
 class ActiveRecord extends Model {
+    list = [];
     mode = 'create';
     _uploadProgress = 0;
     _forceUpdate = () => null;
@@ -52,7 +53,7 @@ class ActiveRecord extends Model {
 
     setUploadProgress(value) {
         this._uploadProgress = value;
-        if(value > 95) this.resetForm();
+        if (value > 95) this.resetForm();
         this._forceUpdate();
     }
 
@@ -104,12 +105,12 @@ class ActiveRecord extends Model {
     //@return {}
     selected = (attr) => {
         console.log('Select selected', attr);
-        if(!attr) {
+        if (!attr) {
             return {value: 'na', label: 'NA'};
         }
         const found = this._selectList[attr].find(item => item.value == this.form[attr]);
 
-        if(!found) {
+        if (!found) {
             return this._selectList[attr][0];
         }
 

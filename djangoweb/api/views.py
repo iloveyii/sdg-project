@@ -274,18 +274,25 @@ def machine_learning(request):
 @csrf_exempt
 def basic(request):
     id = get_logged_in_email_to_file_format(request)
-    id = 'hazrat_kth_se';
+    # @todo
+    id = 'default'
     if not id:
         response = {
             'status': 'fail',
             'msg': 'User not logged in'
         }
     else:
+        if not id:
+            id = ''
         URL = 'http://basicanalysis:3000?id=' + id
         r = requests.get(URL)
         response = r.json()
-        print(response)
-    return HttpResponse(json.dumps(response))
+        data = {
+            'actions': {'type': 'read', 'ok': 1},
+            'list': response
+        }
+        print(data)
+    return HttpResponse(json.dumps(data))
 
 
 @csrf_exempt
@@ -315,5 +322,9 @@ def plotting(request):
         r = requests.get(URL)
         print(r)
         response = r.json()
-        print(response)
-    return HttpResponse(json.dumps(response))
+        data = {
+            'actions': {'type': 'read', 'ok': 1},
+            'list': response
+        }
+        print(data)
+    return HttpResponse(json.dumps(data))
