@@ -292,11 +292,13 @@ def basic(request):
 def plotting(request):
     id = get_logged_in_email_to_file_format(request)
     params = ''
+
     response = {
         'status': 'fail',
         'msg': 'logged in'
     }
-    if not id:
+    #if not id:
+    if False:
         response = {
             'status': 'fail',
             'msg': 'User not logged in'
@@ -307,6 +309,8 @@ def plotting(request):
             ch2 = request.GET['ch2']
             print(ch1, ch2)
             params = "&ch1={}&ch2={}".format(ch1, ch2)
+        if not id:
+            id = '' 
         URL = 'http://plotting:4000?id=' + id + params
         r = requests.get(URL)
         print(r)
