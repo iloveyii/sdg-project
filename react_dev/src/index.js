@@ -104,7 +104,7 @@ if(true || ENVIRONMENT.DEV) {
         b: 9909
     }));*/
 
-
+    // Dispatch all read actions
     for(let i=0; i < Object.keys(models).length; i++) {
         const model = models[Object.keys(models)[i]];
         store.dispatch(model.actions.read({}));

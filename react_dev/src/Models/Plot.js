@@ -1,12 +1,12 @@
 import ActiveRecord from './ActiveRecord';
 
-class Show extends ActiveRecord {
+class Plot extends ActiveRecord {
     constructor(name) {
         super(name);
         this.form = {
             images: [],
         };
-        console.log('Shows', this.types);
+        console.log('Plots', this.types);
     }
 
     /*get types() {
@@ -22,8 +22,6 @@ class Show extends ActiveRecord {
                 }
             });
     }*/
-
-
 }
 
-export default Show;
+export default Plot;

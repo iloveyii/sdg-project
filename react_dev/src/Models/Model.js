@@ -231,6 +231,7 @@ class Model {
 
     // API
     get api() {
+        console.log('API server', this.server)
         return {
             read: () =>
                 axios.get(this.server).then(res => res.data).catch(error => {

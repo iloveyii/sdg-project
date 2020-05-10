@@ -1,9 +1,11 @@
 // name, server, form, forceUpdate
-import Show from "../Models/Show";
+import Plot from "../Models/Plot";
+import Basic from "../Models/Basic";
 
 
 const models = {
-    shows: new Show('shows'),
+    basics: new Basic('basics'),
+    plots: new Plot('plots'),
 };
 
 export default models;

@@ -1,6 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {BasicContext} from "../contexts/BasicContextProvider";
 import api from "../api/basic";
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+
 import models from '../store/models';
 
 
@@ -32,7 +35,7 @@ class Basic extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: models.shows, // Show is an Object of class Show, while shows is array of objects from json/db
+            show: models.shows, // Plots is an Object of class Plots, while shows is array of objects from json/db
         }
     }
 
@@ -81,6 +84,24 @@ class Basic extends React.Component {
     }
 }
 
+/**
+ * Get data from store
+ * @param state
+ */
+const mapStateToProps = state => ({
+    plots: state.plots,
+});
 
 
-export default Basic;
+/**
+ * Import action from dir action above - but must be passed to connect method in order to trigger reducer in store
+ * @type {{UserUpdate: UserUpdateAction}}
+ */
+const mapActionsToProps = {
+    readAction: models.basics.actions.read,
+    deleteAction: models.basics.actions.delete,
+    createAction: models.basics.actions.create,
+    updateAction: models.basics.actions.update,
+};
+
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(Basic));

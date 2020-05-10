@@ -304,7 +304,7 @@ def plotting(request):
             'msg': 'User not logged in'
         }
     else:
-        if request.GET['ch1'] and request.GET['ch2']:
+        if request.GET and request.GET['ch1'] and request.GET['ch2']:
             ch1 = request.GET['ch1']
             ch2 = request.GET['ch2']
             print(ch1, ch2)
