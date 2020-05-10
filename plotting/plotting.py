@@ -32,7 +32,7 @@ class Plotting:
         self.channel_name1 = ch1
         self.channel_name2 = ch2
         self.transformation = transformations['hlog']
-        self.bins = bins
+        self.bins = int(bins)
         global SHARED_RAW_DIR
         self.response = {}
         # Locate sample data included with this package

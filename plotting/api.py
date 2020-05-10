@@ -22,6 +22,10 @@ class Data(Resource):
         file_id = request.args.get('id')
         ch1 = request.args.get('ch1')
         ch2 = request.args.get('ch2')
+        transformation = request.args.get('transformation')
+        bins = request.args.get('bins')
+        gl = {'server_start_ts': dt.microsecond, 'id': file_id, 'ch1': ch1, 'bins': bins,
+              'transformation': transformation}
         if not file_id or not ch1 or not ch2:
             file_id = 'default'
             ch1 = 'HDR-T'
@@ -30,10 +34,10 @@ class Data(Resource):
         else:
             print('PLOTTING RECEIVED FCS and chs', file_id, ch1, ch2)
 
-        plotting = Plotting(file_id, ch1, ch2)
+        plotting = Plotting(file_id, ch1, ch2, transformation, bins)
         plots = plotting.get_plots()
         gl.update(plots)
-        return gl
+        return plots
 
 
 api.add_resource(Data, '/')

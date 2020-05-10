@@ -299,32 +299,41 @@ def basic(request):
 def plotting(request):
     id = get_logged_in_email_to_file_format(request)
     params = ''
+    data = {}
 
     response = {
         'status': 'fail',
         'msg': 'logged in'
     }
-    #if not id:
-    if False:
+    if not id:
+        # if False:
         response = {
             'status': 'fail',
             'msg': 'User not logged in'
         }
     else:
-        if request.GET and request.GET['ch1'] and request.GET['ch2']:
-            ch1 = request.GET['ch1']
-            ch2 = request.GET['ch2']
+        if request.GET and request.GET['channel1'] and request.GET['channel2']:
+            ch1 = request.GET['channel1']
+            ch2 = request.GET['channel2']
             print(ch1, ch2)
             params = "&ch1={}&ch2={}".format(ch1, ch2)
+            if request.GET['bins']:
+                params += '&bins=' + request.GET['bins']
+            if request.GET['transformation']:
+                params += '&transformation=' + request.GET['transformation']
+
         if not id:
-            id = '' 
+            id = ''
         URL = 'http://plotting:4000?id=' + id + params
+
         r = requests.get(URL)
         print(r)
         response = r.json()
         data = {
             'actions': {'type': 'read', 'ok': 1},
-            'list': response
+            'list': response,
+            'id': id,
+            'params': params
         }
         print(data)
     return HttpResponse(json.dumps(data))

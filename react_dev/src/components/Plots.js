@@ -12,33 +12,40 @@ class Plots extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            attributes: {},
+            channel1: 0,
+            channel2: 0,
+            transformation: 'hlog',
+            bins: 0,
             plot: models.plots, // Basic is an Object of class Basic, while basic is array of objects from json/db
         }
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        let {plot, attributes} = this.state;
-        const {basics, readAction} = nextProps;
-        plot.list = nextProps.plots.list;
-        const pre = JSON.stringify(attributes);
-        const curr = JSON.stringify(nextProps.basics.form);
-
-        if (attributes.bins !== nextProps.basics.form.bins) {
-            console.group('Attributes NOT Eq');
-            console.log(attributes.bins);
-            console.log(nextProps.basics.form.bins);
-            console.groupEnd();
-            attributes = nextProps.basics.form;
-            // readAction();
-            setTimeout(() => this.setState({plot, attributes}), 4000)
-        } else {
-            console.group('Attributes Eq');
-            console.log(attributes.bins);
-            console.log(nextProps.basics.form.bins);
-            console.groupEnd();
+        console.log('componentWillReceiveProps');
+        const {readAction} = this.props;
+        const {channel1, channel2, transformation, bins, plot} = this.state;
+        console.log(channel1, channel2, transformation, bins);
+        if (
+            channel1 === nextProps.basics.form.channel1 &&
+            channel2 === nextProps.basics.form.channel2 &&
+            transformation === nextProps.basics.form.transformation &&
+            bins === nextProps.basics.form.bins
+        ) {
+            console.log('Same');
+            plot.list = nextProps.plots.list;
             this.setState({plot});
+        } else {
+            console.log('Diff');
+            const data = {
+                channel1: nextProps.basics.form.channel1,
+                channel2: nextProps.basics.form.channel2,
+                transformation: nextProps.basics.form.transformation,
+                bins: nextProps.basics.form.bins,
+            };
+            readAction(data);
+            this.setState({...data});
         }
+
     }
 
 
