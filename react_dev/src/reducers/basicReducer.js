@@ -10,7 +10,7 @@ const basicReducer = (state, action) => {
             return state;
 
         case 'SET_ATTRIBUTES':
-            state.attribues = action.payload.attributes;
+            state.attributes = action.payload.attributes;
             console.log('Inside reducer SET_ATTRIBUTES ', action);
             return state;
 

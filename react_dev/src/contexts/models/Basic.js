@@ -1,3 +1,5 @@
+import {useState} from 'react';
+
 class Basic {
     _channels = [];
     _channel1 = 'ch1';
@@ -7,8 +9,22 @@ class Basic {
     _bins = -1;
     ts = null;
 
+    /**
+     * Specify all variables as state
+     * for which you want to trigger a render
+     */
     constructor() {
         this.ts = Date.now();
+        const [attributes, setAttributes] = useState({
+            channels: [],
+            channel1: '',
+            channel2: '',
+            transformations: [],
+            transformation: '',
+            bins: '',
+        });
+        this._attributes = attributes;
+        this._setAttributes = setAttributes;
     }
 
     set basic(basic) {
@@ -71,11 +87,12 @@ class Basic {
         return this._bins;
     }
 
-    set attribues(attributes) {
+    set attributes(attributes) {
         this.channel1 = attributes.channel1;
         this.channel2 = attributes.channel2;
         this.transformation = attributes.transformation;
         this.bins = attributes.bins;
+        this._setAttributes(this.attributes);
     }
 
     get attributes() {

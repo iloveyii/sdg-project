@@ -10,30 +10,33 @@ const Plottings = () => {
     const {plottings, dispatch} = useContext(PlottingsContext);
     const {basic} = useContext(BasicContext);
     const [loading, setLoading] = useState(false);
-
     const image_url = apiServer + '/static/plots/plotting/';
 
     // componentDidMount
     useEffect(() => {
-        console.log('PLOT_ componentDidMount');
+        console.log('PLOT_ componentDidMount', basic.attributes);
+        setTimeout(()=> {
+            console.log('PLOT_ componentDidMount setTimeout', basic.attributes);
+        }, 4000);
     }, []);
 
     useEffect(() => {
+        console.log('PLOT_ componentWill', Date.now(), basic.attributes);
         setLoading(true);
-        api.read(basic.current_channels).then(plottings => dispatch({type: 'ADD_PLOTTINGS', payload: {plottings}}))
-    }, [basic]);
+        //api.read(basic.current_channels).then(plottings => dispatch({type: 'ADD_PLOTTINGS', payload: {plottings}}))
+    }, [basic.attributes]);
 
     useEffect(() => {
         setLoading(false);
     }, [plottings])
 
-    if (Object.keys(plottings).length === 0) return <Loading />;
+    //if (Object.keys(plottings).length === 0) return <Loading />;
 
     return (
 
         <div className="row py-3">
             <div className="col-sm-12">
-                <h1>Plottings</h1>
+                <h1>Plottings {basic.bins}</h1>
             </div>
             {
                 loading
