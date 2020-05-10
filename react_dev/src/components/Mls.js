@@ -8,7 +8,7 @@ import {apiServer} from "../settings/constants";
 import Loading from "./Loading";
 
 
-class Plots extends React.Component {
+class Mls extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,14 +17,14 @@ class Plots extends React.Component {
             channel2: 0,
             transformation: 'hlog',
             bins: 0,
-            plot: models.plots, // Basic is an Object of class Basic, while basic is array of objects from json/db
+            ml: models.mls, // Basic is an Object of class Basic, while basic is array of objects from json/db
         }
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
         console.log('componentWillReceiveProps');
         const {readAction} = this.props;
-        const {channel1, channel2, transformation, bins, plot} = this.state;
+        const {channel1, channel2, transformation, bins, ml} = this.state;
         console.log(channel1, channel2, transformation, bins);
         if (
             channel1 === nextProps.basics.form.channel1 &&
@@ -33,8 +33,8 @@ class Plots extends React.Component {
             bins === nextProps.basics.form.bins
         ) {
             console.log('Same');
-            plot.list = nextProps.plots.list;
-            this.setState({plot, loading: false});
+            ml.list = nextProps.mls.list;
+            this.setState({ml, loading: false});
         } else {
             console.log('Diff');
             const data = {
@@ -50,20 +50,20 @@ class Plots extends React.Component {
 
 
     render() {
-        const {plot, loading} = this.state;
-        const image_url = apiServer + '/static/plots/plotting/';
-        if (Object.keys(plot.list).length < 1 || loading) return <Loading/>;
-        console.log('Plots', plot.list);
+        const {ml, loading} = this.state;
+        const image_url = apiServer + '/static/plots/machinelearning/';
+        if (Object.keys(ml.list).length < 1 || loading) return <Loading/>;
+        console.log('Plots', ml.list);
 
         return (
             <div className="row py-3">
                 <div className="col-sm-12">
-                    <h1>Plots</h1>
+                    <h1>ML</h1>
                 </div>
                 {
-                    Object.keys(plot.list).map(key => <Plot key={key}
-                                                            image={{id: key, src: image_url + plot.list[key]}}
-                                                            data_section="data_plots"/>)
+                    Object.keys(ml.list).map(key => <Plot key={key}
+                                                            image={{id: key, src: image_url + ml.list[key]}}
+                                                            data_section="data_ml"/>)
                 }
             </div>
         )
@@ -75,7 +75,7 @@ class Plots extends React.Component {
  * @param state
  */
 const mapStateToProps = state => ({
-    plots: state.plots,
+    mls: state.mls,
     basics: state.basics,
 });
 
@@ -85,11 +85,11 @@ const mapStateToProps = state => ({
  * @type {{UserUpdate: UserUpdateAction}}
  */
 const mapActionsToProps = {
-    readAction: models.plots.actions.read,
-    deleteAction: models.plots.actions.delete,
-    createAction: models.plots.actions.create,
-    createSuccessAction: models.plots.actions.create_success,
-    updateAction: models.plots.actions.update,
+    readAction: models.mls.actions.read,
+    deleteAction: models.mls.actions.delete,
+    createAction: models.mls.actions.create,
+    createSuccessAction: models.mls.actions.create_success,
+    updateAction: models.mls.actions.update,
 };
 
-export default withRouter(connect(mapStateToProps, mapActionsToProps)(Plots));
+export default withRouter(connect(mapStateToProps, mapActionsToProps)(Mls));

@@ -1,7 +1,7 @@
 import ActiveRecord from './ActiveRecord';
 import axios from 'axios';
 
-class Plot extends ActiveRecord {
+class Ml extends ActiveRecord {
     constructor(name) {
         super(name);
         this.form = {
@@ -16,6 +16,7 @@ class Plot extends ActiveRecord {
             console.log('Inside api newApiRead undef', data.channel1);
             return {};
         }
+
         let suffix = '?';
         Object.keys(data).forEach(key => suffix += (`${key}=${data[key]}&`));
         suffix += '&params=' + suffix;
@@ -32,4 +33,4 @@ class Plot extends ActiveRecord {
     }
 }
 
-export default Plot;
+export default Ml;

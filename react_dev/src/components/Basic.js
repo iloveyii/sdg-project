@@ -53,7 +53,7 @@ class Basic extends React.Component {
         const data = {
             actions: {status: 'success', ok: 1},
             form: attributes
-        }
+        };
         createSuccessAction(data)
         console.log('Firing actions');
     };
@@ -65,7 +65,7 @@ class Basic extends React.Component {
             <>
                 <div className="row" id="basic-div">
                     <div className="col-md-12 order-md-0">
-                        <h1>Basic {Date.now()} info {JSON.stringify(basic.attributes)} </h1>
+                        <h1>Basic info</h1>
                         <p className="lead" id="basic-info"></p>
 
                         <select className="form-control" id="channel-name-1" value={attributes.channel1}

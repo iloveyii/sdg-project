@@ -246,6 +246,13 @@ def login(request):
 @csrf_exempt
 def machine_learning(request):
     id = get_logged_in_email_to_file_format(request)
+    data = {
+        'actions': {'type': 'read', 'ok': 1},
+        'list': [],
+        'id': id,
+    }
+    return HttpResponse(json.dumps(data))
+
     if not id:
         response = {
             'status': 'fail',
@@ -253,21 +260,32 @@ def machine_learning(request):
         }
     else:
         params = ''
-        if request.GET['ch1'] and request.GET['ch2']:
-            ch1 = request.GET['ch1']
-            ch2 = request.GET['ch2']
+        if request.GET['channel1'] and request.GET['channel2']:
+            ch1 = request.GET['channel1']
+            ch2 = request.GET['channel2']
             print(ch1, ch2)
             params = "&ch1={}&ch2={}".format(ch1, ch2)
+            if request.GET['bins']:
+                params += '&bins=' + request.GET['bins']
+            if request.GET['transformation']:
+                params += '&transformation=' + request.GET['transformation']
+
         URL = 'http://machinelearning:5000?id=' + id + params
         r = requests.get(URL)
         response = r.json()
+        data = {
+            'actions': {'type': 'read', 'ok': 1},
+            'list': response,
+            'id': id,
+            'params': params
+        }
     # print(r.json())
     # a = Model.objects.all()
     # print(serializers.serialize('json', a))
     # json_str = json.dumps(data)
     # print(json_str)
     #  json_str = serializers.serialize('json', r.json())
-    return HttpResponse(json.dumps(response))
+    return HttpResponse(json.dumps(data))
 
 
 # Plotting plots
@@ -299,15 +317,22 @@ def basic(request):
 def plotting(request):
     id = get_logged_in_email_to_file_format(request)
     params = ''
-    data = {}
-
+    data = {
+        'actions': {'type': 'read', 'ok': 1},
+        'list': [],
+        'id': id,
+        'params': params
+    }
     response = {
         'status': 'fail',
         'msg': 'logged in'
     }
     if not id:
-        # if False:
-        response = {
+        data = {
+            'actions': {'type': 'read', 'ok': 1},
+            'list': [],
+            'id': id,
+            'params': params,
             'status': 'fail',
             'msg': 'User not logged in'
         }

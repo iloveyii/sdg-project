@@ -21,17 +21,18 @@ ECOLI_FILE = 'ecoli.fcs'
 
 transformations = {
     'hlog': 'hlog',
-    'tlog': 'tlog'
+    'tlog': 'tlog',
+    'glog': 'glog',
 }
 
 
 class Plotting:
-    def __init__(self, file_id='default', ch1=False, ch2=False, transformation=False, bins=100):
+    def __init__(self, file_id='default', ch1=False, ch2=False, transformation='hlog', bins=100):
         fcs_file_name = file_id + '_fcs_file.fcs'
         self.file_id = file_id
         self.channel_name1 = ch1
         self.channel_name2 = ch2
-        self.transformation = transformations['hlog']
+        self.transformation = transformations[transformation]
         self.bins = int(bins)
         global SHARED_RAW_DIR
         self.response = {}
@@ -70,7 +71,7 @@ class Plotting:
         if not channel_name:
             channel_name = self.channel_name1
             print('Channel name: ', channel_name)
-        self.sample.plot(channel_name, bins=100, alpha=0.9, color='green')
+        self.sample.plot(channel_name, bins=self.bins, alpha=0.9, color='green')
         png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('histogram1d.png'))
         print(png_file)
         grid(True)
@@ -83,7 +84,7 @@ class Plotting:
         if not channel_name1:
             channel_name1 = self.channel_names[0]
             channel_name2 = self.channel_names[1]
-        self.sample.plot([channel_name1, channel_name2], bins=100, alpha=0.9, cmap=cm.hot)
+        self.sample.plot([channel_name1, channel_name2], bins=self.bins, alpha=0.9, cmap=cm.hot)
         png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('histogram2d.png'))
         print(png_file)
         grid(True)
@@ -113,12 +114,12 @@ class Plotting:
 
         # Plot
         ax1 = subplot(121)
-        self.sample.plot(channel_name, gates=[y2_gate], bins=100, alpha=0.9)
+        self.sample.plot(channel_name, gates=[y2_gate], bins=self.bins, alpha=0.9)
         y2_gate.plot(color='k', linewidth=4, linestyle='-')
         title('Original Sample')
 
         ax2 = subplot(122, sharey=ax1, sharex=ax1)
-        gated_sample.plot(channel_name, gates=[y2_gate], bins=100, color='y', alpha=0.9)
+        gated_sample.plot(channel_name, gates=[y2_gate], bins=self.bins, color='y', alpha=0.9)
         title('Gated Sample')
 
         tight_layout()
