@@ -2,6 +2,7 @@ version: '3'
 
 services:
   db:
+    container_name: db
     image: postgres:12.2-alpine
     restart: always
     environment:
@@ -12,12 +13,14 @@ services:
     ports:
       - 5433:5432
   web:
+    container_name: web
     build: .
     command: bash -c "
         pip install requests
         && pip install django-cors-headers
         && mkdir -p /shared/plotting
         && mkdir -p /shared/machinelearning
+        && mkdir -p /shared/class
         && rm /code/djangoweb/api/static/plots -rf
         && ln -s /code/shared /code/djangoweb/api/static/plots
         && python /code/djangoweb/manage.py makemigrations api
@@ -32,6 +35,7 @@ services:
     depends_on:
       - db
   node_auth_server:
+    container_name: node_auth_server
     build: ./node_auth_server
     image: node:8
     restart: always
@@ -48,6 +52,7 @@ services:
     ports:
       - 8090:8090
   basicanalysis:
+    container_name: basicanalysis
     build: ./basicanalysis
     image: alikth/basic_cell:latest
     restart: always
@@ -63,6 +68,7 @@ services:
     depends_on:
       - web
   plotting:
+    container_name: plotting
     build: ./plotting
     image: alikth/basic_cell:latest
     restart: always
@@ -78,6 +84,7 @@ services:
     depends_on:
       - web
   machinelearning:
+    container_name: machinelearning
     build:
       context: ./machinelearning
     image:  alikth/ml_cell:latest
@@ -93,5 +100,24 @@ services:
       - ./shared:/shared
     ports:
       - 5000:5000
+    depends_on:
+      - web
+  classification:
+    container_name: classification
+    build:
+      context: ./classification
+    image:  alikth/ml_cell:latest
+    restart: always
+    command: bash -c "
+      pip install -r requirements.txt
+      && pip3 uninstall bottleneck -y
+      && pip3 install bottleneck==1.2
+      && python3.6 api.py
+      "
+    volumes:
+      - ./classification:/usr/src/app
+      - ./shared:/shared
+    ports:
+      - 6000:6000
     depends_on:
       - web
