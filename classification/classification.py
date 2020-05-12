@@ -240,10 +240,10 @@ class Classification:
 # If script ran from terminal
 if __name__ == '__main__':
     STATIC_DIR = os.path.realpath('../shared/static/')
-    SHARED_PLOT_DIR = os.path.realpath('../shared/Class/')
+    SHARED_PLOT_DIR = os.path.realpath('../shared/classification/')
     SHARED_RAW_DIR = os.path.realpath('../shared/raw/cell/')
 
-    mlearn = Class('admin_hkr_se', 'HDR-T', 'FSC-A', 'hlog', 100)
+    mlearn = Classification('admin_hkr_se', 'HDR-T', 'FSC-A', 'hlog', 100)
     print(mlearn.get_plots())
 
     print(os.path.basename(__file__))

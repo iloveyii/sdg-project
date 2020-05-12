@@ -20,7 +20,7 @@ services:
         && pip install django-cors-headers
         && mkdir -p /shared/plotting
         && mkdir -p /shared/machinelearning
-        && mkdir -p /shared/class
+        && mkdir -p /shared/classification
         && rm /code/djangoweb/api/static/plots -rf
         && ln -s /code/shared /code/djangoweb/api/static/plots
         && python /code/djangoweb/manage.py makemigrations api
