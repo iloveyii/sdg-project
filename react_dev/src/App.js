@@ -19,6 +19,7 @@ class App extends Component {
                     <Upload/>
                     <Basic/>
                     <Plots/>
+                    <Mls/>
                 </Container>
             </>
         );

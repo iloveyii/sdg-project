@@ -3,7 +3,6 @@ from flask import request
 from flask_wtf.csrf import CSRFProtect
 from flask_restful import Resource, Api
 from plotting import Plotting
-
 from datetime import datetime
 
 app = Flask(__name__)

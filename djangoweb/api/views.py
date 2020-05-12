@@ -251,7 +251,7 @@ def machine_learning(request):
         'list': [],
         'id': id,
     }
-    return HttpResponse(json.dumps(data))
+    # return HttpResponse(json.dumps(data))
 
     if not id:
         response = {

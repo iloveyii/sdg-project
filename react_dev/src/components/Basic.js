@@ -47,7 +47,8 @@ class Basic extends React.Component {
         this.setState({attributes});
     };
 
-    onClick = () => {
+    onClick = (e) => {
+        e.preventDefault();
         const {attributes} = this.state;
         const {createSuccessAction} = this.props;
         const data = {
@@ -96,7 +97,7 @@ class Basic extends React.Component {
                         </div>
 
                         <br/>
-                        <button onClick={() => this.onClick()} className="btn btn-lg btn-success">
+                        <button onClick={e => this.onClick(e)} className="btn btn-lg btn-success">
                             <i className="fas fa-chart-line"></i> Display
                         </button>
 

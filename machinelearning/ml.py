@@ -19,12 +19,15 @@ CSV_FILE = 'fcs_file.csv'
 FCS_FILE = 'a1_24h_noc200.fcs'
 FCS_FILE_A4 = 'cfp_well_a4.fcs'
 ECOLI_FILE = 'ecoli.fcs'
+CHECK_IF_FILE_EXIST = True
 
 
 class MachineLearning:
-    def __init__(self, file_id, ch1=False, ch2=False):
+    def __init__(self, file_id='default', ch1=False, ch2=False, transformation='hlog', bins=100):
         fcs_file_name = file_id + '_fcs_file.fcs'
         self.file_id = file_id
+        self.transformation = transformation
+        self.bins = bins
         self.response = {}
         self.channel_name1 = ch1
         self.channel_name2 = ch2
@@ -155,9 +158,23 @@ class MachineLearning:
         self.k_means2(ex)
 
     def get_file_name(self, file_part):
-        return "{}_{}_{}__{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(), file_part)
+        return "{}_{}_{}__{}_{}_{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(),
+                                           self.transformation, self.bins, file_part)
 
     def check_if_images_exist(self):
+        file_part = 'gausian'
+        file_name = "{}.{}".format(file_part, 'png')
+        png_file = os.path.join(SHARED_PLOT_DIR, self.get_file_name(file_name))
+        if os.path.exists(png_file) and os.path.isfile(png_file):
+            for file_part in ['gausian', 'gausian_filtered_low_posterior', 'gausian_mixture_model_two_channels',
+                              'gausian_posterior', 'gausian_posterior_table', 'gausian_table', 'histogram', 'k_means',
+                              'k_means2']:
+                file_name = "{}.{}".format(file_part, 'png')
+                self.response[file_part] = self.get_file_name(file_name)
+            return True
+        return False
+
+    def check_if_images_exist2(self):
         dir = os.scandir(SHARED_PLOT_DIR)
         print('CHECK if images exist ', dir)
         user_channels = self.get_file_name('')
@@ -222,7 +239,12 @@ class MachineLearning:
 
 # If script ran from terminal
 if __name__ == '__main__':
-    mlearn = MachineLearning()
+    STATIC_DIR = os.path.realpath('../shared/static/')
+    SHARED_PLOT_DIR = os.path.realpath('../shared/machinelearning/')
+    SHARED_RAW_DIR = os.path.realpath('../shared/raw/cell/')
+
+    mlearn = MachineLearning('admin_hkr_se', 'HDR-T', 'FSC-A', 'hlog', 100)
+    print(mlearn.get_plots())
 
     print(os.path.basename(__file__))
     print(__name__)

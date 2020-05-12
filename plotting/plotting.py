@@ -18,7 +18,7 @@ FCS_FILE = 'a1_24h_noc200.fcs'
 # FCS_FILE = 'a03_kranvatten_mars_sybr.fcs'
 FCS_FILE_A4 = 'CFP_Well_A4.fcs'
 ECOLI_FILE = 'ecoli.fcs'
-
+CHECK_IF_FILE_EXIST = True
 transformations = {
     'hlog': 'hlog',
     'tlog': 'tlog',
@@ -71,6 +71,11 @@ class Plotting:
         if not channel_name:
             channel_name = self.channel_name1
             print('Channel name: ', channel_name)
+        # Check if file already exists
+        if CHECK_IF_FILE_EXIST:
+            if self.check_if_images_exist('histogram1d'):
+                return True
+
         self.sample.plot(channel_name, bins=self.bins, alpha=0.9, color='green')
         png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('histogram1d.png'))
         print(png_file)
@@ -84,6 +89,12 @@ class Plotting:
         if not channel_name1:
             channel_name1 = self.channel_names[0]
             channel_name2 = self.channel_names[1]
+
+        # Check if file already exists
+        if CHECK_IF_FILE_EXIST:
+            if self.check_if_images_exist('histogram2d'):
+                return True
+
         self.sample.plot([channel_name1, channel_name2], bins=self.bins, alpha=0.9, cmap=cm.hot)
         png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('histogram2d.png'))
         print(png_file)
@@ -95,6 +106,12 @@ class Plotting:
         if not channel_name1:
             channel_name1 = self.channel_names[0]
             channel_name2 = self.channel_names[1]
+
+        # Check if file already exists
+        if CHECK_IF_FILE_EXIST:
+            if self.check_if_images_exist('scatter'):
+                return True
+
         # Plot scatter
         self.sample.plot([channel_name1, channel_name2], kind='scatter', alpha=0.6, color='gray')
         png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name('scatter.png'))
@@ -106,6 +123,12 @@ class Plotting:
     def threshold_gate(self, channel_name=''):
         if not channel_name:
             channel_name = self.channel_names[0]
+
+        # Check if file already exists
+        if CHECK_IF_FILE_EXIST:
+            if self.check_if_images_exist('threshold_gate'):
+                return True
+
         # Create a threshold gates
         y2_gate = ThresholdGate(1000.0, channel_name, region='above')
 
@@ -133,6 +156,12 @@ class Plotting:
         if not channel_name1:
             channel_name1 = self.channel_names[0]
             channel_name2 = self.channel_names[1]
+
+        # Check if file already exists
+        if CHECK_IF_FILE_EXIST:
+            if self.check_if_images_exist('plate_gated_counts'):
+                return True
+
         # Plot - Counting fluorescent events¶
         self.sample.plot([channel_name1, channel_name2], kind='scatter', alpha=0.6, color='gray')
 
@@ -170,6 +199,12 @@ class Plotting:
         if not channel_name1:
             channel_name1 = self.channel_names[0]
             channel_name2 = self.channel_names[1]
+
+        # Check if file already exists
+        if CHECK_IF_FILE_EXIST:
+            if self.check_if_images_exist('plate_gated_median_fluorescence'):
+                return True
+
         # Load plate
         plate = FCPlate.from_dir(ID='Demo Plate', path=SHARED_RAW_DIR, parser='name')
         plate = plate.transform('hlog', channels=[channel_name1, channel_name2], b=500.0)
@@ -218,6 +253,12 @@ class Plotting:
         if not channel_name1:
             channel_name1 = self.channel_names[0]
             channel_name2 = self.channel_names[1]
+
+        # Check if file already exists
+        if CHECK_IF_FILE_EXIST:
+            if self.check_if_images_exist('compensation'):
+                return True
+
         # Load data
         # sample = self.sample.transform('hlog')
         sample = self.sample
@@ -260,6 +301,12 @@ class Plotting:
     def custom_transformation(self, channel_name=''):
         if not channel_name:
             channel_name = self.channel_names[0]
+
+        # Check if file already exists
+        if CHECK_IF_FILE_EXIST:
+            if self.check_if_images_exist('custom_transformation'):
+                return True
+
         # Load data
         # sample = self.ssample.transform('hlog')
         sample = self.sample
@@ -287,8 +334,6 @@ class Plotting:
         self.response['custom_transformation'] = self.get_file_name('custom_transformation.png')
 
     def get_plots(self):
-        if self.check_if_images_exist():
-            return self.response
         self.histogram(self.channel_name1)
         self.histogram2d(self.channel_name1, self.channel_name2)
 
@@ -299,40 +344,18 @@ class Plotting:
         self.custom_transformation(self.channel_name1)
         return self.response
 
-    def check_if_images_exist2(self):
-        dir = os.scandir(SHARED_PLOTTING_DIR)
-        print('CHECK if images exist ', dir)
-
-        for file in dir:
-            if file.name.startswith(self.file_id):
-                parts = file.name.split(self.file_id + '_')
-                file_name = parts[1]
-                keys = file_name.split('.')
-                key = keys[0]
-                print(key, file.name)
-                self.response[key] = file.name
-        return bool(self.response)
-
     def get_file_name(self, file_part):
         print(self.file_id, self.channel_name2.lower())
-        return "{}_{}_{}__{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(), file_part)
+        # return "{}_{}_{}__{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(), file_part)
+        return "{}_{}_{}__{}_{}_{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(),
+                                           self.transformation, self.bins, file_part)
 
-    def check_if_images_exist(self):
-        directory = os.scandir(SHARED_PLOTTING_DIR)
-        print('CHECK if images exist ', directory)
-        user_channels = self.get_file_name('')
-        for file in directory:
-            if file.name.startswith(user_channels):
-                parts = file.name.partition('__')
-                if len(parts) != 3:
-                    print(file.name, user_channels, parts, sys.getdefaultencoding())
-                    continue
-                file_name = parts[2]
-                keys = file_name.split('.')
-                key = keys[0]
-                print(key, file.name)
-                self.response[key] = file.name
-        return bool(self.response)
+    def check_if_images_exist(self, file_part):
+        file_name = "{}.{}".format(file_part, 'png')
+        png_file = os.path.join(SHARED_PLOTTING_DIR, self.get_file_name(file_name))
+        if os.path.exists(png_file) and os.path.isfile(png_file):
+            self.response[file_part] = self.get_file_name(file_name)
+            return True
 
 
 # If script ran from terminal
