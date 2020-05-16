@@ -124,7 +124,7 @@ app.get('/api/v1/login', async (req, res) => {
 
 app.get('/api/v1/islogin', async (req, res) => {
     console.log('GET /api/v1/islogin', req.session, req.headers.cookie);
-    return res.status(200).json({login: 'success'})
+    //return res.status(200).json({login: 'success'})
 
     if (!req.session.userId) {
         return res.status(200).json({login: 'fail', user_id: 'f' + req.session.userId})
@@ -171,6 +171,7 @@ app.get('/api/v1/register', async (req, res) => {
 
 app.get('/api/v1/get_logged_in_user', async (req, res) => {
     const userId = req.session.userId
+    console.log('node server session ', req.session);
     if (!userId) return res.status(201).json({status: 'fail', email: ''})
 
     const user = await Login.findOne({where: {id: userId}})
