@@ -1,0 +1,13 @@
+# Clone repot
+mkdir projects
+cd projects
+git clone git@github.com:iloveyii/cell-analysis.git
+cd cell-analysis
+
+# Pull some images from hub.docker.com
+docker pull node:8
+docker pull alikth/basic_cell:latest
+docker pull alikth/ml_cell:latest
+
+# Run docker-compose
+sudo docker-compose up

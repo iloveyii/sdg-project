@@ -20,6 +20,8 @@ Firebase                   |  IFTTT
 ![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/run.gif)
 
 ## Installation
+   ### Docker 
+
    * Clone repo `git clone https://github.com/iloveyii/iot-lab`
    * `sudo docker-compose up `
    * Browse to to http://localhost:80. Please stop any service on port 80 before running.    

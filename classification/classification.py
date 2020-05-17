@@ -1,36 +1,17 @@
-#!/usr/bin/env python3
-import os
-from pylab import *
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+#!/usr/bin/env python
 from pandas.tools.plotting import table  # EDIT: see deprecation warnings below
-import cytoflow as flow
-import requests
-# if your figures are too big or too small, you can scale them by changing matplotlib's DPI
-import matplotlib
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 
 # Import libraries
-import numpy as np
-import pandas as pd
-import os
 import json
 from pylab import *
 import seaborn as sns
 
-import FlowCytometryTools
 from FlowCytometryTools import FCMeasurement
-from FlowCytometryTools import ThresholdGate
-from FlowCytometryTools import FCPlate
-from FlowCytometryTools.core.graph import plot_heat_map
 from sklearn.preprocessing import StandardScaler
 from datetime import datetime
 

@@ -1,0 +1,6 @@
+# Add SSH key to github
+ssh-keygen
+cat ~/.ssh/id_rsa.pub 
+
+# Copy and paste to github
+
