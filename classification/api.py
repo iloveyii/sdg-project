@@ -4,6 +4,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_restful import Resource, Api
 from classification import Classification
 from datetime import datetime
+import json
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
@@ -28,14 +29,16 @@ class Product(Resource):
             print('ML RECEIVED FCS:', file_id)
 
         files = [file_id]
-        cls = Classification(file_id)
+        cls = Classification(file_id, True)
         response = {}
         for file in files:
             response[file] = cls.predict(file)
+            # response[file] = file
 
         gl.update(response)
-
-        return gl
+        print(gl)
+        str1 = json.dumps(gl)
+        return response
 
 
 api.add_resource(Product, '/')

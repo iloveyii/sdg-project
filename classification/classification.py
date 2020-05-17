@@ -22,6 +22,7 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 import pandas as pd
 import os
+import json
 from pylab import *
 import seaborn as sns
 
@@ -52,7 +53,6 @@ class Classification:
         if debug:
             self.set_dirs_for_debug()
 
-        fcs_file_name = file_id + '_fcs_file.fcs'
         self.response = {}
         self.train()
         self.basic()
@@ -61,13 +61,15 @@ class Classification:
         # Show accuracy for test
         self.show_accuracy(self.models_array, self.X_test, self.Y_test, 'test')
         # Predict the file_name
-        self.predict(fcs_file_name)
-        print(self.response)
+        self.predict(file_id)
+        # print(self.response)
 
     def set_dirs_for_debug(self):
+        global STATIC_DIR, SHARED_PLOT_DIR, SHARED_RAW_DIR
         STATIC_DIR = os.path.realpath('../shared/static/')
         SHARED_PLOT_DIR = os.path.realpath('../shared/classification/')
         SHARED_RAW_DIR = os.path.realpath('../shared/raw/multi/')
+        return self
 
     def train(self):
         # Make file path
@@ -80,14 +82,14 @@ class Classification:
         # Compute diagnosis
         self.compute_diagnosis()
         # Show head
-        print(self.train_df.head())
         # Split
         self.split_train_test()
         # Make models
         self.models_array = self.models()
 
-    def predict(self, file_name):
-        datafile = os.path.join(SHARED_RAW_DIR, file_name)
+    def predict(self, file_id):
+        fcs_file_name = file_id + '_fcs_file.fcs'
+        datafile = os.path.join(SHARED_RAW_DIR, fcs_file_name)
         sample = FCMeasurement(ID='Test Sample', datafile=datafile)
         df = sample.data
         df = self.pre_process(df)
@@ -100,13 +102,12 @@ class Classification:
         model_names = ['Logistic Regression', 'Decision Tree', 'Random Forest']
 
         for i in range(len(self.models_array)):
-            print('===> Predict ', i)
             a = self.models_array[i].predict(X)
             unique_elements, counts_elements = np.unique(a, return_counts=True)
-            print(np.asarray((unique_elements, counts_elements)))
-            arr2 = (np.asarray((unique_elements, counts_elements)))
+            unique_elements = unique_elements.tolist()
+            counts_elements = counts_elements.tolist()
             predictions['elements'] = unique_elements
-            counts[model_names[i]] = counts_elements
+            counts[model_names[i]] = dict(zip(unique_elements, counts_elements))
 
         predictions['counts'] = counts
         self.response['predictions'] = predictions
@@ -126,7 +127,7 @@ class Classification:
     def basic(self):
         # Count number of malignant and benign
         c = self.train_df['diagnosis'].value_counts()
-        self.response['count_mb'] = c
+        self.response['count_mb'] = json.loads(c.to_json())
         # Visualize
         sns.countplot(self.train_df['diagnosis'], label='count')
         png_file_path = os.path.join(SHARED_PLOT_DIR, 'count_mb.png')
@@ -169,19 +170,11 @@ class Classification:
     def show_accuracy(self, model, X, Y, type='train'):
         # Show accuracy using the trained models
         model_names = ['Logistic Regression', 'Decision Tree', 'Random Forest']
-        # print('######### TRAIN Accuracy ##########')
         scores = {}
         for i in range(len(model)):
-            print('===> ' + model_names[i])
-            print(classification_report(Y, model[i].predict(X)))
             score = accuracy_score(Y, model[i].predict(X))
-            print(score)
             scores[model_names[i]] = round(score, 3)
-            print()
         self.response[type + '_score'] = scores
-
-    def get_train_file(self):
-        pass
 
     def get_file_name(self, file_part):
         return "{}_{}_{}__{}_{}_{}".format(self.file_id, self.channel_name2.lower(), self.channel_name1.lower(),
@@ -219,11 +212,8 @@ class Classification:
 
 # If script ran from terminal
 if __name__ == '__main__':
-    STATIC_DIR = os.path.realpath('../shared/static/')
-    SHARED_PLOT_DIR = os.path.realpath('../shared/classification/')
-    SHARED_RAW_DIR = os.path.realpath('../shared/raw/multi/')
-
-    mlearn = Classification('admin_hkr_se', True)
+    cls = Classification('admin_hkr_se', True)
+    print(cls.predict('admin_hkr_se'))
 
     print(os.path.basename(__file__))
     print(__name__)
