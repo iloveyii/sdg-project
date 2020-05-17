@@ -8,12 +8,12 @@ visually on a web application.
 The following tools and technologies have been used in this project.
 
 
-Firebase                   |  IFTTT
+Python                   |  Docker
 :-------------------------:|:-------------------------:
-![fb](https://github.com/iloveyii/iot-lab/blob/master/images/firebase1.png)  |  ![ifttt](https://github.com/iloveyii/iot-lab/blob/master/images/ifttt1.png)
-![fb](https://github.com/iloveyii/iot-lab/blob/master/images/html51.png)  |  ![ifttt](https://github.com/iloveyii/iot-lab/blob/master/images/js1.png)
-![fb](https://github.com/iloveyii/iot-lab/blob/master/images/node1.png)  |  ![ifttt](https://github.com/iloveyii/iot-lab/blob/master/images/smarthome.jpg)
-![fb](https://github.com/iloveyii/iot-lab/blob/master/images/thingy.jpg)  | ![fb](https://github.com/iloveyii/iot-lab/blob/master/images/hkr.png)   
+![JS](https://github.com/iloveyii/cell-analysis/blob/master/install/js1.png)  |  ![Node](https://github.com/iloveyii/cell-analysis/blob/master/install/node1.png)
+![python](https://github.com/iloveyii/cell-analysis/blob/master/install/python.png)  |  ![django](https://github.com/iloveyii/cell-analysis/blob/master/install/phyton-django.jpg)
+![html5](https://github.com/iloveyii/cell-analysis/blob/master/install/html51.png)  |  ![react](https://github.com/iloveyii/cell-analysis/blob/master/install/react.jpg)
+![hkr](https://github.com/iloveyii/cell-analysis/blob/master/install/hkr.png)  | ![machine learning](https://github.com/iloveyii/cell-analysis/blob/master/install/machine-learning.jpeg)   
 
 ## [DEMO APP](https://hkr-iot-lab1.firebaseapp.com/)
 
