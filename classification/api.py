@@ -28,13 +28,11 @@ class Product(Resource):
         else:
             print('ML RECEIVED FCS:', file_id)
 
-        files = [file_id]
-        cls = Classification(file_id, False)
+        files = ['a1_24h_noc200.fcs', 'RFP_Well_A3.fcs', 'RFP_Well_A6.fcs', 'RFP_Well_B3.fcs']
         response = {}
-
         for file in files:
+            cls = Classification(file_id, False)
             response[file] = cls.predict(file)
-            # response[file] = file
 
         gl.update(response)
 

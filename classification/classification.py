@@ -32,6 +32,7 @@ from FlowCytometryTools import ThresholdGate
 from FlowCytometryTools import FCPlate
 from FlowCytometryTools.core.graph import plot_heat_map
 from sklearn.preprocessing import StandardScaler
+from datetime import datetime
 
 STATIC_DIR = os.path.realpath('/shared/static/')
 SHARED_PLOT_DIR = os.path.realpath('/shared/class/')
@@ -49,7 +50,7 @@ CHECK_IF_FILE_EXIST = True
 
 
 class Classification:
-    def __init__(self, file_id='default', debug=False):
+    def __init__(self, file_id='default.fcs', debug=False):
         if debug:
             self.set_dirs_for_debug()
 
@@ -60,8 +61,6 @@ class Classification:
         self.show_accuracy(self.models_array, self.X_train, self.Y_train, 'train')
         # Show accuracy for test
         self.show_accuracy(self.models_array, self.X_test, self.Y_test, 'test')
-        # Predict the file_name
-        self.predict(file_id)
         # print(self.response)
 
     def set_dirs_for_debug(self):
@@ -88,7 +87,10 @@ class Classification:
         self.models_array = self.models()
 
     def predict(self, file_id):
-        fcs_file_name = file_id + '_fcs_file.fcs'
+        dt = datetime.now()
+        self.response['ts'] = dt.microsecond
+        self.response['file_name'] = file_id
+        fcs_file_name = file_id
         datafile = os.path.join(SHARED_RAW_DIR, fcs_file_name)
         sample = FCMeasurement(ID='Test Sample', datafile=datafile)
         df = sample.data
@@ -212,8 +214,13 @@ class Classification:
 
 # If script ran from terminal
 if __name__ == '__main__':
-    cls = Classification('admin_hkr_se', True)
-    print(cls.predict('admin_hkr_se'))
+    files = ['a1_24h_noc200.fcs', 'RFP_Well_A3.fcs']
+    resp = {}
+    for file in files:
+        cls = Classification('file_id', True)
+        resp[file] = cls.predict(file)
+
+    print(resp)
 
     print(os.path.basename(__file__))
     print(__name__)
