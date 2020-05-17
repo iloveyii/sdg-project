@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from pandas.tools.plotting import table  # EDIT: see deprecation warnings below
+from pandas.plotting import table  # EDIT: see deprecation warnings below
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
