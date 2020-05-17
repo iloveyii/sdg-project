@@ -16,6 +16,7 @@ urlpatterns = [
     url('forgot-password', views.forgot_password, name='forgot_password'),
     url('logout', views.logout, name='logout'),
     url('plots', views.plotting, name='plotting'),
+    url('cls', views.classification, name='classification'),
     url('upload', views.upload, name='upload'),
     # Welcome page
     url('', views.welcome, name='welcome'),

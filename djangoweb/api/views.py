@@ -362,3 +362,37 @@ def plotting(request):
         }
         print(data)
     return HttpResponse(json.dumps(data))
+
+@csrf_exempt
+def classification(request):
+    id = get_logged_in_email_to_file_format(request)
+    params = ''
+    data = {
+        'actions': {'type': 'read', 'ok': 1},
+        'list': [],
+        'id': id,
+        'params': params
+    }
+
+    if not id:
+        data = {
+            'actions': {'type': 'read', 'ok': 1},
+            'list': [],
+            'id': id,
+            'params': params,
+            'status': 'fail',
+            'msg': 'User not logged in'
+        }
+    else:
+        if not id:
+            id = ''
+        URL = 'http://classification:6000?id=' + id
+        r = requests.get(URL)
+        response = r.json()
+        data = {
+            'actions': {'type': 'read', 'ok': 1},
+            'list': response,
+            'id': id,
+        }
+        print(data)
+    return HttpResponse(json.dumps(data))

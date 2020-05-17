@@ -5,6 +5,7 @@ import Navbar from './components/Navbar'
 import Container from './components/Container'
 import Plots from './components/Plots';
 import Mls from './components/Mls';
+import Cls from './components/Cls';
 import Upload from './components/Upload'
 import Basic from './components/Basic'
 
@@ -20,6 +21,7 @@ class App extends Component {
                     <Basic/>
                     <Plots/>
                     <Mls/>
+                    <Cls/>
                 </Container>
             </>
         );

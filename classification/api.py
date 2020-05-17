@@ -29,15 +29,15 @@ class Product(Resource):
             print('ML RECEIVED FCS:', file_id)
 
         files = [file_id]
-        cls = Classification(file_id, True)
+        cls = Classification(file_id, False)
         response = {}
+
         for file in files:
             response[file] = cls.predict(file)
             # response[file] = file
 
         gl.update(response)
-        print(gl)
-        str1 = json.dumps(gl)
+
         return response
 
 
