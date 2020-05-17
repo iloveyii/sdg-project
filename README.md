@@ -1,77 +1,65 @@
-CELL ANALYSIS USING PYTHON FLOW CYTOMETRY
-=========================================
+PC3 Cell Analysis
+=====================================
 
-This is a blood cell analysis application written React and Python.
+This is a micro services based web application for analysing the prostrate cancer cells. This application gets data from 
+FCS file uploaded by the user and then using Flow Cytometry Tools in Python the results are shown
+visually on a web application.
 
-It has two sub applications i.e one for frontend and second for backend.
+The following tools and technologies have been used in this project.
 
-## 1. Frontend
-   This is written in Read JS.
-   ### Installations
-   * Clone the repo `git clone https://github.com/iloveyii/sdg-project.git`
-   * Install npm packages, inside frontend/ run `npm install`
-   * Run the application inside, frontend/ run the command `npm start`
-   * Browse to the url `http://127.0.0.1:3000`
 
-## 2. Backend
-   This is written in Python and it uses Django, SQL lite.
+Python                   |  Docker
+:-------------------------:|:-------------------------:
+![JS](https://github.com/iloveyii/cell-analysis/blob/master/install/js1.png)  |  ![Node](https://github.com/iloveyii/cell-analysis/blob/master/install/node1.png)
+![python](https://github.com/iloveyii/cell-analysis/blob/master/install/python.png)  |  ![django](https://github.com/iloveyii/cell-analysis/blob/master/install/phyton-django.jpg)
+![html5](https://github.com/iloveyii/cell-analysis/blob/master/install/html51.png)  |  ![react](https://github.com/iloveyii/cell-analysis/blob/master/install/react.jpg)
+![hkr](https://github.com/iloveyii/cell-analysis/blob/master/install/hkr.png)  | ![machine learning](https://github.com/iloveyii/cell-analysis/blob/master/install/machine-learning.jpeg)   
+
+## [DEMO APP](https://hkr-iot-lab1.firebaseapp.com/)
+
+![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/run.gif)
+
+## Add SSH key to Github
+   ![install-demo](https://github.com/iloveyii/cell-analysis/blob/master/install/add_ssh_key_to_github.gif)
+   * ssh-keygen
+   * cat ~/.ssh/id_rsa.pub 
+   * Copy and paste to github
    
-   ### Installations
-   * Clone the repo `git clone https://github.com/iloveyii/sdg-project.git`
-   * Run migrations inside backend/project1 `python3.6 manage.py migrate`
-   * Inside backend/project1 run the command `python3.6 manage.py runserver`
-   * Browse to the following api end points
-   ```python
-    GET http://127.0.0.1:8000/app1/analysis
-    POST http://127.0.0.1:8000/app1/upload
+## Installation
+   ### Docker 
+   ![install-demo](https://github.com/iloveyii/cell-analysis/blob/master/install/install_docker_ubuntu1804.gif)
+   *  sudo apt update
+   *  sudo apt install apt-transport-https ca-certificates curl software-properties-common
+   *  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+   *  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+   *  sudo apt update
+   *  apt-cache policy docker-ce
+   *  sudo apt install docker-ce
+   *  sudo systemctl status docker
+   
+   ### Docker compose
+   ![install-demo](https://github.com/iloveyii/cell-analysis/blob/master/install/install_docker_compose_ubuntu1804.gif)
+   *  sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+   * sudo chmod +x /usr/local/bin/docker-compose
+   * docker-compose --version
+   
+   ### Clone repo
+   ![install-demo](https://github.com/iloveyii/cell-analysis/blob/master/install/clone_repo.gif)
+
+   * Clone repo `git clone git@github.com:iloveyii/cell-analysis.git`
+   * cd cell-analysis
+   * Pull some images from hub.docker.com
+```     
+    docker pull node:8
+    docker pull alikth/basic_cell:latest
+    docker pull alikth/ml_cell:latest
 ```
-
-
-
-## Instructions for creating app
-
-1. Install Django
-
-pip3 install django
-
-![](https://github.com/iloveyii/sdg-project/blob/master/backend/project1/image/1.png?raw=true)
-
-2. Install mongodb module for django(witch is 
-"djongo")
-
-pip3 install djongo 
-
-3. creat django project
-
-django-admin startproject mongo_project
-
-4. creart app
-
-python manage.py startapp sdg
-
-5. add created app to installed app list
-
-python manage.py migrate
-
-6. Set MongoDB
-
-7. Create Database Migrations
-
-python manage.py migrate
-
-8. Creat Super User 
-python manage.py creates uperuser
-in models.py we defind the database fileds
-9. Create Models
-![](https://github.com/iloveyii/sdg-project/blob/master/backend/project1/image/3.png?raw=true)
-12. Verify storing of data using shell
-    - Install mangoDB with link 
-
-        [Chlick this Link](https://www.mongodb.com/download-center/community)
-    - excuse mongod.exe
-      C:\mongodb\bin\mongod --dbpath c:\data\db
-      
-      ![](https://github.com/iloveyii/sdg-project/blob/master/backend/project1/image/09e394b244693ddf0be29f97383fe4b.png?raw=true)
-
-    - start mangoDB  
-      net stop MongoDB 
+   * Run docker-compose
+   `sudo docker-compose up `
+   * After the containers are up browse to:
+   http://localhost
+ 
+## Contributions
+   * Two docker images prepare for this project and hosted on https://hub.docker.gom
+   * A Droplet purchased and deployed on Digital Ocean.
+   * An open source project for Cancer cell analysis using Flow Cytometry on github.

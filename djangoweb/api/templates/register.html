@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" href="/static/favicon.ico"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#000000"/>
+    <meta name="description" content="Web site created using create-react-app"/>
+    <link rel="apple-touch-icon" href="/static/logo192.png"/>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="/static/css/login.css" rel="stylesheet" id="login-css">
+    <link rel="manifest" href="/static/manifest.json"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <title>PC3 Cell Analysis</title>
+</head>
+
+<body class="bg-light">
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12 order-md-0">
+            {% if msg %}
+                <div class="alert alert-danger" role="alert">
+                    {{msg}}
+                </div>
+            {% endif %}
+            <div class="wrapper fadeInDown my-5">
+                <div id="formContent">
+                    <!-- Icon -->
+                    <div class="fadeIn first">
+                        <img src="/static/img/user-avatar.png" class="py-4" style="width: 120px" id="icon"
+                             alt="User Icon"/>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form method="post">
+                        <input type="email" id="email" class="fadeIn second" name="email" placeholder="Email">
+                        <input type="password" id="password" class="fadeIn third" name="password"
+                               placeholder="Password">
+                        <input type="password" id="confirm password" class="fadeIn third" name="confirm_password"
+                               placeholder="Confirm password">
+                        <input type="submit" class="fadeIn fourth" value="Register">
+                    </form>
+
+                    <!-- Remind Passowrd -->
+                    <div id="formFooter">
+                        <a class="underlineHover" href="/api/login">Login</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">&copy; 2017-2018 Company Name</p>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#">Privacy</a></li>
+            <li class="list-inline-item"><a href="#">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Support</a></li>
+        </ul>
+    </footer>
+</div>
+
+</html>
