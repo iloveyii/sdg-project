@@ -57,7 +57,7 @@ Python                   |  Docker
    * Run docker-compose
    `sudo docker-compose up `
    * After the containers are up browse to:
-   ![http://localhost](http://localhost)
+   http://localhost
  
 ## Contributions
    * Two docker images prepare for this project and hosted on https://hub.docker.gom
