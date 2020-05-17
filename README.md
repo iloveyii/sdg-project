@@ -15,7 +15,7 @@ Python                   |  Docker
 ![html5](https://github.com/iloveyii/cell-analysis/blob/master/install/html51.png)  |  ![react](https://github.com/iloveyii/cell-analysis/blob/master/install/react.jpg)
 ![hkr](https://github.com/iloveyii/cell-analysis/blob/master/install/hkr.png)  | ![machine learning](https://github.com/iloveyii/cell-analysis/blob/master/install/machine-learning.jpeg)   
 
-## [DEMO APP](https://hkr-iot-lab1.firebaseapp.com/)
+## [DEMO APP](http://pc3.servebeer.com/)
 
 ![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/run.gif)
 
