@@ -2,3 +2,5 @@ requests
 flask_wtf
 FlowCytometryTools
 pandas
+matplotlib
+seaborn
