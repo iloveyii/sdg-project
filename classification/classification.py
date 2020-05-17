@@ -11,6 +11,12 @@ import requests
 import matplotlib
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
 
 # Import libraries
 import numpy as np
@@ -24,6 +30,7 @@ from FlowCytometryTools import FCMeasurement
 from FlowCytometryTools import ThresholdGate
 from FlowCytometryTools import FCPlate
 from FlowCytometryTools.core.graph import plot_heat_map
+from sklearn.preprocessing import StandardScaler
 
 STATIC_DIR = os.path.realpath('/shared/static/')
 SHARED_PLOT_DIR = os.path.realpath('/shared/class/')
@@ -41,36 +48,26 @@ CHECK_IF_FILE_EXIST = True
 
 
 class Classification:
-    def __init__(self, file_id='default', ch1=False, ch2=False, transformation='hlog', bins=100):
+    def __init__(self, file_id='default', debug=False):
+        if debug:
+            self.set_dirs_for_debug()
+
+        fcs_file_name = file_id + '_fcs_file.fcs'
         self.response = {}
         self.train()
         self.basic()
+        # Show accuracy for train
+        self.show_accuracy(self.models_array, self.X_train, self.Y_train, 'train')
+        # Show accuracy for test
+        self.show_accuracy(self.models_array, self.X_test, self.Y_test, 'test')
+        # Predict the file_name
+        self.predict(fcs_file_name)
         print(self.response)
-        return
-        # Import data set
-        csv_file_name = file_id + '.csv'
-        csv_file_path = os.path.join(SHARED_RAW_DIR, csv_file_name)
-        print(csv_file_path)
-        dataset = pd.read_csv(csv_file_path)
-        print(dataset.head)
-        print("Dimensions : {}".format(dataset.shape))
 
-        X = dataset.iloc[:, 0:11].values
-        print(X.shape)
-        Y = dataset.iloc[11]
-        print(Y.shape)
-        print(Y)
-
-        self.train()
-
-        print(X)
-
-        return
-        Y = dataset.iloc[:, 11].values
-        labelencoder_Y = LabelEncoder()
-        Y = labelencoder_Y.fit_transform(Y)
-
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
+    def set_dirs_for_debug(self):
+        STATIC_DIR = os.path.realpath('../shared/static/')
+        SHARED_PLOT_DIR = os.path.realpath('../shared/classification/')
+        SHARED_RAW_DIR = os.path.realpath('../shared/raw/multi/')
 
     def train(self):
         # Make file path
@@ -84,9 +81,36 @@ class Classification:
         self.compute_diagnosis()
         # Show head
         print(self.train_df.head())
+        # Split
+        self.split_train_test()
+        # Make models
+        self.models_array = self.models()
 
     def predict(self, file_name):
-        pass
+        datafile = os.path.join(SHARED_RAW_DIR, file_name)
+        sample = FCMeasurement(ID='Test Sample', datafile=datafile)
+        df = sample.data
+        df = self.pre_process(df)
+        X = df.iloc[:, 0:len(PRINCIPAL_COMPONENTS)].values
+        # Scale the data - feature scaling
+        sc = StandardScaler()
+        X = sc.fit_transform(X)
+        predictions = {}
+        counts = {}
+        model_names = ['Logistic Regression', 'Decision Tree', 'Random Forest']
+
+        for i in range(len(self.models_array)):
+            print('===> Predict ', i)
+            a = self.models_array[i].predict(X)
+            unique_elements, counts_elements = np.unique(a, return_counts=True)
+            print(np.asarray((unique_elements, counts_elements)))
+            arr2 = (np.asarray((unique_elements, counts_elements)))
+            predictions['elements'] = unique_elements
+            counts[model_names[i]] = counts_elements
+
+        predictions['counts'] = counts
+        self.response['predictions'] = predictions
+        return self.response
 
     def pre_process(self, df):
         # Principal component analysis
@@ -112,6 +136,49 @@ class Classification:
         sns.pairplot(self.train_df.iloc[:, 0:len(PRINCIPAL_COMPONENTS) + 1], hue='diagnosis')
         png_file_path = os.path.join(SHARED_PLOT_DIR, 'pair_plot.png')
         savefig(png_file_path)
+
+    # Create a function for all models
+    def models(self):
+        # Logistic Regression
+        log = LogisticRegression(random_state=0)
+        log.fit(self.X_train, self.Y_train)
+
+        # Decision Tree
+        tree = DecisionTreeClassifier(criterion='entropy', random_state=0)
+        tree.fit(self.X_train, self.Y_train)
+
+        # Random Forest RF
+        forest = RandomForestClassifier(n_estimators=10, criterion='entropy', random_state=0)
+        forest.fit(self.X_train, self.Y_train)
+
+        return log, tree, forest
+
+    def split_train_test(self):
+        # Split the data into dependent(Y) and independent sets(X)
+        X = self.train_df.iloc[:, 1:len(PRINCIPAL_COMPONENTS) + 1].values
+        Y = self.train_df.iloc[:, 0].values
+        # Split the dataset into 70% training and 30% testing data sets
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.30, random_state=0)
+        # Scale the data - feature scaling
+        sc = StandardScaler()
+        self.X_train = sc.fit_transform(X_train)
+        self.X_test = sc.fit_transform(X_test)
+        self.Y_train = Y_train
+        self.Y_test = Y_test
+
+    def show_accuracy(self, model, X, Y, type='train'):
+        # Show accuracy using the trained models
+        model_names = ['Logistic Regression', 'Decision Tree', 'Random Forest']
+        # print('######### TRAIN Accuracy ##########')
+        scores = {}
+        for i in range(len(model)):
+            print('===> ' + model_names[i])
+            print(classification_report(Y, model[i].predict(X)))
+            score = accuracy_score(Y, model[i].predict(X))
+            print(score)
+            scores[model_names[i]] = round(score, 3)
+            print()
+        self.response[type + '_score'] = scores
 
     def get_train_file(self):
         pass
@@ -156,7 +223,7 @@ if __name__ == '__main__':
     SHARED_PLOT_DIR = os.path.realpath('../shared/classification/')
     SHARED_RAW_DIR = os.path.realpath('../shared/raw/multi/')
 
-    mlearn = Classification('default', 'HDR-T', 'FSC-A', 'hlog', 100)
+    mlearn = Classification('admin_hkr_se', True)
 
     print(os.path.basename(__file__))
     print(__name__)
