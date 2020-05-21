@@ -10,9 +10,10 @@ The following tools and technologies have been used in this project.
 
 Python                   |  Docker
 :-------------------------:|:-------------------------:
+![Python](https://github.com/iloveyii/cell-analysis/blob/master/install/python.png)  |  ![Docker](https://github.com/iloveyii/sdg-project/blob/master/install/dockerhero.jpg)
 ![JS](https://github.com/iloveyii/cell-analysis/blob/master/install/js1.png)  |  ![Node](https://github.com/iloveyii/cell-analysis/blob/master/install/node1.png)
-![python](https://github.com/iloveyii/cell-analysis/blob/master/install/python.png)  |  ![django](https://github.com/iloveyii/cell-analysis/blob/master/install/phyton-django.jpg)
-![html5](https://github.com/iloveyii/cell-analysis/blob/master/install/html51.png)  |  ![react](https://github.com/iloveyii/cell-analysis/blob/master/install/react.jpg)
+![Django](https://github.com/iloveyii/cell-analysis/blob/master/install/phyton-django.jpg)  |  ![html5](https://github.com/iloveyii/cell-analysis/blob/master/install/html51.png)
+![React](https://github.com/iloveyii/cell-analysis/blob/master/install/react.jpg)  |  ![Microservices](https://github.com/iloveyii/cell-analysis/blob/master/install/microservices.png)
 ![hkr](https://github.com/iloveyii/cell-analysis/blob/master/install/hkr.png)  | ![machine learning](https://github.com/iloveyii/cell-analysis/blob/master/install/machine-learning.jpeg)   
 
 ## [DEMO APP](http://pc3.servebeer.com/)
@@ -59,6 +60,11 @@ Python                   |  Docker
    * After the containers are up browse to:
    http://localhost
  
+ 
+## Directory structure
+   ![Directory-structure](https://github.com/iloveyii/cell-analysis/blob/master/install/directory_structure.png)
+
+## How it works ?
 ## Contributions
    * Two docker images prepare for this project and hosted on https://hub.docker.gom
    * A Droplet purchased and deployed on Digital Ocean.
