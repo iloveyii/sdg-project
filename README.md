@@ -13,7 +13,7 @@ Python                   |  Docker
 ![Python](https://github.com/iloveyii/cell-analysis/blob/master/install/python.png)  |  ![Docker](https://github.com/iloveyii/sdg-project/blob/master/install/dockerhero.jpg)
 ![JS](https://github.com/iloveyii/cell-analysis/blob/master/install/js1.png)  |  ![Node](https://github.com/iloveyii/cell-analysis/blob/master/install/node1.png)
 ![Django](https://github.com/iloveyii/cell-analysis/blob/master/install/phyton-django.jpg)  |  ![html5](https://github.com/iloveyii/cell-analysis/blob/master/install/html51.png)
-![React](https://github.com/iloveyii/cell-analysis/blob/master/install/react.jpg)  |  ![Microservices](https://github.com/iloveyii/cell-analysis/blob/master/install/microservices.png)
+![React](https://github.com/iloveyii/cell-analysis/blob/master/install/react.jpg)  |  ![Micro-service](https://github.com/iloveyii/sdg-project/blob/master/install/microservices.png)
 ![hkr](https://github.com/iloveyii/cell-analysis/blob/master/install/hkr.png)  | ![machine learning](https://github.com/iloveyii/cell-analysis/blob/master/install/machine-learning.jpeg)   
 
 ## [DEMO APP](http://pc3.servebeer.com/)
