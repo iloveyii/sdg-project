@@ -62,7 +62,7 @@ Python                   |  Docker
  
  
 ## Directory structure
-   ![Directory-structure](https://github.com/iloveyii/cell-analysis/blob/master/install/directory_structure.png)
+   ![Directory-structure](https://github.com/iloveyii/sdg-project/blob/master/install/directory_structure.png)
 
 ## How it works ?
 ## Contributions
