@@ -68,7 +68,11 @@ Python                   |  Docker
    provides user interface and has been developed in React.
    The backend provides the different APIs for analysis of the FCS files and has been developed in Python.
 ### Frontend
-   The frontend has further subdirectories for components, pages, context and themes.
+   * The frontend has further subdirectories for components, pages, context and themes.
+   * The component directory contains all the React components used
+   * The pages provide different containers
+   * The context is using React hook context api.
+   * Themes contains different themes available for the frontend.
    
 ### Backend
    * The backend is based on micro services architecture using Docker containers. 
