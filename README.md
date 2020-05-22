@@ -66,7 +66,7 @@ Python                   |  Docker
    
    This application has been divided into two major modules, one for frontend and the second for backend. The front end
    provides user interface and has been developed in React.
-   The backend provides the different APIs for analysis of the FCS files and has been developed in Python.
+   The backend provides the different APIs for analysis of the FCS files and has been developed in Python, Django, Node.
 ### Frontend
    * The frontend has further subdirectories for components, pages, context and themes.
    * The component directory contains all the React components used
