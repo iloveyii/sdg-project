@@ -71,14 +71,18 @@ Python                   |  Docker
    The frontend has further subdirectories for components, pages, context and themes.
    
 ### Backend
-   The backend is based on micro services architecture using Docker containers. Each sub directory e.g (classification, machinelearning) correspond to a docker container. Each container provides a service to the application. For example the db container provide service about database. All the services of the application are listed and configured in the docker-compose.yml.
-   This separation and organization of code into different directories give the freedom of easily maintaining and deployment, plus stability in the code. It also provide easy scalability of poping up more containers and services in an easy and independent way. 
+   * The backend is based on micro services architecture using Docker containers. 
+   * Each sub directory e.g (classification, machinelearning) correspond to a docker container. Each container provides a service to the application. 
+   * For example the db container provide service about database. All the services of the application are listed and configured in the docker-compose.yml.
+   * This separation and organization of code into different directories give the freedom of easily maintaining and deployment, plus stability in the code. It also provide easy scalability of popping up more containers and services in an easy and independent way. 
 
 ## How it works ?
-   The backend has a gateway service which handle each request from the frontend. The inner containers/services are not directly accessible from outside which makes it more secure. 
-   When the user first first login to the system the gateway service orient the request to the node auth server which returns json web token to the gateway. The gateway sends the token to the user browser which stores it in cookies and use it for further communication with the gateway.
-   After the login the user can call the gateway for any service for example the frontend sends request for basic analysis, which the gateway receives and send it to the basicanalysis service internally. As soons as the gateway gets the response from any service it is then returned to the frontend/browser.
+   * The backend has a gateway service which handle each request from the frontend. The inner containers/services are not directly accessible from outside which makes it more secure. 
+   * When the user first first login to the system the gateway service orient the request to the node auth server which returns json web token to the gateway. The gateway sends the token to the user browser which stores it in cookies and use it for further communication with the gateway.
+   * After the login the user can call the gateway for any service for example the frontend sends request for basic analysis, which the gateway receives and send it to the basicanalysis service internally. 
+   * As soon as the gateway gets the response from any service it is then returned to the frontend/browser.
    This process is illustrated in the figure above (micro services).
+   
 ## Contributions
    * Two docker images prepare for this project and hosted on https://hub.docker.gom
    * A premium droplet deployed on [Digital Ocean](https://www.digitalocean.com/).
