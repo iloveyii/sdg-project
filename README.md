@@ -88,7 +88,7 @@ Python                   |  Docker
    * The backend is based on micro services architecture using Docker containers. 
    * Each sub directory e.g (classification, machinelearning) correspond to a docker container. Each container provides a service to the application. 
    * For example the db container provide service about database. All the services of the application are listed and configured in the docker-compose.yml.
-   * This separation and organization of code into different directories give the freedom of easily maintaining and deployment, plus stability in the code. It also provide easy scalability of popping up more containers and services in an easy and independent way. 
+   * This separation and organization of code into different directories give the freedom of easily maintaining and deployment, plus stability in the code. It also provide easy scalability by popping up more containers and services in an easy and independent way. 
    * The backend has a gateway service which handle each request from the frontend. The inner containers/services are not directly accessible from outside which makes it more secure. 
    * When the user first login to the system the gateway service routes the request to the node auth server which returns json web token to the gateway. The gateway sends the token to the user browser which stores it in cookies and uses it for further communication with the gateway.
    * After the login the user can call the gateway for any service for example the frontend sends request for basic analysis, which the gateway receives and send it to the basicanalysis service internally. 
