@@ -17,9 +17,12 @@ Python                   |  Docker
 ![hkr](https://github.com/iloveyii/cell-analysis/blob/master/install/hkr.png)  | ![machine learning](https://github.com/iloveyii/cell-analysis/blob/master/install/machine-learning.jpeg)   
 
 ## [DEMO APP](http://pc3.servebeer.com/)
+### [LINK 1](http://pc3.servebeer.com/)
+### [LINK 2](http://pc3.servebeer.com:8000/)
 
-![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/run.gif)
-
+| screenshot1 | screenshot2 |
+| :---         |          ---: |
+| ![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/install/classifcation.gif)   | ![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/install/custom_plots.gif)    |
 ## Add SSH key to Github
    ![install-demo](https://github.com/iloveyii/cell-analysis/blob/master/install/add_ssh_key_to_github.gif)
    * ssh-keygen
