@@ -60,7 +60,7 @@ Python                   |  Docker
    * After the containers are up browse to:
    http://localhost
    
-   ![compose-up](https://github.com/iloveyii/cell-analysis/blob/master/install/docker-compose-up.gif)
+   ![compose-up](https://github.com/iloveyii/sdg-project/blob/master/install/docker-compose-up.gif)
 
  
  
