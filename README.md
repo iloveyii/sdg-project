@@ -44,7 +44,7 @@ Python                   |  Docker
    * sudo chmod +x /usr/local/bin/docker-compose
    * docker-compose --version
    
-   ### Clone repo
+   ### Clone github repository and run application
    ![install-demo](https://github.com/iloveyii/cell-analysis/blob/master/install/clone_repo.gif)
 
    * Clone repo `git clone git@github.com:iloveyii/cell-analysis.git`
@@ -59,6 +59,9 @@ Python                   |  Docker
    `sudo docker-compose up `
    * After the containers are up browse to:
    http://localhost
+   
+   ![compose-up](https://github.com/iloveyii/cell-analysis/blob/master/install/docker-compose-up.gif)
+
  
  
 ## Directory structure
