@@ -417,8 +417,12 @@ def test_db(request):
         cursor.execute("""SELECT table_name FROM information_schema.tables
                WHERE table_schema = 'public'""")
         for table in cursor.fetchall():
-            data[str(table)] = table
-            print(table)
+            # Check if user want to reset
+            if request.GET and request.GET['reset'] and request.GET['reset'] == '1':
+                result = cursor.execute("DROP TABLE IF EXISTS {}".format(table[0]))
+                data["dropped_{}".format(table[0])] = str(result)
+            data[table[0]] = table[0]
+            print(len(table))
         # Print PostgresSQL Connection properties
         print(connection.get_dsn_parameters(), "\n")
 
@@ -427,8 +431,8 @@ def test_db(request):
         record = cursor.fetchone()
         print("You are connected to - ", record, "\n")
         data['record'] = record
+        connection.commit()
         return HttpResponse(json.dumps(data))
-
 
     except (Exception, psycopg2.Error) as error:
         print("Error while connecting to PostgresSQL", error)

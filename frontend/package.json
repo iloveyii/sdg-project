@@ -30,11 +30,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "rm_custom_build": "rm ../backend/custom/build -rf",
+    "cp_to_custom_build": "cp ./build ../backend/custom/ -rf",
+    "deploy": "npm run build && npm run rm_custom_build && npm run cp_to_custom_build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "cd _bc && nodemon index.py"
-
   },
   "eslintConfig": {
     "extends": "react-app"

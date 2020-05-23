@@ -75,12 +75,12 @@ class tbusers(models.Model):
     password = models.TextField(max_length=100, default='')
     fullname = models.TextField(max_length=100, default='')
     trials = models.IntegerField(default=0)
-    locked = models.IntegerField(default=0)
-    active = models.IntegerField(default=0)
-    mobilephone = models.TextField(max_length=20, default='')
-    usergroup = models.TextField(max_length=50, default='')
-    location = models.TextField(max_length=100, default='')
-    locationdescription = models.TextField(max_length=1000, default='')
+    locked = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+    mobilephone = models.TextField(max_length=20, default='NA', null=True)
+    usergroup = models.TextField(max_length=50, default='admin', null=True)
+    location = models.TextField(max_length=100, default='NA', null=True)
+    locationdescription = models.TextField(max_length=1000, default='NA', null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -93,3 +93,23 @@ class tbusers(models.Model):
 
     def __str__(self):
         return "Email: {} Full name: {} active: {}".format(self.email, self.fullname, self.active)
+
+class tbmeta(models.Model):
+    # location,category,recorddate,filename,uploadname,channels
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    location = models.TextField(max_length=100, default='NA', null=True)
+    category = models.TextField(max_length=50, default='admin', null=True)
+    recorddate = models.DateTimeField(auto_now_add=True, null=True)
+    uploaddate = models.DateTimeField(auto_now_add=True, null=True)
+    filename = models.TextField(max_length=100, default='')
+    uploadname = models.TextField(max_length=100, default='')
+    channels = models.CharField(max_length=100, default='')
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __init__(self):
+        self.initial = False
+
+    class Meta:
+        db_table = '"tbmeta"'

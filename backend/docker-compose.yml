@@ -122,3 +122,25 @@ services:
       - 6000:6000
     depends_on:
       - web
+
+  custom:
+    container_name: custom
+    build:
+      context: ./custom
+    image:  alikth/ml_cell:latest
+    restart: always
+    command: bash -c "
+      pip install -r requirements.txt
+      && pip3 uninstall bottleneck -y
+      && pip3 install bottleneck==1.2
+      && python3.6 index.py
+      "
+    volumes:
+      - ./custom:/usr/src/app
+      - ./shared:/shared
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - web
+

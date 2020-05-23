@@ -3,8 +3,8 @@ import {toast} from "react-toastify";
 
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
-var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : process.env.REACT_APP_API_PATH;
-
+var urlpath = process.env.NODE_ENV === "development" ? process.env.REACT_APP_URL_PATH : 'http://localhost:8000';
+console.log('ENV, ',  process.env.NODE_ENV, process.env.REACT_APP_URL_PATH);
 function userReducer(state, action) {
   switch (action.type) {
     case "LOGIN_SUCCESS":
@@ -60,7 +60,7 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
   fetch(`${urlpath}/loadUser/?user=${login}&pass=${password}`)
   .then(response => response.json())
   .then(function(response){
-    if (response["status"]){     
+    if (response["status"]){
         if (response["payload"]['trials'] > 3){
           dispatch({ type: "LOGIN_FAILURE" });
           setError(true);
@@ -77,7 +77,7 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
         dispatch({ type: "LOGIN_SUCCESS" });
         setError(null);
         setIsLoading(false);
-        
+
         history.push("/app/dashboard");
     } else {
       toast.warn("Login Failed. Check username or password.");
@@ -89,7 +89,7 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
     toast.error("Server is down. Contact admin", {autoClose: 5000});
     console.error(err);
     setIsLoading(false);
-  })  
+  })
 }
 
 
@@ -107,7 +107,7 @@ function registerUser(dispatch, login, password, name, history, setIsLoading, se
       email: login,
       password: password,
       name: name,
-      usergroup: 'Admin',
+      usergroup: 'admin',
       location: 'Kristianstad'
     })
   })
@@ -126,7 +126,7 @@ function registerUser(dispatch, login, password, name, history, setIsLoading, se
     toast.error("Server is down. Contact admin", {autoClose: 5000});
     console.error(err);
     setIsLoading(false);
-  })  
+  })
 
 }
 
