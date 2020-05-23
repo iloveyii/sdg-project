@@ -334,14 +334,17 @@ class Plotting:
         self.response['custom_transformation'] = self.get_file_name('custom_transformation.png')
 
     def get_plots(self):
-        self.histogram(self.channel_name1)
-        self.histogram2d(self.channel_name1, self.channel_name2)
+        try:
+            self.histogram(self.channel_name1)
+            self.histogram2d(self.channel_name1, self.channel_name2)
 
-        self.scatter(self.channel_name1, self.channel_name2)
-        self.threshold_gate(self.channel_name1)
+            self.scatter(self.channel_name1, self.channel_name2)
+            self.threshold_gate(self.channel_name1)
 
-        self.compensation(self.channel_name1, self.channel_name2)
-        self.custom_transformation(self.channel_name1)
+            self.compensation(self.channel_name1, self.channel_name2)
+            self.custom_transformation(self.channel_name1)
+        except Exception as inst:
+            print('Err', inst)
         return self.response
 
     def get_file_name(self, file_part):
