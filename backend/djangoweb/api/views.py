@@ -31,6 +31,7 @@ def if_login(request):
     global sid
     try:
         value = request.COOKIES.get('sid')
+        print('if_login value', value)
         if not value:
             return False
         s = requests.Session()
@@ -78,7 +79,6 @@ def clear_user_files(request):
 # Create your views here.
 @csrf_exempt
 def upload(request):
-    global if_login, get_logged_in_user, format_to_filename
     if not if_login(request):
         return redirect('/api/login.html')
     if request.method == 'POST' and request.FILES[FILE_FIELD_NAME]:
@@ -237,6 +237,7 @@ def login(request):
             if is_login['login'] == 'success':
                 sid = r.cookies['sid']
                 print(is_login, sid)
+                response.set_cookie('sid', sid)
                 response = HttpResponse(render(request, 'upload.html'))
             else:
                 sid = ''
