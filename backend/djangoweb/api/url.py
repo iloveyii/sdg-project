@@ -18,6 +18,7 @@ urlpatterns = [
     url('plots', views.plotting, name='plotting'),
     url('cls', views.classification, name='classification'),
     url('upload', views.upload, name='upload'),
+    url('test-db', views.test_db, name='test_db'),
     # Welcome page
     url('', views.welcome, name='welcome'),
     url(r'^/$', views.welcome, name='welcome'),

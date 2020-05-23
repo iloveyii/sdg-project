@@ -96,7 +96,7 @@ Python                   |  Docker
    This process is illustrated in the figure above (micro services).
    
 ## Contributions
-   * Two docker images prepare for this project and hosted on https://hub.docker.gom
+   * Two docker images prepare for this project and hosted on [Docker Hub](https://hub.docker.com)
    * A premium droplet deployed on [Digital Ocean](https://www.digitalocean.com/).
    * A premium EC2 deployed on [AWS](https:/aws.com).
    * An open source project for Cancer cell analysis using Flow Cytometry on github.

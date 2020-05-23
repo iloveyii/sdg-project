@@ -6,12 +6,14 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 import ast
-import os, shutil
+import os
+import shutil
 import sys
 import json
 import re
 from api.models.models import Model
 import requests
+import psycopg2
 
 from django.core.files.storage import FileSystemStorage
 
@@ -363,6 +365,7 @@ def plotting(request):
         print(data)
     return HttpResponse(json.dumps(data))
 
+
 @csrf_exempt
 def classification(request):
     id = get_logged_in_email_to_file_format(request)
@@ -396,3 +399,42 @@ def classification(request):
         }
         print(data)
     return HttpResponse(json.dumps(data))
+
+
+def test_db(request):
+    connection = None
+    data = {
+        'status': 'ok',
+    }
+
+    try:
+        connection = psycopg2.connect(user="runner",
+                                      host="db",
+                                      port="5432",
+                                      database="postgres")
+
+        cursor = connection.cursor()
+        cursor.execute("""SELECT table_name FROM information_schema.tables
+               WHERE table_schema = 'public'""")
+        for table in cursor.fetchall():
+            data[str(table)] = table
+            print(table)
+        # Print PostgresSQL Connection properties
+        print(connection.get_dsn_parameters(), "\n")
+
+        # Print PostgresSQL version
+        cursor.execute("SELECT version();")
+        record = cursor.fetchone()
+        print("You are connected to - ", record, "\n")
+        data['record'] = record
+        return HttpResponse(json.dumps(data))
+
+
+    except (Exception, psycopg2.Error) as error:
+        print("Error while connecting to PostgresSQL", error)
+    finally:
+        # closing database connection.
+        if connection:
+            cursor.close()
+            connection.close()
+            print("PostgresSQL connection is closed")
