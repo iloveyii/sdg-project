@@ -297,7 +297,7 @@ def basic(request):
     id = get_logged_in_email_to_file_format(request)
 
     if not id:
-        response = {
+        data = {
             'status': 'fail',
             'msg': 'User not logged in'
         }
