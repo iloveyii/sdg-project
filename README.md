@@ -22,7 +22,7 @@ Python                   |  Docker
 
 | screenshot1 | screenshot2 |
 | :---         |          ---: |
-| ![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/install/classifcation.gif)   | ![screenshots](https://github.com/iloveyii/cell-analysis/blob/master/install/custom_plots.gif)    |
+| ![screenshots](https://github.com/iloveyii/sdg-project/blob/master/install/classifcation.gif)   | ![screenshots](https://github.com/iloveyii/sdg-project/blob/master/install/custom_plots.gif)    |
 ## Add SSH key to Github
    ![install-demo](https://github.com/iloveyii/cell-analysis/blob/master/install/add_ssh_key_to_github.gif)
    * ssh-keygen
