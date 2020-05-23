@@ -30,7 +30,7 @@ CORS_ORIGIN_WHITELIST = (
 def if_login(request):
     global sid
     try:
-        value = request.COOKIES.get('sid')
+        value = sid or request.COOKIES.get('sid')
         print('if_login value', value)
         if not value:
             return False
