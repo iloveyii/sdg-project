@@ -1,1 +1,1 @@
-export const apiServer = process.env.NODE_ENV === 'development' ? 'http://localhost' : '';
+export const apiServer = process.env.NODE_ENV === 'development' ? '' : '';
