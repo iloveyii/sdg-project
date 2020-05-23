@@ -17,6 +17,7 @@ class Product(Resource):
     @csrf.exempt
     def get(self):
         global gl
+        plots = []
         # return gl
         file_id = request.args.get('id')
         ch1 = request.args.get('ch1')
@@ -32,10 +33,12 @@ class Product(Resource):
             print('ML Default FCS and  chs', ch1, ch2)
         else:
             print('ML RECEIVED FCS and chs', file_id, ch1, ch2)
-
-        ml = MachineLearning(file_id, ch1, ch2, transformation, bins)
-        plots = ml.get_plots()
-        gl.update(plots)
+        try:
+            ml = MachineLearning(file_id, ch1, ch2, transformation, bins)
+            plots = ml.get_plots()
+            gl.update(plots)
+        except Exception as inst:
+            print('Err', inst)
         return plots
 
 
