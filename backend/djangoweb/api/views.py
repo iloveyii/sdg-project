@@ -30,7 +30,9 @@ CORS_ORIGIN_WHITELIST = (
 def if_login(request):
     global sid
     try:
-        value = sid or request.COOKIES.get('sid')
+        value = request.COOKIES.get('sid')
+        if not value:
+            return False
         s = requests.Session()
         cookie_obj = requests.cookies.create_cookie(name='sid', value=value)
         s.cookies.set_cookie(cookie_obj)
@@ -248,15 +250,14 @@ def login(request):
 @csrf_exempt
 def machine_learning(request):
     id = get_logged_in_email_to_file_format(request)
-    data = {
-        'actions': {'type': 'read', 'ok': 1},
-        'list': [],
-        'id': id,
-    }
-    # return HttpResponse(json.dumps(data))
+    params = ''
 
     if not id:
-        response = {
+        data = {
+            'actions': {'type': 'read', 'ok': 1},
+            'list': [],
+            'id': id,
+            'params': params,
             'status': 'fail',
             'msg': 'User not logged in'
         }
@@ -294,8 +295,7 @@ def machine_learning(request):
 @csrf_exempt
 def basic(request):
     id = get_logged_in_email_to_file_format(request)
-    # @todo
-    id = 'default'
+
     if not id:
         response = {
             'status': 'fail',
@@ -319,16 +319,7 @@ def basic(request):
 def plotting(request):
     id = get_logged_in_email_to_file_format(request)
     params = ''
-    data = {
-        'actions': {'type': 'read', 'ok': 1},
-        'list': [],
-        'id': id,
-        'params': params
-    }
-    response = {
-        'status': 'fail',
-        'msg': 'logged in'
-    }
+
     if not id:
         data = {
             'actions': {'type': 'read', 'ok': 1},
