@@ -43,6 +43,8 @@ Python                   |  Docker
    
    ### Docker compose
    ![install-demo](https://github.com/iloveyii/sdg-project/blob/master/install/install_docker_compose_ubuntu1804.gif)
+   
+   
 ``` sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 
 ```
