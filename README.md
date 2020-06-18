@@ -45,7 +45,8 @@ Python                   |  Docker
    ![install-demo](https://github.com/iloveyii/sdg-project/blob/master/install/install_docker_compose_ubuntu1804.gif)
    
    
-``` sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+``` 
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 
 ```
 
@@ -53,6 +54,7 @@ Python                   |  Docker
    * docker-compose --version
    
    ### Clone github repository and run application
+   
    ![install-demo](https://github.com/iloveyii/sdg-project/blob/master/install/clone_repo.gif)
 
    * Clone repo `git clone git@github.com:iloveyii/sdg-project.git`
@@ -63,6 +65,7 @@ Python                   |  Docker
     docker pull alikth/basic_cell:latest
     docker pull alikth/ml_cell:latest
 ```
+
    * Run docker-compose
    `sudo docker-compose up `
    * After the containers are up browse to:
