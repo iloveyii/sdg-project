@@ -117,7 +117,7 @@ The backend provides the different APIs for analysis of the FCS files and has be
 - When the user first login to the system the gateway service routes the request to the node auth server which returns json web token to the gateway. The gateway sends the token to the user browser which stores it in cookies and uses it for further communication with the gateway.
 - After the login the user can call the gateway for any service for example the frontend sends request for basic analysis, which the gateway receives and send it to the basicanalysis service internally.
 - As soon as the gateway gets the response from any service it is then returned to the frontend/browser.
-  This process is illustrated in the figure above (micro services in final_report.pdf).
+  This process is illustrated in the figure above (section: system architecture in final_report.pdf).
 
 ## Contributions
 
